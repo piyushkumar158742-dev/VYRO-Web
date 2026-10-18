@@ -54,3 +54,31 @@
 .simple-email-login[open] summary{margin-bottom:4px}
 .legal-document-links .btn{flex:1}
 @media(max-width:520px){.user-settings>.panel>header{padding:15px 16px}.user-settings>.panel>.pad{padding:16px}.account-benefits{padding:14px}}
+
+
+/* Settings redesign: use the full workspace width, with a calm two-column layout. */
+.user-settings{width:100%;max-width:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:18px}
+.user-settings>.panel{width:100%;min-width:0;height:100%;border-radius:14px}
+.user-settings>.panel>.pad{min-width:0}
+.user-settings>.panel:nth-child(1){grid-column:1}
+.user-settings>.panel:nth-child(2){grid-column:2}
+.user-settings>.panel:nth-child(3){grid-column:1}
+.user-settings>.panel:nth-child(4){grid-column:2}
+.user-settings>.simple-data{grid-column:1/-1;height:auto}
+.user-settings .backend-help{font-size:13px;line-height:1.65;color:var(--mut)}
+.user-settings .panel p,
+.user-settings .panel small,
+.user-settings .panel label{color:var(--ink)}
+.user-settings .panel small{color:var(--mut)}
+.user-settings .account-benefits{gap:11px}
+.user-settings .account-benefits small{color:var(--mut)}
+.user-settings .currency-choice{background:var(--pan);color:var(--ink)}
+.user-settings .currency-choice.selected{background:#EEEEEC;color:#171717;border-color:#777}
+:root[data-theme="dark"] .user-settings .currency-choice{background:#1C1C1C;color:#F5F5F5;border-color:#4A4A4A}
+:root[data-theme="dark"] .user-settings .currency-choice.selected{background:#3A3A3A;color:#fff;border-color:#AAA}
+:root[data-theme="dark"] .user-settings .panel p,
+:root[data-theme="dark"] .user-settings .panel label,
+:root[data-theme="dark"] .user-settings .panel strong{color:#F5F5F5}
+:root[data-theme="dark"] .user-settings .backend-help,
+:root[data-theme="dark"] .user-settings .panel small{color:#BDBDBD}
+@media(max-width:900px){.user-settings{grid-template-columns:minmax(0,1fr);gap:13px}.user-settings>.panel:nth-child(n){grid-column:1}.user-settings>.simple-data{grid-column:1}}

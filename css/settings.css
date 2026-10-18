@@ -35,3 +35,22 @@
 .vyro-legal-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(9,14,25,.66);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
 .vyro-legal-dialog{position:relative;width:min(100%,480px);max-height:min(90vh,760px);overflow:auto;background:var(--panel,var(--bg));color:var(--ink);border:1px solid var(--ln);border-radius:18px;padding:30px;box-shadow:0 24px 80px rgba(0,0,0,.28)}
 .vyro-legal-close{position:absolute;right:15px;top:12px;border:0;background:transparent;color:var(--mut);font-size:28px;cursor:pointer}.vyro-legal-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.13em;font-weight:800;color:var(--blue);margin-bottom:10px}.vyro-legal-dialog h2{font-size:24px;line-height:1.2;margin:0 30px 10px 0}.vyro-legal-dialog>p{font-size:14px;color:var(--mut);line-height:1.55;margin:0 0 20px}.vyro-legal-check{display:flex;align-items:flex-start;gap:11px;padding:13px 0;border-top:1px solid var(--ln);font-size:14px;line-height:1.5}.vyro-legal-check input{width:17px;height:17px;flex:none;margin-top:3px;accent-color:var(--blue)}.vyro-legal-check a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}.vyro-legal-error{color:#d33!important;margin:8px 0!important}.vyro-legal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}.vyro-legal-actions button{min-height:42px}.vyro-legal-dialog[hidden],.vyro-legal-error[hidden]{display:none!important}@media(max-width:480px){.vyro-legal-dialog{padding:24px 20px;border-radius:14px}.vyro-legal-actions{display:grid;grid-template-columns:1fr 1fr}.vyro-legal-actions button{width:100%}}
+
+/* Friendlier account setup and calmer Settings layout */
+.user-settings{max-width:720px;gap:16px}
+.user-settings>.panel{border-radius:16px;overflow:hidden}
+.user-settings>.panel>header{padding:17px 20px;border-bottom:1px solid var(--ln)}
+.user-settings>.panel>.pad{padding:20px;gap:16px}
+.user-settings .panel>header h3{font-size:15px;letter-spacing:-.01em}
+.account-benefits{display:grid;gap:14px;padding:17px;border-radius:13px;background:var(--bg);border:1px solid var(--ln)}
+.account-benefits>span{display:flex;align-items:flex-start;gap:12px}
+.account-benefits>span>b{display:grid;place-items:center;flex:none;width:27px;height:27px;border-radius:50%;background:var(--pan);border:1px solid var(--ln);font-size:12px}
+.account-benefits>span>span{display:grid;gap:3px;padding-top:2px}
+.account-benefits strong{font-size:13px;font-weight:700;color:var(--ink)}
+.account-benefits small{font-size:12px;line-height:1.5;color:var(--muted)}
+.account-primary .btn{width:100%;justify-content:center;min-height:46px;gap:10px}
+.simple-email-login{border-top:1px solid var(--ln);padding-top:13px}
+.simple-email-login summary{font-size:13px;color:var(--ink)}
+.simple-email-login[open] summary{margin-bottom:4px}
+.legal-document-links .btn{flex:1}
+@media(max-width:520px){.user-settings>.panel>header{padding:15px 16px}.user-settings>.panel>.pad{padding:16px}.account-benefits{padding:14px}}

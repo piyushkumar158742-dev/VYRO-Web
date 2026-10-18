@@ -75,3 +75,44 @@ input,select,textarea{transition:border-color var(--motion-base),box-shadow var(
 .sheet::-webkit-scrollbar,.modal::-webkit-scrollbar,.tl::-webkit-scrollbar,.tl-in::-webkit-scrollbar,.wrap::-webkit-scrollbar,#main::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
 
 .legal-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:22px 4px 26px;color:var(--mut);font-size:12px;flex-wrap:wrap}.legal-footer nav{display:flex;gap:16px;flex-wrap:wrap}.legal-footer a,.legal-consent a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}.legal-consent{display:grid;gap:11px;margin:16px 0;padding:14px;border:1px solid var(--ln);border-radius:8px;background:var(--bin)}.consent-check{display:flex;align-items:flex-start;grid-template-columns:none;gap:10px;font-size:13px;line-height:1.5;font-weight:500}.consent-check input{width:17px;height:17px;flex:none;margin-top:2px;accent-color:var(--blue)}.consent-note{font-size:12px;color:var(--mut)}
+
+
+/* Vyro visual system v1 — premium monochrome */
+:root{
+ --bin:#F4F4F2;
+ --pan:#FFFFFF;
+ --ink:#171717;
+ --mut:#737373;
+ --ln:#E4E4E1;
+ --blue:#242424;
+ --flag:#737373;
+ --mint:#525252;
+ --amb:#A3A3A3;
+ --vio:#525252;
+ color-scheme:light;
+}
+body{background:var(--bin);color:var(--ink);letter-spacing:-.008em}
+.rail{background:#171717;border-right:1px solid #292929}
+.rail button{color:#A3A3A3;border-radius:10px}
+.rail button:hover{background:#292929;color:#fff}
+.rail button.on{background:#fff;color:#171717}
+.rail button:before{background:#fff}
+.wrap{padding:28px 32px 64px}
+.top{margin-bottom:28px;gap:18px}
+.top h1{letter-spacing:-.045em}
+.btn{background:#202020;color:#fff;border:1px solid #202020;border-radius:10px;box-shadow:none}
+.btn:hover{background:#383838;border-color:#383838;box-shadow:0 5px 14px #00000012}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid #D4D4D0}
+.btn.ghost:hover{background:#EBEBE8}
+.btn.del{color:#525252;border-color:#D4D4D0}
+.lnk{color:#404040}
+:focus-visible{outline:2px solid #525252;outline-offset:3px}
+.panel{border-radius:12px;border-color:var(--ln);box-shadow:0 1px 2px #00000004}
+.panel>header{background:#FAFAF9;border-radius:12px 12px 0 0}
+.panel:hover{border-color:#C7C7C2;box-shadow:0 5px 18px #00000006}
+input,select,textarea{border-color:#D4D4D0!important;border-radius:9px}
+input:focus,select:focus,textarea:focus{border-color:#737373!important;box-shadow:0 0 0 3px #1717170b}
+::selection{background:#D4D4D0;color:#171717}
+@media(min-width:861px){.wrap{max-width:1680px;width:100%;margin-inline:auto}}
+@media(max-width:860px){.wrap{padding:18px 14px 34px}.rail{background:#171717;border-top:1px solid #303030}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

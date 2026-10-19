@@ -188,3 +188,14 @@ input:focus,select:focus,textarea:focus{border-color:#737373!important;box-shado
 :root[data-theme="dark"] .donate-modal .donate-head h3,
 :root[data-theme="dark"] .donate-modal .donate-upi{color:#F5F5F5}
 :root[data-theme="dark"] .donate-modal .donate-upi{background:#292929;border-color:#555}
+
+/* Rounded hover surfaces and consistent dark active-navigation contrast */
+.rail button,.rail button:hover,.rail button:focus-visible{border-radius:10px}
+.rail button:hover{background:color-mix(in srgb,var(--pan) 9%,transparent)}
+:root[data-theme="dark"] .rail button.on{background:#3B3B3B!important;color:#FFFFFF!important}
+:root[data-theme="dark"] .rail button.on b{color:#FFFFFF!important;opacity:1}
+:root[data-theme="dark"] .rail button.on:before{background:#FFFFFF}
+:root[data-theme="dark"] .rail button:hover{background:#303030}
+:root[data-theme="dark"] .task-row .chk.on{background:#F5F5F5;border-color:#F5F5F5;color:#171717}
+:root[data-theme="dark"] .task-row .chk{border-color:#858585}
+:root[data-theme="dark"] .task-row .chk.on span{text-shadow:none}

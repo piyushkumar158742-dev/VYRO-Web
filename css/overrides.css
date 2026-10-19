@@ -44,3 +44,8 @@ input::placeholder,textarea::placeholder{color:#737373!important;opacity:1}
 :root[data-theme="dark"] .rail button.on{background:#3B3B3B!important;color:#FFF!important;border-radius:10px!important}
 :root[data-theme="dark"] .rail button.on b{color:#FFF!important;opacity:1!important}
 :root[data-theme="dark"] .rail button:hover{border-radius:10px!important}
+
+/* Quiet navigation hover; the brand mark alone gets a gentle scale */
+.rail button:not(.logo):hover{background:transparent!important}
+.rail .logo{transition:transform .18s ease}
+.rail .logo:hover{transform:scale(1.12);background:transparent!important}

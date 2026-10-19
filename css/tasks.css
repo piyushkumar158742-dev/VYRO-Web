@@ -53,3 +53,17 @@
 .task-empty-quiet:empty{display:block}
 .task-empty-mark,.task-empty p,.task-empty .btn{display:none!important}
 @media(max-width:900px){.task-empty,.task-empty-quiet{min-height:150px}}
+
+/* Match task panel headers and keep empty states minimal */
+.tasks-columns{align-items:stretch}
+.task-panel{display:flex;flex-direction:column}
+.task-panel>header{box-sizing:border-box;min-height:72px;height:72px;flex:0 0 72px;display:flex;align-items:center;padding:0 18px!important}
+.task-panel>header>div{display:flex;align-items:center;min-height:0}
+.task-panel>header h3{display:flex;align-items:center;gap:9px;line-height:1.2;margin:0!important}
+.task-heading-icon{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border:1px solid var(--ln);border-radius:7px;font-family:Arial,sans-serif;font-size:14px;font-weight:600;flex:0 0 23px}
+.task-panel .task-count{margin-left:1px}
+.task-list{flex:1}
+.task-empty{flex:1;min-height:210px!important}
+.task-empty-quiet{display:flex!important;align-items:center;justify-content:center;text-align:center;padding:24px}
+.task-empty-quiet span{color:var(--mut);font-size:13px;line-height:1.5}
+@media(max-width:900px){.task-panel>header{height:64px;min-height:64px;flex-basis:64px}.task-empty,.task-empty-quiet{min-height:145px!important}}

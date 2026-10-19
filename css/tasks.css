@@ -67,3 +67,20 @@
 .task-empty-quiet{display:flex!important;align-items:center;justify-content:center;text-align:center;padding:24px}
 .task-empty-quiet span{color:var(--mut);font-size:13px;line-height:1.5}
 @media(max-width:900px){.task-panel>header{height:64px;min-height:64px;flex-basis:64px}.task-empty,.task-empty-quiet{min-height:145px!important}}
+
+/* Task feedback: visible checkbox, text cut/reopen motion, matching empty-state weight */
+.task-panel>header{height:72px;min-height:72px;flex-basis:72px}
+.task-panel>header h3{font-weight:700}
+.task-empty-quiet span{font-weight:600;color:var(--ink)}
+.task-row .chk{border:2px solid #777;background:var(--pan);color:#fff}
+.task-row .chk.on{background:#171717;border-color:#171717;color:#fff}
+.task-row .chk.on span{font-size:16px;text-shadow:0 0 1px #fff}
+.task-row .chk:not(.on):hover{border-color:var(--ink);background:var(--bin)}
+.task-copy strong{font-weight:600}
+.task-row.done .task-copy strong:after{animation:strike-in .36s cubic-bezier(.2,.7,.25,1) both}
+.task-row.task-animate-reopen .task-copy strong:after{transform:scaleX(0)!important;transform-origin:right center;animation:strike-out .32s cubic-bezier(.2,.7,.25,1) both}
+.task-row.task-animate-complete .chk.on{animation:check-pop .32s cubic-bezier(.2,.9,.3,1.3) both}
+.task-row.task-animate-complete .chk.on span{animation:check-draw .22s ease both}
+@keyframes strike-in{from{transform:scaleX(0);transform-origin:left center}to{transform:scaleX(1);transform-origin:left center}}
+@keyframes strike-out{from{transform:scaleX(1);transform-origin:right center}to{transform:scaleX(0);transform-origin:right center}}
+@media(prefers-reduced-motion:reduce){.task-row.done .task-copy strong:after,.task-row.task-animate-reopen .task-copy strong:after{animation:none!important}}

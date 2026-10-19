@@ -8,5 +8,26 @@ V.tasks=()=>{
 };
 function tm(){ask(`<div class="form-heading"><span class="form-mark">✓</span><div><span class="form-eyebrow">STAY ON TRACK</span><h3>Add task</h3><p>Make the next step clear and manageable.</p></div></div><form class="f standard-form" onsubmit="tsave(event)"><label>Task<input name="title" required maxlength="100" placeholder="What needs to get done?"></label><label>Priority<select name="priority"><option value="high">High</option><option value="medium" selected>Medium</option><option value="low">Low</option></select></label><div class="acts"><button type="button" class="btn ghost" onclick="shut()">Cancel</button><button class="btn">Add task</button></div></form>`)}
 function tsave(e){e.preventDefault();const f=new FormData(e.target);S.tasks.push({id:uid(),title:f.get('title').trim(),completed:false,priority:f.get('priority')});done('Task added')}
-function tk(id){const t=S.tasks.find(x=>x.id===id);if(!t)return;const previous=t.completed;t.completed=!t.completed;taskAnimation={id,direction:t.completed?'complete':'reopen'};if(!save()){t.completed=previous;taskAnimation=null;return}draw();setTimeout(()=>{taskAnimation=null;const row=document.querySelector('.task-row.task-animate-complete,.task-row.task-animate-reopen');if(row)row.classList.remove('task-animate-complete','task-animate-reopen')},520)}
+let taskTransitionBusy=false;
+function tk(id){
+ if(taskTransitionBusy)return;
+ const task=S.tasks.find(x=>x.id===id);if(!task)return;
+ const previous=!!task.completed,next=!previous;
+ const row=[...document.querySelectorAll('.task-row')].find(el=>el.querySelector('.chk')?.getAttribute('onclick')===`tk(${id})`);
+ if(!row){task.completed=next;if(save())draw();else task.completed=previous;return}
+ taskTransitionBusy=true;
+ row.classList.remove('task-animate-complete','task-animate-reopen');
+ void row.offsetWidth;
+ row.classList.add(next?'task-animate-complete':'task-animate-reopen');
+ const check=row.querySelector('.chk');
+ if(check){check.classList.toggle('on',next);check.setAttribute('aria-pressed',String(next));check.setAttribute('aria-label',next?'Mark not done':'Mark done');const mark=check.querySelector('span');if(mark)mark.textContent=next?'✓':''}
+ const duration=next?430:390;
+ setTimeout(()=>{
+   task.completed=next;
+   taskAnimation=null;
+   if(!save())task.completed=previous;
+   taskTransitionBusy=false;
+   draw();
+ },duration);
+}
 function tdel(id){const old=S.tasks;S.tasks=old.filter(x=>x.id!==id);if(!save()){S.tasks=old;return}draw()}

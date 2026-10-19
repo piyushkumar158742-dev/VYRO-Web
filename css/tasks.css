@@ -1,21 +1,43 @@
-.done strong{text-decoration:line-through;color:var(--mut)}
-
-/* Task completion: tactile, clear, and reversible */
-.task-row{position:relative;gap:12px;min-width:0;animation:task-arrive .28s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--task-delay,0ms);transition:background .2s,border-color .2s,opacity .2s}
+/* To-do workspace — spacious, calm, and useful even when empty */
+.tasks-page{width:100%;max-width:none;margin:0 auto}
+.tasks-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:2px 0 22px}
+.tasks-heading h2{font-size:clamp(23px,2.2vw,30px);line-height:1.2;margin:5px 0 6px;letter-spacing:-.04em}
+.tasks-heading p,.task-panel-subtitle{margin:0;color:var(--mut);font-size:13px;line-height:1.5}
+.tasks-eyebrow{font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--mut)}
+.tasks-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:stretch}
+.task-panel{min-width:0;overflow:hidden;min-height:300px}
+.task-panel>header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 18px}
+.task-panel>header h3{display:flex;align-items:center;gap:9px;margin:0 0 4px;font-size:15px}
+.task-count{display:inline-grid;place-items:center;min-width:23px;height:23px;padding:0 6px;border-radius:999px;background:var(--bin);border:1px solid var(--ln);color:var(--ink);font-size:11px;font-weight:700}
+.task-panel-subtitle{font-size:12px}
+.task-add-small{white-space:nowrap}
+.task-list{padding:4px 14px 14px}
+.task-row{position:relative;gap:12px;min-width:0;padding:13px 8px;border-bottom:1px solid var(--ln);animation:task-arrive .28s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--task-delay,0ms);transition:background .2s,border-color .2s,opacity .2s}
+.task-row:last-child{border-bottom:0}
 .task-row:hover{background:color-mix(in srgb,var(--blue) 4%,var(--pan))}
 .task-copy{min-width:0;flex:1}
-.task-copy strong{display:block;overflow-wrap:anywhere;transition:color .22s,opacity .22s}
+.task-copy strong{display:block;position:relative;width:fit-content;max-width:100%;overflow-wrap:anywhere;font-weight:600;line-height:1.45;transition:color .22s,opacity .22s}
+.task-copy strong:after{content:"";position:absolute;left:0;right:0;top:52%;height:1.5px;border-radius:2px;background:currentColor;transform:scaleX(0);transform-origin:left center;transition:transform .32s cubic-bezier(.2,.7,.2,1)}
+.task-row.done .task-copy strong:after{transform:scaleX(1);transform-origin:left center}
+.task-row.done .task-copy strong{color:var(--mut)}
 .task-row .chk{flex:0 0 22px;width:22px;height:22px;display:grid;place-items:center;border:1.5px solid var(--ln);border-radius:7px;background:transparent;color:white;padding:0;transition:background .2s,border-color .2s,transform .2s,box-shadow .2s}
 .task-row .chk span{font-size:14px;font-weight:800;line-height:1}
 .task-row .chk:hover{transform:scale(1.08);border-color:var(--blue)}
 .task-row .chk.on{background:var(--blue);border-color:var(--blue);box-shadow:0 2px 8px color-mix(in srgb,var(--blue) 28%,transparent);animation:check-pop .26s cubic-bezier(.2,.9,.3,1.3)}
 .task-row .chk.on span{animation:check-draw .22s ease both}
-.task-row.done .task-copy strong{color:var(--mut);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--mut) 65%,transparent);text-decoration-thickness:1.5px}
-.task-row.done{opacity:.8}
-.task-delete{opacity:.5;transition:opacity .18s,transform .18s}
+.task-row.done{opacity:.88}
+.task-delete{opacity:.45;transition:opacity .18s,transform .18s}
 .task-row:hover .task-delete,.task-delete:focus-visible{opacity:1}
 .task-delete:hover{transform:rotate(5deg)}
+.task-empty{min-height:235px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:25px 18px}
+.task-empty-mark{display:grid;place-items:center;width:42px;height:42px;border:1px solid var(--ln);border-radius:14px;background:var(--bin);color:var(--ink);font-size:20px;margin-bottom:14px}
+.task-empty h4{margin:0 0 7px;font-size:14px;font-weight:700}
+.task-empty p{max-width:260px;margin:0 0 17px;color:var(--mut);font-size:12px;line-height:1.65}
+.task-empty-quiet{opacity:.85}
+.task-empty-quiet p{margin-bottom:0}
 @keyframes check-pop{0%{transform:scale(.75)}65%{transform:scale(1.14)}100%{transform:scale(1)}}
 @keyframes check-draw{from{opacity:0;transform:scale(.5) rotate(-15deg)}to{opacity:1;transform:scale(1) rotate(0)}}
 @keyframes task-arrive{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-@media(prefers-reduced-motion:reduce){.task-row,.task-row .chk,.task-row .chk span,.task-copy strong,.task-delete{animation:none!important;transition:none!important}}
+@media(max-width:900px){.tasks-columns{grid-template-columns:minmax(0,1fr)}.task-panel{min-height:0}.task-empty{min-height:190px}}
+@media(max-width:520px){.tasks-heading{align-items:flex-start}.tasks-heading .task-add-primary{font-size:12px;padding:9px 11px}.task-panel>header{padding:14px}.task-list{padding:4px 9px 10px}.task-row{gap:9px}.task-row .tag{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.task-row,.task-row .chk,.task-row .chk span,.task-copy strong:after,.task-delete{animation:none!important;transition:none!important}}

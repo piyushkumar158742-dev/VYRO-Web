@@ -41,3 +41,15 @@
 @media(max-width:900px){.tasks-columns{grid-template-columns:minmax(0,1fr)}.task-panel{min-height:0}.task-empty{min-height:190px}}
 @media(max-width:520px){.tasks-heading{align-items:flex-start}.tasks-heading .task-add-primary{font-size:12px;padding:9px 11px}.task-panel>header{padding:14px}.task-list{padding:4px 9px 10px}.task-row{gap:9px}.task-row .tag{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.task-row,.task-row .chk,.task-row .chk span,.task-copy strong:after,.task-delete{animation:none!important;transition:none!important}}
+
+/* Simplified empty states: remove duplicate headings and decorative clutter */
+.tasks-heading,.tasks-eyebrow,.task-panel-subtitle{display:none!important}
+.tasks-columns{margin-top:4px}
+.task-panel>header{padding:17px 18px}
+.task-panel>header h3{margin:0!important}
+.task-empty{min-height:235px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+.task-empty h4{margin:0;font-size:14px;font-weight:600;letter-spacing:-.01em}
+.task-empty-quiet{min-height:235px}
+.task-empty-quiet:empty{display:block}
+.task-empty-mark,.task-empty p,.task-empty .btn{display:none!important}
+@media(max-width:900px){.task-empty,.task-empty-quiet{min-height:150px}}

@@ -95,3 +95,17 @@
 .task-count{display:inline-flex!important;align-items:center;justify-content:center;text-align:center;line-height:1!important;padding:0!important;min-width:23px;width:23px;height:23px;font-variant-numeric:tabular-nums}
 .task-heading-icon{display:inline-flex;align-items:center;justify-content:center;line-height:1}
 @media(prefers-reduced-motion:reduce){.task-row.task-animate-complete .task-copy strong:after,.task-row.task-animate-reopen .task-copy strong:after{animation:none!important}}
+
+/* Task completion: animate in the current column before moving the item */
+.task-row.done .task-copy strong:after{transform:scaleX(1)!important;transform-origin:left center!important;animation:none!important}
+.task-row.task-animate-complete .task-copy strong:after{transform:scaleX(0);transform-origin:left center;animation:vyro-premium-strike-in .42s cubic-bezier(.22,.8,.25,1) both!important}
+.task-row.task-animate-reopen .task-copy strong:after{transform:scaleX(1);transform-origin:right center;animation:vyro-premium-strike-out .36s cubic-bezier(.4,0,.2,1) both!important}
+@keyframes vyro-premium-strike-in{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+@keyframes vyro-premium-strike-out{0%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+/* Checkbox uses a clear outline in dark mode, never a blank white tile */
+:root[data-theme="dark"] .task-row .chk{background:#202020!important;border:1.5px solid #858585!important;color:#fff!important;box-shadow:none!important}
+:root[data-theme="dark"] .task-row .chk.on{background:#F5F5F5!important;border-color:#F5F5F5!important;color:#171717!important}
+:root[data-theme="dark"] .task-row .chk.on span{color:#171717!important;font-weight:800;text-shadow:none!important}
+.task-row .chk{display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:0}
+.task-row .chk span{display:block;line-height:1;transform:translateY(-.5px)}
+@media(prefers-reduced-motion:reduce){.task-row.task-animate-complete .task-copy strong:after,.task-row.task-animate-reopen .task-copy strong:after{animation:none!important}}

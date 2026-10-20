@@ -109,3 +109,20 @@
 .task-row .chk{display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:0}
 .task-row .chk span{display:block;line-height:1;transform:translateY(-.5px)}
 @media(prefers-reduced-motion:reduce){.task-row.task-animate-complete .task-copy strong:after,.task-row.task-animate-reopen .task-copy strong:after{animation:none!important}}
+
+/* Final task interaction pass: let keyframes control the strike line (no competing !important transform). */
+.task-copy strong:after{z-index:2;pointer-events:none;height:2px;transform:scaleX(0);transform-origin:left center;transition:none}
+.task-row.done:not(.task-animate-reopen) .task-copy strong:after{transform:scaleX(1);transform-origin:left center}
+.task-row.task-animate-complete .task-copy strong:after{transform:scaleX(0);transform-origin:left center;animation:vyro-strike-complete .44s cubic-bezier(.22,.78,.2,1) both!important}
+.task-row.task-animate-reopen .task-copy strong:after{transform:scaleX(1);transform-origin:right center;animation:vyro-strike-reopen .38s cubic-bezier(.4,0,.2,1) both!important}
+@keyframes vyro-strike-complete{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes vyro-strike-reopen{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+.task-row .chk{width:22px;height:22px;min-width:22px;flex:0 0 22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;border:1.5px solid #777;background:transparent;color:transparent;box-shadow:none;transition:background .18s,border-color .18s,transform .18s}
+.task-row .chk span{font-size:14px;font-weight:800;line-height:1;display:block;transform:translateY(-.4px);color:inherit}
+.task-row .chk:hover{transform:scale(1.04)}
+:root[data-theme="dark"] .task-row .chk{background:#222!important;border-color:#A3A3A3!important;color:transparent!important}
+:root[data-theme="dark"] .task-row .chk.on{background:#F5F5F5!important;border-color:#F5F5F5!important;color:#171717!important}
+:root[data-theme="dark"] .task-row .chk.on span{color:#171717!important}
+:root:not([data-theme="dark"]) .task-row .chk.on{background:#202020!important;border-color:#202020!important;color:#fff!important}
+:root:not([data-theme="dark"]) .task-row .chk.on span{color:#fff!important}
+@media(prefers-reduced-motion:reduce){.task-row.task-animate-complete .task-copy strong:after,.task-row.task-animate-reopen .task-copy strong:after{animation:none!important}}

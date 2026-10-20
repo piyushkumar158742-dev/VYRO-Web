@@ -37,3 +37,27 @@
   .rail button.nav-icon-settings,
   .rail button .nav-icon-settings { transition: none !important; }
 }
+
+/* Final task-row correction: every item has an outline even before hover. */
+.task-list > .task-row {
+  box-sizing: border-box !important;
+  border: 1px solid var(--ln) !important;
+  border-radius: 11px !important;
+  margin: 4px 0 !important;
+}
+.task-list > .task-row:last-child {
+  border-bottom-color: var(--ln) !important;
+}
+.task-list > .task-row:hover {
+  border-color: color-mix(in srgb, var(--ink) 22%, var(--ln)) !important;
+  border-radius: 11px !important;
+}
+/* Use the original gear character in text presentation, not emoji artwork. */
+.rail button b.nav-icon-settings {
+  font-family: Arial, sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  line-height: 1 !important;
+}

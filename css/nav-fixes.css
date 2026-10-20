@@ -61,3 +61,23 @@
   -webkit-text-fill-color: #FFFFFF !important;
   line-height: 1 !important;
 }
+
+/* Settings icon: outlined gear drawing, never a platform emoji glyph. */
+.rail button b.nav-icon-settings {
+  display: grid !important;
+  width: 19px !important;
+  height: 19px !important;
+  place-items: center !important;
+  color: #FFFFFF !important;
+  font-size: 0 !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+.rail button b.nav-icon-settings svg {
+  width: 19px !important;
+  height: 19px !important;
+  display: block !important;
+  overflow: visible !important;
+  fill: none !important;
+  stroke: #FFFFFF !important;
+  stroke-width: 1.65 !important;
+}

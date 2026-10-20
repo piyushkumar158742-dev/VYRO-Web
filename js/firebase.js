@@ -23,12 +23,64 @@ function configure(){
    user=u||null;
    window.VyroBackend.user=user;
    if(user){
-    try{const ref=db.collection('users').doc(user.uid).collection('workspace').doc('main');const snap=await ref.get();if(snap.exists&&typeof S!=='undefined'&&typeof save==='function'){const cloud=snap.data().state;if(cloud&&typeof cloud==='object'){const requestedView=new URLSearchParams(window.location.search).get('admin')==='1'?'admin':null;S=removeDemoData({...seed(),...cloud,settings:{...seed().settings,...cloud.settings}});if(requestedView)S.view=requestedView;if(typeof load==='function'&&Array.isArray(S.settings.pipelineStages))ST=S.settings.pipelineStages.slice();save();if(typeof draw==='function')draw()}}else if(typeof S!=='undefined')queueSync(S);say('Signed in. Workspace sync is ready.')}catch(e){console.error(e);say('Signed in, but workspace sync failed. Check Firestore setup and rules.')}
+    try{
+     const ref=db.collection('users').doc(user.uid).collection('workspace').doc('main');
+     const snap=await ref.get();
+     if(snap.exists&&typeof S!=='undefined'&&typeof save==='function'){
+      const cloud=snap.data().state;
+      if(cloud&&typeof cloud==='object'){
+       const localExists=!!localStorage.getItem('vyro_creator_os_state');
+       const localState=typeof S==='object'?JSON.parse(JSON.stringify(S)):null;
+       if(localExists&&localState&&workspaceSignature(localState)!==workspaceSignature(cloud)){
+        promptWorkspaceConflict(localState,cloud,ref);
+        return;
+       }
+       applyCloudWorkspace(cloud);
+      }
+     }else if(typeof S!=='undefined')queueSync(S);
+     say('Signed in. Workspace sync is ready.');
+    }catch(e){console.error(e);say('Signed in, but workspace sync failed. Check Firestore setup and rules.')}
    }
    document.dispatchEvent(new CustomEvent('vyro-auth-change',{detail:{user}}));
   });
   return {ok:true};
  }catch(e){console.error(e);return {ok:false,reason:e.message||'Firebase setup failed.'}}
+}
+function stableWorkspaceValue(value){
+ if(Array.isArray(value))return value.map(stableWorkspaceValue);
+ if(value&&typeof value==='object')return Object.keys(value).sort().reduce((out,key)=>{out[key]=stableWorkspaceValue(value[key]);return out;},{});
+ return value;
+}
+function workspaceSignature(state){
+ const comparable={...state,view:'home'};
+ return JSON.stringify(stableWorkspaceValue(comparable));
+}
+function applyCloudWorkspace(cloud){
+ const requestedView=new URLSearchParams(window.location.search).get('admin')==='1'?'admin':null;
+ S=removeDemoData({...seed(),...cloud,settings:{...seed().settings,...cloud.settings}});
+ if(requestedView)S.view=requestedView;
+ if(typeof load==='function'&&Array.isArray(S.settings.pipelineStages))ST=S.settings.pipelineStages.slice();
+ if(typeof save==='function')save();
+ if(typeof draw==='function')draw();
+}
+function promptWorkspaceConflict(localState,cloudState,ref){
+ if(typeof ask!=='function'){
+  say('Your local and cloud workspaces differ. Your local copy was preserved; reload the app to choose which version to keep.');
+  return;
+ }
+ ask(`<div class="form-heading"><span class="form-mark">↔</span><div><span class="form-eyebrow">WORKSPACE SYNC</span><h3>Choose your workspace</h3><p>This device and your cloud workspace contain different data. Choose which copy to keep before syncing so nothing is silently overwritten.</p></div></div><div class="f standard-form"><button type="button" class="btn ghost" id="vyro-keep-local">Keep this device's workspace</button><button type="button" class="btn" id="vyro-use-cloud">Use cloud workspace</button></div>`);
+ const localButton=document.querySelector('#vyro-keep-local');
+ const cloudButton=document.querySelector('#vyro-use-cloud');
+ if(localButton)localButton.addEventListener('click',()=>{
+  shut();
+  queueSync(localState);
+  say('This device’s workspace was kept. Cloud sync will update to this copy.');
+ });
+ if(cloudButton)cloudButton.addEventListener('click',()=>{
+  shut();
+  applyCloudWorkspace(cloudState);
+  say('Cloud workspace loaded on this device.');
+ });
 }
 function queueSync(state){if(!user||!db||!state)return;clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{await db.collection('users').doc(user.uid).collection('workspace').doc('main').set({state:JSON.parse(JSON.stringify(state)),updatedAt:firebase.firestore.FieldValue.serverTimestamp()})}catch(e){console.error('Vyro cloud sync:',e);say('Cloud save failed. Check Firestore rules; this device still has a local copy.')}},700)}
 const LEGAL_CONSENT_KEY='vyro_legal_consent_v2';

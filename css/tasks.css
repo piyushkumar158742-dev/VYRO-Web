@@ -1,177 +1,56 @@
-/* To-do workspace — spacious, calm, and useful even when empty */
+/* Vyro To-do workspace — one authoritative set of layout and animation rules. */
 .tasks-page{width:100%;max-width:none;margin:0 auto}
-.tasks-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:2px 0 22px}
-.tasks-heading h2{font-size:clamp(23px,2.2vw,30px);line-height:1.2;margin:5px 0 6px;letter-spacing:-.04em}
-.tasks-heading p,.task-panel-subtitle{margin:0;color:var(--mut);font-size:13px;line-height:1.5}
-.tasks-eyebrow{font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--mut)}
-.tasks-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:stretch}
-.task-panel{min-width:0;overflow:hidden;min-height:300px}
-.task-panel>header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 18px}
-.task-panel>header h3{display:flex;align-items:center;gap:9px;margin:0 0 4px;font-size:15px}
-.task-count{display:inline-grid;place-items:center;min-width:23px;height:23px;padding:0 6px;border-radius:999px;background:var(--bin);border:1px solid var(--ln);color:var(--ink);font-size:11px;font-weight:700}
-.task-panel-subtitle{font-size:12px}
-.task-add-small{white-space:nowrap}
-.task-list{padding:4px 14px 14px}
-.task-row{position:relative;gap:12px;min-width:0;padding:13px 8px;border-bottom:1px solid var(--ln);animation:task-arrive .28s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--task-delay,0ms);transition:background .2s,border-color .2s,opacity .2s}
-.task-row:last-child{border-bottom:0}
-.task-row:hover{background:color-mix(in srgb,var(--blue) 4%,var(--pan))}
-.task-copy{min-width:0;flex:1}
-.task-copy strong{display:block;position:relative;width:fit-content;max-width:100%;overflow-wrap:anywhere;font-weight:600;line-height:1.45;transition:color .22s,opacity .22s}
-.task-copy strong:after{content:"";position:absolute;left:0;right:0;top:52%;height:1.5px;border-radius:2px;background:currentColor;transform:scaleX(0);transform-origin:left center;transition:transform .32s cubic-bezier(.2,.7,.2,1)}
-.task-row.done .task-copy strong:after{transform:scaleX(1);transform-origin:left center}
+.tasks-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch;margin-top:4px}
+.task-panel{display:flex;flex-direction:column;min-width:0;min-height:300px;overflow:hidden}
+.task-panel>header{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:12px;flex:0 0 72px;min-height:72px;padding:0 18px;border-bottom:1px solid var(--ln)}
+.task-panel>header>div{display:flex;align-items:center;min-height:0}
+.task-panel>header h3{display:flex;align-items:center;gap:9px;margin:0;font-size:15px;font-weight:700;line-height:1.2}
+.task-heading-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 25px;width:25px;height:25px;border:1px solid var(--ln);border-radius:8px;background:var(--bin);color:var(--ink);font-family:Arial,sans-serif;font-size:14px;font-weight:700;line-height:1}
+.task-count{display:inline-flex;align-items:center;justify-content:center;width:23px;min-width:23px;height:23px;margin-left:1px;padding:0;border:1px solid var(--ln);border-radius:999px;background:var(--bin);color:var(--ink);font-size:11px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.task-add-small{white-space:nowrap;border-radius:10px!important}
+.task-list{flex:1;min-width:0;padding:7px 12px 12px}
+.task-row{position:relative;display:flex;align-items:center;gap:12px;min-width:0;margin:2px 0;padding:12px 9px;border:1px solid transparent;border-bottom-color:var(--ln);border-radius:11px;animation:vyro-task-arrive .24s ease both;animation-delay:var(--task-delay,0ms);transition:background-color .18s ease,border-color .18s ease,opacity .18s ease}
+.task-row:last-child{border-bottom-color:transparent}
+.task-row:hover{background:color-mix(in srgb,var(--ink) 4%,var(--pan));border-color:var(--ln);border-radius:11px}
+.task-copy{flex:1;min-width:0}
+.task-copy strong{position:relative;display:block;width:fit-content;max-width:100%;overflow-wrap:anywhere;color:var(--ink);font-weight:600;line-height:1.45;transition:color .18s ease,opacity .18s ease}
+.task-copy strong:after{position:absolute;z-index:2;top:52%;right:0;left:0;height:2px;border-radius:2px;background:currentColor;content:"";pointer-events:none;transform:scaleX(0);transform-origin:left center}
+.task-row.done:not(.task-animate-reopen) .task-copy strong:after{transform:scaleX(1);transform-origin:left center}
 .task-row.done .task-copy strong{color:var(--mut)}
-.task-row .chk{flex:0 0 22px;width:22px;height:22px;display:grid;place-items:center;border:1.5px solid var(--ln);border-radius:7px;background:transparent;color:white;padding:0;transition:background .2s,border-color .2s,transform .2s,box-shadow .2s}
-.task-row .chk span{font-size:14px;font-weight:800;line-height:1}
-.task-row .chk:hover{transform:scale(1.08);border-color:var(--blue)}
-.task-row .chk.on{background:var(--blue);border-color:var(--blue);box-shadow:0 2px 8px color-mix(in srgb,var(--blue) 28%,transparent);animation:check-pop .26s cubic-bezier(.2,.9,.3,1.3)}
-.task-row .chk.on span{animation:check-draw .22s ease both}
-.task-row.done{opacity:.88}
-.task-delete{opacity:.45;transition:opacity .18s,transform .18s}
+.task-row.task-animate-complete .task-copy strong:after{transform:scaleX(0);transform-origin:left center;animation:vyro-task-line-in .46s cubic-bezier(.22,.72,.2,1) both}
+.task-row.task-animate-reopen .task-copy strong:after{transform:scaleX(1);transform-origin:right center;animation:vyro-task-line-out .4s cubic-bezier(.4,0,.2,1) both}
+.task-row .chk{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;width:22px;min-width:22px;height:22px;padding:0;border:1.5px solid var(--mut);border-radius:7px;background:var(--pan);color:transparent;box-shadow:none;line-height:1;transition:background-color .18s ease,border-color .18s ease,transform .18s ease}
+.task-row .chk span{display:block;color:inherit;font-size:14px;font-weight:800;line-height:1;transform:translateY(-.4px)}
+.task-row .chk:hover{transform:scale(1.05);border-color:var(--ink)}
+.task-row .chk.on{border-color:var(--ink);background:var(--ink);color:var(--pan);animation:vyro-task-check-pop .24s cubic-bezier(.2,.9,.3,1.2)}
+.task-row .chk.on span{color:var(--pan);animation:vyro-task-check-draw .2s ease both}
+:root[data-theme="dark"] .task-row .chk{border-color:#A3A3A3;background:#222;color:transparent}
+:root[data-theme="dark"] .task-row .chk.on{border-color:#F5F5F5;background:#F5F5F5;color:#171717}
+:root[data-theme="dark"] .task-row .chk.on span{color:#171717}
+.task-row.done{opacity:.9}
+.task-row .tag{flex:0 0 auto}
+.task-row .tag.high{background:#FCE7EC;color:#A61B3B}
+.task-row .tag.medium{background:#F5EEDC;color:#775B18}
+.task-row .tag.low{background:#E2F2EA;color:#246B4B}
+:root[data-theme="dark"] .task-row .tag.high{background:#44252D;color:#FFB8C5}
+:root[data-theme="dark"] .task-row .tag.medium{background:#403722;color:#F5D98A}
+:root[data-theme="dark"] .task-row .tag.low{background:#203B30;color:#A5E4C3}
+.task-delete{flex:0 0 auto;opacity:.55;border-radius:8px!important;transition:opacity .18s ease,transform .18s ease,background-color .18s ease}
 .task-row:hover .task-delete,.task-delete:focus-visible{opacity:1}
 .task-delete:hover{transform:rotate(5deg)}
-.task-empty{min-height:235px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:25px 18px}
-.task-empty-mark{display:grid;place-items:center;width:42px;height:42px;border:1px solid var(--ln);border-radius:14px;background:var(--bin);color:var(--ink);font-size:20px;margin-bottom:14px}
-.task-empty h4{margin:0 0 7px;font-size:14px;font-weight:700}
-.task-empty p{max-width:260px;margin:0 0 17px;color:var(--mut);font-size:12px;line-height:1.65}
-.task-empty-quiet{opacity:.85}
-.task-empty-quiet p{margin-bottom:0}
-@keyframes check-pop{0%{transform:scale(.75)}65%{transform:scale(1.14)}100%{transform:scale(1)}}
-@keyframes check-draw{from{opacity:0;transform:scale(.5) rotate(-15deg)}to{opacity:1;transform:scale(1) rotate(0)}}
-@keyframes task-arrive{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:900px){.tasks-columns{grid-template-columns:minmax(0,1fr)}.task-panel{min-height:0}.task-empty{min-height:190px}}
-@media(max-width:520px){.tasks-heading{align-items:flex-start}.tasks-heading .task-add-primary{font-size:12px;padding:9px 11px}.task-panel>header{padding:14px}.task-list{padding:4px 9px 10px}.task-row{gap:9px}.task-row .tag{font-size:10px}}
-@media(prefers-reduced-motion:reduce){.task-row,.task-row .chk,.task-row .chk span,.task-copy strong:after,.task-delete{animation:none!important;transition:none!important}}
-
-/* Simplified empty states: remove duplicate headings and decorative clutter */
-.tasks-heading,.tasks-eyebrow,.task-panel-subtitle{display:none!important}
-.tasks-columns{margin-top:4px}
-.task-panel>header{padding:17px 18px}
-.task-panel>header h3{margin:0!important}
-.task-empty{min-height:235px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
-.task-empty h4{margin:0;font-size:14px;font-weight:600;letter-spacing:-.01em}
-.task-empty-quiet{min-height:235px}
-.task-empty-quiet:empty{display:block}
-.task-empty-mark,.task-empty p,.task-empty .btn{display:none!important}
-@media(max-width:900px){.task-empty,.task-empty-quiet{min-height:150px}}
-
-/* Match task panel headers and keep empty states minimal */
-.tasks-columns{align-items:stretch}
-.task-panel{display:flex;flex-direction:column}
-.task-panel>header{box-sizing:border-box;min-height:72px;height:72px;flex:0 0 72px;display:flex;align-items:center;padding:0 18px!important}
-.task-panel>header>div{display:flex;align-items:center;min-height:0}
-.task-panel>header h3{display:flex;align-items:center;gap:9px;line-height:1.2;margin:0!important}
-.task-heading-icon{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border:1px solid var(--ln);border-radius:7px;font-family:Arial,sans-serif;font-size:14px;font-weight:600;flex:0 0 23px}
-.task-panel .task-count{margin-left:1px}
-.task-list{flex:1}
-.task-empty{flex:1;min-height:210px!important}
-.task-empty-quiet{display:flex!important;align-items:center;justify-content:center;text-align:center;padding:24px}
-.task-empty-quiet span{color:var(--mut);font-size:13px;line-height:1.5}
-@media(max-width:900px){.task-panel>header{height:64px;min-height:64px;flex-basis:64px}.task-empty,.task-empty-quiet{min-height:145px!important}}
-
-/* Task feedback: visible checkbox, text cut/reopen motion, matching empty-state weight */
-.task-panel>header{height:72px;min-height:72px;flex-basis:72px}
-.task-panel>header h3{font-weight:700}
-.task-empty-quiet span{font-weight:600;color:var(--ink)}
-.task-row .chk{border:2px solid #777;background:var(--pan);color:#fff}
-.task-row .chk.on{background:#171717;border-color:#171717;color:#fff}
-.task-row .chk.on span{font-size:16px;text-shadow:0 0 1px #fff}
-.task-row .chk:not(.on):hover{border-color:var(--ink);background:var(--bin)}
-.task-copy strong{font-weight:600}
-.task-row.done .task-copy strong:after{animation:strike-in .36s cubic-bezier(.2,.7,.25,1) both}
-.task-row.task-animate-reopen .task-copy strong:after{transform:scaleX(0)!important;transform-origin:right center;animation:strike-out .32s cubic-bezier(.2,.7,.25,1) both}
-.task-row.task-animate-complete .chk.on{animation:check-pop .32s cubic-bezier(.2,.9,.3,1.3) both}
-.task-row.task-animate-complete .chk.on span{animation:check-draw .22s ease both}
-@keyframes strike-in{from{transform:scaleX(0);transform-origin:left center}to{transform:scaleX(1);transform-origin:left center}}
-@keyframes strike-out{from{transform:scaleX(1);transform-origin:right center}to{transform:scaleX(0);transform-origin:right center}}
-@media(prefers-reduced-motion:reduce){.task-row.done .task-copy strong:after,.task-row.task-animate-reopen .task-copy strong:after{animation:none!important}}
-
-/* Reliable strike-through feedback and truly centered counters */
-.task-copy strong:after{z-index:2;pointer-events:none;height:2px;transition:none!important}
-.task-row.done .task-copy strong:after{transform:scaleX(1)}
-.task-row.task-animate-complete .task-copy strong:after{animation:vyro-task-strike-in .42s cubic-bezier(.2,.75,.2,1) both}
-.task-row.task-animate-reopen .task-copy strong:after{transform:scaleX(1);animation:vyro-task-strike-out .38s cubic-bezier(.2,.75,.2,1) both}
-@keyframes vyro-task-strike-in{from{transform:scaleX(0);transform-origin:left center}to{transform:scaleX(1);transform-origin:left center}}
-@keyframes vyro-task-strike-out{from{transform:scaleX(1);transform-origin:right center}to{transform:scaleX(0);transform-origin:right center}}
-.task-count{display:inline-flex!important;align-items:center;justify-content:center;text-align:center;line-height:1!important;padding:0!important;min-width:23px;width:23px;height:23px;font-variant-numeric:tabular-nums}
-.task-heading-icon{display:inline-flex;align-items:center;justify-content:center;line-height:1}
-@media(prefers-reduced-motion:reduce){.task-row.task-animate-complete .task-copy strong:after,.task-row.task-animate-reopen .task-copy strong:after{animation:none!important}}
-
-/* Task completion: animate in the current column before moving the item */
-.task-row.done .task-copy strong:after{transform:scaleX(1)!important;transform-origin:left center!important;animation:none!important}
-.task-row.task-animate-complete .task-copy strong:after{transform:scaleX(0);transform-origin:left center;animation:vyro-premium-strike-in .42s cubic-bezier(.22,.8,.25,1) both!important}
-.task-row.task-animate-reopen .task-copy strong:after{transform:scaleX(1);transform-origin:right center;animation:vyro-premium-strike-out .36s cubic-bezier(.4,0,.2,1) both!important}
-@keyframes vyro-premium-strike-in{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
-@keyframes vyro-premium-strike-out{0%{transform:scaleX(1)}100%{transform:scaleX(0)}}
-/* Checkbox uses a clear outline in dark mode, never a blank white tile */
-:root[data-theme="dark"] .task-row .chk{background:#202020!important;border:1.5px solid #858585!important;color:#fff!important;box-shadow:none!important}
-:root[data-theme="dark"] .task-row .chk.on{background:#F5F5F5!important;border-color:#F5F5F5!important;color:#171717!important}
-:root[data-theme="dark"] .task-row .chk.on span{color:#171717!important;font-weight:800;text-shadow:none!important}
-.task-row .chk{display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:0}
-.task-row .chk span{display:block;line-height:1;transform:translateY(-.5px)}
-@media(prefers-reduced-motion:reduce){.task-row.task-animate-complete .task-copy strong:after,.task-row.task-animate-reopen .task-copy strong:after{animation:none!important}}
-
-/* Final task interaction pass: let keyframes control the strike line (no competing !important transform). */
-.task-copy strong:after{z-index:2;pointer-events:none;height:2px;transform:scaleX(0);transform-origin:left center;transition:none}
-.task-row.done:not(.task-animate-reopen) .task-copy strong:after{transform:scaleX(1);transform-origin:left center}
-.task-row.task-animate-complete .task-copy strong:after{transform:scaleX(0);transform-origin:left center;animation:vyro-strike-complete .44s cubic-bezier(.22,.78,.2,1) both!important}
-.task-row.task-animate-reopen .task-copy strong:after{transform:scaleX(1);transform-origin:right center;animation:vyro-strike-reopen .38s cubic-bezier(.4,0,.2,1) both!important}
-@keyframes vyro-strike-complete{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes vyro-strike-reopen{from{transform:scaleX(1)}to{transform:scaleX(0)}}
-.task-row .chk{width:22px;height:22px;min-width:22px;flex:0 0 22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;border:1.5px solid #777;background:transparent;color:transparent;box-shadow:none;transition:background .18s,border-color .18s,transform .18s}
-.task-row .chk span{font-size:14px;font-weight:800;line-height:1;display:block;transform:translateY(-.4px);color:inherit}
-.task-row .chk:hover{transform:scale(1.04)}
-:root[data-theme="dark"] .task-row .chk{background:#222!important;border-color:#A3A3A3!important;color:transparent!important}
-:root[data-theme="dark"] .task-row .chk.on{background:#F5F5F5!important;border-color:#F5F5F5!important;color:#171717!important}
-:root[data-theme="dark"] .task-row .chk.on span{color:#171717!important}
-:root:not([data-theme="dark"]) .task-row .chk.on{background:#202020!important;border-color:#202020!important;color:#fff!important}
-:root:not([data-theme="dark"]) .task-row .chk.on span{color:#fff!important}
-@media(prefers-reduced-motion:reduce){.task-row.task-animate-complete .task-copy strong:after,.task-row.task-animate-reopen .task-copy strong:after{animation:none!important}}
-
-/* Premium task interaction: one strike animation per action, including reopening */
-.task-copy strong:after{
-  transition:none!important;
-  transform:scaleX(0);
-  transform-origin:left center;
-  will-change:transform;
-}
-.task-row.done:not(.task-animate-reopen) .task-copy strong:after{
-  transform:scaleX(1);
-  transform-origin:left center;
-}
-.task-row.task-animate-complete .task-copy strong:after{
-  transform:scaleX(0);
-  transform-origin:left center;
-  animation:vyro-task-line-in .46s cubic-bezier(.22,.72,.2,1) both!important;
-}
-.task-row.task-animate-reopen .task-copy strong:after{
-  transform:scaleX(1);
-  transform-origin:right center;
-  animation:vyro-task-line-out .4s cubic-bezier(.4,0,.2,1) both!important;
-}
-@keyframes vyro-task-line-in{
-  0%{transform:scaleX(0);transform-origin:left center}
-  100%{transform:scaleX(1);transform-origin:left center}
-}
-@keyframes vyro-task-line-out{
-  0%{transform:scaleX(1);transform-origin:right center}
-  100%{transform:scaleX(0);transform-origin:right center}
-}
-/* Keep the priority control aligned with the monochrome interface */
-.standard-form select[name="priority"]{
-  appearance:none;-webkit-appearance:none;
-  width:100%;min-height:44px;
-  padding:0 42px 0 13px;
-  border:1px solid var(--ln);
-  border-radius:12px;
-  background-color:var(--pan);
-  color:var(--ink);
-  font:inherit;font-size:14px;font-weight:600;
-  cursor:pointer;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 14px center;
-  transition:border-color .18s,box-shadow .18s,background-color .18s;
-}
+.task-empty{display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;min-height:210px;padding:24px;text-align:center}
+.task-empty h4{margin:0;color:var(--ink);font-size:14px;font-weight:600;letter-spacing:-.01em}
+.task-empty-quiet{min-height:210px}
+.task-empty-quiet span{color:var(--mut);font-size:13px;font-weight:600;line-height:1.5}
+@keyframes vyro-task-line-in{0%{transform:scaleX(0);transform-origin:left center}100%{transform:scaleX(1);transform-origin:left center}}
+@keyframes vyro-task-line-out{0%{transform:scaleX(1);transform-origin:right center}100%{transform:scaleX(0);transform-origin:right center}}
+@keyframes vyro-task-check-pop{0%{transform:scale(.82)}70%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes vyro-task-check-draw{from{opacity:0;transform:scale(.65) translateY(-.4px)}to{opacity:1;transform:scale(1) translateY(-.4px)}}
+@keyframes vyro-task-arrive{from{opacity:.55;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.standard-form select[name="priority"]{appearance:none;-webkit-appearance:none;width:100%;min-height:46px;padding:0 42px 0 13px;border:1px solid var(--ln);border-radius:12px;background-color:var(--pan);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;color:var(--ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease}
 .standard-form select[name="priority"]:hover{border-color:var(--mut)}
 .standard-form select[name="priority"]:focus-visible{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px color-mix(in srgb,var(--ink) 12%,transparent)}
 .standard-form select[name="priority"] option{background:var(--pan);color:var(--ink)}
-:root[data-theme="dark"] .standard-form select[name="priority"]{background-color:#1C1C1C;color:#F5F5F5;border-color:#555}
+@media(max-width:900px){.tasks-columns{grid-template-columns:minmax(0,1fr)}.task-panel{min-height:0}.task-panel>header{flex-basis:64px;min-height:64px}.task-empty,.task-empty-quiet{min-height:145px}}
+@media(max-width:520px){.task-panel>header{padding:0 14px}.task-list{padding:5px 8px 10px}.task-row{gap:8px;padding:11px 7px}.task-row .tag{font-size:10px;padding:3px 7px}.task-delete{padding:7px 8px}}
+@media(prefers-reduced-motion:reduce){.task-row,.task-row .chk,.task-row .chk span,.task-copy strong:after,.task-delete{animation:none!important;transition:none!important}}

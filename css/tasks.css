@@ -9,8 +9,7 @@
 .task-count{display:inline-flex;align-items:center;justify-content:center;width:23px;min-width:23px;height:23px;margin-left:1px;padding:0;border:1px solid var(--ln);border-radius:999px;background:var(--bin);color:var(--ink);font-size:11px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
 .task-add-small{white-space:nowrap;border-radius:10px!important}
 .task-list{flex:1;min-width:0;padding:7px 12px 12px}
-.task-row{position:relative;display:flex;align-items:center;gap:12px;min-width:0;margin:2px 0;padding:12px 9px;border:1px solid transparent;border-bottom-color:var(--ln);border-radius:11px;animation:vyro-task-arrive .24s ease both;animation-delay:var(--task-delay,0ms);transition:background-color .18s ease,border-color .18s ease,opacity .18s ease}
-.task-row:last-child{border-bottom-color:transparent}
+.task-row{position:relative;display:flex;align-items:center;gap:12px;min-width:0;margin:4px 0;padding:12px 9px;border:1px solid var(--ln);border-radius:11px;animation:vyro-task-arrive .24s ease both;animation-delay:var(--task-delay,0ms);transition:background-color .18s ease,border-color .18s ease,opacity .18s ease}
 .task-row:hover{background:color-mix(in srgb,var(--ink) 4%,var(--pan));border-color:var(--ln);border-radius:11px}
 .task-copy{flex:1;min-width:0}
 .task-copy strong{position:relative;display:block;width:fit-content;max-width:100%;overflow-wrap:anywhere;color:var(--ink);font-weight:600;line-height:1.45;transition:color .18s ease,opacity .18s ease}

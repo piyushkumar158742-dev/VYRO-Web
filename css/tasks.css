@@ -126,3 +126,52 @@
 :root:not([data-theme="dark"]) .task-row .chk.on{background:#202020!important;border-color:#202020!important;color:#fff!important}
 :root:not([data-theme="dark"]) .task-row .chk.on span{color:#fff!important}
 @media(prefers-reduced-motion:reduce){.task-row.task-animate-complete .task-copy strong:after,.task-row.task-animate-reopen .task-copy strong:after{animation:none!important}}
+
+/* Premium task interaction: one strike animation per action, including reopening */
+.task-copy strong:after{
+  transition:none!important;
+  transform:scaleX(0);
+  transform-origin:left center;
+  will-change:transform;
+}
+.task-row.done:not(.task-animate-reopen) .task-copy strong:after{
+  transform:scaleX(1);
+  transform-origin:left center;
+}
+.task-row.task-animate-complete .task-copy strong:after{
+  transform:scaleX(0);
+  transform-origin:left center;
+  animation:vyro-task-line-in .46s cubic-bezier(.22,.72,.2,1) both!important;
+}
+.task-row.task-animate-reopen .task-copy strong:after{
+  transform:scaleX(1);
+  transform-origin:right center;
+  animation:vyro-task-line-out .4s cubic-bezier(.4,0,.2,1) both!important;
+}
+@keyframes vyro-task-line-in{
+  0%{transform:scaleX(0);transform-origin:left center}
+  100%{transform:scaleX(1);transform-origin:left center}
+}
+@keyframes vyro-task-line-out{
+  0%{transform:scaleX(1);transform-origin:right center}
+  100%{transform:scaleX(0);transform-origin:right center}
+}
+/* Keep the priority control aligned with the monochrome interface */
+.standard-form select[name="priority"]{
+  appearance:none;-webkit-appearance:none;
+  width:100%;min-height:44px;
+  padding:0 42px 0 13px;
+  border:1px solid var(--ln);
+  border-radius:12px;
+  background-color:var(--pan);
+  color:var(--ink);
+  font:inherit;font-size:14px;font-weight:600;
+  cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+  transition:border-color .18s,box-shadow .18s,background-color .18s;
+}
+.standard-form select[name="priority"]:hover{border-color:var(--mut)}
+.standard-form select[name="priority"]:focus-visible{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px color-mix(in srgb,var(--ink) 12%,transparent)}
+.standard-form select[name="priority"] option{background:var(--pan);color:var(--ink)}
+:root[data-theme="dark"] .standard-form select[name="priority"]{background-color:#1C1C1C;color:#F5F5F5;border-color:#555}

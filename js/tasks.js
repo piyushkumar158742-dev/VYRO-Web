@@ -16,6 +16,7 @@ function tk(id){
  const row=[...document.querySelectorAll('.task-row')].find(el=>el.querySelector('.chk')?.getAttribute('onclick')===`tk(${id})`);
  if(!row){task.completed=next;if(save())draw();else task.completed=previous;return}
  taskTransitionBusy=true;
+ taskAnimation={id,direction:next?'complete':'reopen'};
  row.classList.remove('task-animate-complete','task-animate-reopen');
  void row.offsetWidth;
  row.classList.add(next?'task-animate-complete':'task-animate-reopen');
@@ -27,6 +28,7 @@ function tk(id){
    taskAnimation=null;
    if(!save())task.completed=previous;
    taskTransitionBusy=false;
+   taskAnimation=null;
    draw();
  },duration);
 }

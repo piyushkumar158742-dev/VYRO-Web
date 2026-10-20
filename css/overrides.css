@@ -49,3 +49,9 @@ input::placeholder,textarea::placeholder{color:#737373!important;opacity:1}
 .rail button:not(.logo):hover{background:transparent!important}
 .rail .logo{transition:transform .18s ease}
 .rail .logo:hover{transform:scale(1.12);background:transparent!important}
+
+/* Rounded navigation hover surface; keep the brand mark hover background-free */
+.rail button:not(.logo){border-radius:10px!important;transition:background-color .16s ease,color .16s ease}
+.rail button:not(.logo):hover{background:color-mix(in srgb,var(--pan) 82%,var(--ink) 5%)!important;border-radius:10px!important}
+.rail .logo:hover{background:transparent!important;transform:scale(1.12)}
+:root[data-theme="dark"] .rail button:not(.logo):hover{background:#303030!important;border-radius:10px!important}

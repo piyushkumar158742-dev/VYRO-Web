@@ -82,3 +82,101 @@
 :root[data-theme="dark"] .user-settings .backend-help,
 :root[data-theme="dark"] .user-settings .panel small{color:#BDBDBD}
 @media(max-width:900px){.user-settings{grid-template-columns:minmax(0,1fr);gap:13px}.user-settings>.panel:nth-child(n){grid-column:1}.user-settings>.simple-data{grid-column:1}}
+
+/* Minimal Settings redesign: one calm, readable column with consistent spacing. */
+.user-settings {
+  width: min(100%, 820px) !important;
+  max-width: 820px !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  align-items: start !important;
+  gap: 14px !important;
+}
+.user-settings > .panel,
+.user-settings > .simple-data {
+  grid-column: 1 !important;
+  width: 100% !important;
+  height: auto !important;
+  min-width: 0 !important;
+  border: 1px solid var(--ln) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+.user-settings > .panel > header {
+  min-height: 54px !important;
+  padding: 15px 18px !important;
+  background: transparent !important;
+  border-bottom: 1px solid var(--ln) !important;
+}
+.user-settings > .panel > header h3 {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+.user-settings > .panel > .pad {
+  display: grid !important;
+  gap: 15px !important;
+  padding: 18px !important;
+}
+.user-settings .backend-help {
+  max-width: 66ch;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+.user-settings .account-benefits {
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) !important;
+  gap: 10px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+.user-settings .account-benefits > span {
+  gap: 10px !important;
+}
+.user-settings .account-benefits > span > b {
+  width: 24px !important;
+  height: 24px !important;
+}
+.user-settings .currency-options {
+  gap: 8px !important;
+}
+.user-settings .currency-choice {
+  border-radius: 9px !important;
+  box-shadow: none !important;
+  min-height: 44px !important;
+}
+.user-settings .acts {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+.user-settings .simple-data {
+  padding: 16px 18px !important;
+}
+.user-settings .simple-data .pad {
+  padding: 10px 0 0 !important;
+}
+.user-settings .simple-email-login {
+  border-top: 1px solid var(--ln) !important;
+  padding-top: 12px !important;
+}
+.user-settings .channel-card {
+  border-radius: 10px !important;
+}
+@media (min-width: 900px) {
+  .user-settings .currency-options { max-width: 480px; }
+}
+@media (max-width: 520px) {
+  .user-settings { gap: 10px !important; }
+  .user-settings > .panel > header { padding: 13px 15px !important; }
+  .user-settings > .panel > .pad { padding: 15px !important; }
+  .user-settings .currency-options { grid-template-columns: repeat(4,minmax(0,1fr)) !important; }
+  .user-settings .currency-choice { flex-direction: column; gap: 4px !important; padding: 8px 3px !important; }
+  .user-settings .currency-choice strong { font-size: 18px !important; }
+  .user-settings .currency-choice span { font-size: 10px !important; }
+}
+/* Keep the gear's centre exactly concentric with its outer outline. */
+.rail button b.nav-icon-settings svg { overflow: visible; }

@@ -10,8 +10,8 @@
 <link rel="stylesheet" href="css/brands.css?v=25">
 <link rel="stylesheet" href="css/calendar.css?v=25">
 <link rel="stylesheet" href="css/settings.css?v=32">
-<link rel="stylesheet" href="css/tasks.css?v=34"><link rel="stylesheet" href="css/audit.css?v=8"><link rel="stylesheet" href="css/overrides.css?v=4">
-<link rel="stylesheet" href="css/nav-fixes.css?v=2"></head>
+<link rel="stylesheet" href="css/tasks.css?v=35"><link rel="stylesheet" href="css/audit.css?v=8"><link rel="stylesheet" href="css/overrides.css?v=4">
+<link rel="stylesheet" href="css/nav-fixes.css?v=3"></head>
 <body><div class="app">
 <nav class="rail" aria-label="Main"><button class="logo" type="button" onclick="go('home')" aria-label="Go to dashboard" title="Dashboard">V<i></i></button>
 <button data-nav="home" onclick="go('home')"><b>◐</b>Desk</button>
@@ -19,7 +19,7 @@
 <button data-nav="tasks" onclick="go('tasks')"><b>✓</b>To-do</button>
 <button data-nav="brands" onclick="go('brands')"><b>◈</b>Deals</button>
 <button data-nav="calendar" onclick="go('calendar')"><b>▦</b>Schedule</button>
-<button data-nav="settings" onclick="go('settings')"><b class="nav-icon-settings" aria-hidden="true">⚙</b>Settings</button></nav>
+<button data-nav="settings" onclick="go('settings')"><b class="nav-icon-settings" aria-hidden="true">⚙︎</b>Settings</button></nav>
 <div class="wrap"><header class="top"><h1 id="title">Desk</h1><time id="clock"></time><button id="theme-toggle" class="btn ghost theme-toggle" type="button" onclick="toggleTheme()" aria-label="Switch to dark mode" title="Switch theme">◐</button><button class="btn" onclick="vm()">+ New video</button></header>
 <main id="main"></main></div></div>
 <div id="modal" class="modal" hidden onclick="if(event.target===this)shut()"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>

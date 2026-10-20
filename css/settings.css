@@ -180,3 +180,21 @@
 }
 /* Keep the gear's centre exactly concentric with its outer outline. */
 .rail button b.nav-icon-settings svg { overflow: visible; }
+
+/* Use the full available workspace width; do not center Settings in a narrow column. */
+.user-settings {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+.user-settings > .panel,
+.user-settings > .simple-data {
+  min-width: 0 !important;
+}
+.user-settings .backend-help {
+  max-width: none !important;
+}
+@media (min-width: 900px) {
+  .user-settings .currency-options { max-width: 560px; }
+}

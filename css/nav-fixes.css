@@ -1,0 +1,39 @@
+/* Navigation polish: keep hover surfaces on the dark rail consistently dark. */
+.rail button.nav-icon-settings { gap: 2px; }
+.rail button .nav-icon-settings,
+.rail button b.nav-icon-settings {
+  display: grid;
+  width: 19px;
+  height: 19px;
+  place-items: center;
+  color: currentColor;
+  line-height: 1;
+}
+.rail button b.nav-icon-settings svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  flex: none;
+}
+.rail button:not(.logo):not(.on):hover {
+  background: #292929 !important;
+  color: #FFFFFF !important;
+}
+.rail button.on:hover {
+  background: #FFFFFF !important;
+  color: #171717 !important;
+}
+:root[data-theme="dark"] .rail button:not(.logo):not(.on):hover {
+  background: #303030 !important;
+  color: #FFFFFF !important;
+}
+:root[data-theme="dark"] .rail button.on:hover {
+  background: #3B3B3B !important;
+  color: #FFFFFF !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rail button.nav-icon-settings,
+  .rail button .nav-icon-settings { transition: none !important; }
+}

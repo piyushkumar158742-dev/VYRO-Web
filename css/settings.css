@@ -266,3 +266,119 @@
     column-count: initial !important;
   }
 }
+
+
+/* Vyro Settings 2.0 — editorial, immersive, not a stack of identical boxes. */
+.user-settings {
+  gap: 18px !important;
+}
+.user-settings > .panel,
+.user-settings > .simple-data {
+  position: relative !important;
+  border-radius: 18px !important;
+  border: 1px solid color-mix(in srgb, var(--ln) 78%, transparent) !important;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--panel, #202020) 96%, white 4%), var(--panel, #202020)) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08) !important;
+  transition: border-color .22s ease, transform .22s ease, box-shadow .22s ease !important;
+}
+.user-settings > .panel:hover,
+.user-settings > .simple-data:hover {
+  border-color: color-mix(in srgb, var(--text, #fff) 24%, var(--ln)) !important;
+  box-shadow: 0 16px 38px rgba(0,0,0,.13) !important;
+  transform: translateY(-2px);
+}
+.user-settings > .panel > header {
+  border-bottom: 1px solid color-mix(in srgb, var(--ln) 70%, transparent) !important;
+  padding: 18px 20px !important;
+}
+.user-settings > .panel > header h3 {
+  font-size: 14px !important;
+  letter-spacing: -.025em !important;
+}
+.user-settings > .panel > .pad { padding: 20px !important; gap: 17px !important; }
+.user-settings > .panel:nth-child(1) {
+  background: radial-gradient(ellipse at 100% 0%, rgba(255,255,255,.075), transparent 48%), var(--panel, #202020) !important;
+}
+.user-settings > .panel:nth-child(1) > header h3::before { content: "01 / "; opacity: .38; font-size: 10px; letter-spacing: .08em; }
+.user-settings > .panel:nth-child(2) > header h3::before { content: "02 / "; opacity: .38; font-size: 10px; letter-spacing: .08em; }
+.user-settings > .panel:nth-child(3) {
+  background: radial-gradient(ellipse at 100% 0%, rgba(255,255,255,.09), transparent 56%), var(--panel, #202020) !important;
+}
+.user-settings > .panel:nth-child(3) > header h3::before { content: "03 / "; opacity: .38; font-size: 10px; letter-spacing: .08em; }
+.user-settings > .panel:nth-child(4) > header h3::before { content: "04 / "; opacity: .38; font-size: 10px; letter-spacing: .08em; }
+.user-settings > .panel:nth-child(1) label,
+.user-settings > .panel label { gap: 9px !important; }
+.user-settings input:not([type="hidden"]) {
+  min-height: 46px !important;
+  border-radius: 12px !important;
+  transition: border-color .2s ease, box-shadow .2s ease !important;
+}
+.user-settings input:not([type="hidden"]):focus {
+  outline: none !important;
+  border-color: color-mix(in srgb, var(--text, #fff) 42%, var(--ln)) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--text, #fff) 7%, transparent) !important;
+}
+.user-settings .currency-options { display: grid !important; grid-template-columns: repeat(4,minmax(0,1fr)) !important; max-width: none !important; }
+.user-settings .currency-choice {
+  min-height: 54px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease !important;
+}
+.user-settings .currency-choice:hover { transform: translateY(-1px); }
+.user-settings .currency-choice.selected {
+  background: color-mix(in srgb, var(--text, #fff) 9%, transparent) !important;
+  border-color: color-mix(in srgb, var(--text, #fff) 52%, var(--ln)) !important;
+}
+.user-settings .acts { align-items: center !important; justify-content: flex-end !important; }
+.user-settings .acts .btn { min-height: 43px !important; border-radius: 11px !important; }
+.user-settings .account-benefits > span {
+  padding: 11px 12px !important;
+  border: 1px solid var(--ln) !important;
+  border-radius: 12px !important;
+  background: color-mix(in srgb, var(--text, #fff) 2.5%, transparent) !important;
+}
+.user-settings .account-benefits > span > b {
+  flex: 0 0 27px !important;
+  width: 27px !important;
+  height: 27px !important;
+  border-radius: 9px !important;
+}
+.user-settings .channel-card {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 14px !important;
+  border: 1px solid var(--ln) !important;
+  background: color-mix(in srgb, var(--text, #fff) 3%, transparent) !important;
+}
+.user-settings .channel-card img { width: 54px !important; height: 54px !important; border-radius: 50% !important; object-fit: cover !important; }
+.user-settings .legal-document-links { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 10px !important; }
+.user-settings .legal-document-links .btn { justify-content: center !important; min-height: 48px !important; }
+.user-settings > .simple-data {
+  border-style: dashed !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.user-settings > .simple-data summary {
+  cursor: pointer !important;
+  padding: 4px 0 !important;
+  font-weight: 650 !important;
+}
+.user-settings .simple-data .pad { padding-top: 16px !important; }
+@media (min-width: 1050px) {
+  .user-settings { column-gap: 20px !important; }
+  .user-settings > .panel, .user-settings > .simple-data { margin-bottom: 20px !important; }
+}
+@media (max-width: 600px) {
+  .user-settings { gap: 12px !important; }
+  .user-settings > .panel { border-radius: 15px !important; }
+  .user-settings > .panel > header { padding: 15px 16px !important; }
+  .user-settings > .panel > .pad { padding: 16px !important; }
+  .user-settings .legal-document-links { grid-template-columns: minmax(0,1fr) !important; }
+  .user-settings .currency-choice { flex-direction: column !important; gap: 3px !important; }
+}

@@ -238,3 +238,31 @@
   .user-settings > .panel:nth-child(n),
   .user-settings > .simple-data { grid-column: 1 !important; grid-row: auto !important; }
 }
+
+
+/* Final Settings layout: balanced columns without the awkward empty grid cells. */
+@media (min-width: 1050px) {
+  .user-settings {
+    display: block !important;
+    column-count: 2 !important;
+    column-gap: 18px !important;
+    column-fill: balance !important;
+  }
+  .user-settings > .panel,
+  .user-settings > .simple-data {
+    display: inline-block !important;
+    width: 100% !important;
+    margin: 0 0 16px !important;
+    break-inside: avoid !important;
+    vertical-align: top !important;
+  }
+  .user-settings > .panel > header { min-height: 48px !important; }
+  .user-settings > .panel > .pad { gap: 13px !important; }
+  .user-settings .backend-help { max-width: 52ch !important; }
+}
+@media (max-width: 1049px) {
+  .user-settings {
+    display: grid !important;
+    column-count: initial !important;
+  }
+}

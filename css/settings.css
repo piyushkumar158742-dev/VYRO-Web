@@ -400,3 +400,21 @@
 .settings-hub>.settings-account{display:block;border:1px solid var(--ln);border-radius:13px;margin:0 0 18px;padding:16px;background:color-mix(in srgb,var(--ink) 2%,var(--pan))}.settings-account .acts{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}.settings-account .simple-email-login{margin-top:12px}.settings-account .simple-email-login summary{cursor:pointer;color:var(--mut);font-size:12px}.settings-hub .backend-grid{margin-top:12px}.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 @media(max-width:680px){.settings-hub{margin:10px auto 0!important;padding:0 14px!important;border-radius:16px!important}.settings-hub>.settings-profile,.settings-hub>.settings-row{align-items:flex-start;flex-wrap:wrap;padding:17px 2px;gap:12px}.settings-hub>.settings-profile{align-items:center}.profile-avatar{width:52px;height:52px;flex-basis:52px;border-radius:14px}.profile-name-line h2{font-size:18px}.profile-signout{margin-left:auto}.settings-hub .currency-picker{flex:1 1 100%;width:100%;margin-left:50px}.settings-row-copy{flex:1 1 calc(100% - 54px)}.settings-row-actions{width:100%;padding-left:50px;justify-content:flex-start}.settings-row-actions .btn{flex:0 1 auto}.settings-hub>.settings-footer{padding:16px 2px;align-items:flex-start}.settings-footer>div{gap:12px}}
 @media(max-width:420px){.settings-hub .currency-picker{margin-left:0}.settings-row-actions{padding-left:0}.settings-hub>.settings-footer{display:grid}.settings-footer>div{display:grid;gap:8px}}
+
+/* Settings layout refinement: keep the whole hub centered like the reference. */
+main:has(.settings-hub),#app:has(.settings-hub),.view:has(.settings-hub){display:flex!important;flex-direction:column!important;align-items:center!important}
+.settings-hub{width:min( min(820px, calc(100% - 40px)), 820px)!important;max-width:820px!important;margin:28px auto 40px!important;align-self:center!important;box-sizing:border-box!important}
+.settings-hub .settings-profile{position:relative!important}
+.settings-hub .profile-identity{min-width:0}
+.settings-hub .name-edit-button{width:auto!important;height:30px!important;padding:0 10px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;border:1px solid var(--ln)!important;background:color-mix(in srgb,var(--ink) 3%,var(--pan))!important;font-size:12px!important;font-weight:650!important;white-space:nowrap}
+.settings-hub .name-edit-button::after{content:"Edit name"}
+.settings-hub .name-edit-row{display:flex!important;align-items:center!important;gap:8px!important;margin-top:12px!important;padding:10px!important;width:min(100%,440px)!important;border:1px solid var(--ln)!important;border-radius:12px!important;background:color-mix(in srgb,var(--ink) 3%,var(--pan))!important}
+.settings-hub .name-edit-row[hidden]{display:none!important}
+.settings-hub .name-edit-row::before{content:"YOUR DISPLAY NAME";display:block;flex:0 0 100%;font-size:9px;font-weight:750;letter-spacing:.12em;color:var(--mut)}
+.settings-hub .name-edit-row input{flex:1 1 150px!important;width:100%!important;min-width:0!important;background:var(--pan)!important}
+.settings-hub .name-edit-row .btn{min-height:36px!important;padding:8px 12px!important;border-radius:9px!important}
+@media(max-width:680px){
+ .settings-hub{width:calc(100% - 24px)!important;margin:12px auto 28px!important;padding-left:14px!important;padding-right:14px!important}
+ .settings-hub .name-edit-row{flex-wrap:wrap!important}
+ .settings-hub .name-edit-row::before{flex-basis:100%}
+}

@@ -91,7 +91,7 @@ function recordLegalConsent(){try{localStorage.setItem(LEGAL_CONSENT_KEY,JSON.st
 function requestLegalConsent(onAccept){
  if(legalConsentCurrent()){onAccept();return}
  document.querySelector('#vyro-legal-consent-modal')?.remove();
- const modal=document.createElement('div');modal.id='vyro-legal-consent-modal';modal.className='vyro-legal-modal';modal.innerHTML=`<section class="vyro-legal-dialog" role="dialog" aria-modal="true" aria-labelledby="vyro-legal-title"><button class="vyro-legal-close" type="button" aria-label="Close">×</button><div class="vyro-legal-eyebrow">Before you continue</div><h2 id="vyro-legal-title">Review Vyro’s policies</h2><p>Please read the policies before connecting your account. Both agreements are required to continue.</p><label class="vyro-legal-check"><input type="checkbox" id="vyro-modal-privacy"><span>I have read and agree to the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span></label><label class="vyro-legal-check"><input type="checkbox" id="vyro-modal-terms"><span>I have read and agree to the <a href="terms.html" target="_blank" rel="noopener">Terms of Service</a>.</span></label><p class="vyro-legal-error" role="alert" hidden>Please select both checkboxes to continue.</p><div class="vyro-legal-actions"><button class="btn ghost vyro-legal-cancel" type="button">Cancel</button><button class="btn vyro-legal-continue" type="button">Agree & continue</button></div></section>`;
+ const modal=document.createElement('div');modal.id='vyro-legal-consent-modal';modal.className='vyro-legal-modal';modal.innerHTML=`<section class="vyro-legal-dialog" role="dialog" aria-modal="true" aria-labelledby="vyro-legal-title"><button class="vyro-legal-close" type="button" aria-label="Close">×</button><div class="vyro-legal-eyebrow">Before you continue</div><h2 id="vyro-legal-title">Review Vyro’s policies</h2><p>Please read the policies before connecting your account. Both agreements are required to continue.</p><label class="vyro-legal-check"><input type="checkbox" id="vyro-modal-privacy"><span>I have read and agree to the <a href="html/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span></label><label class="vyro-legal-check"><input type="checkbox" id="vyro-modal-terms"><span>I have read and agree to the <a href="html/terms.html" target="_blank" rel="noopener">Terms of Service</a>.</span></label><p class="vyro-legal-error" role="alert" hidden>Please select both checkboxes to continue.</p><div class="vyro-legal-actions"><button class="btn ghost vyro-legal-cancel" type="button">Cancel</button><button class="btn vyro-legal-continue" type="button">Agree & continue</button></div></section>`;
  document.body.appendChild(modal);
  const close=()=>modal.remove();
  modal.querySelector('.vyro-legal-close').addEventListener('click',close);
@@ -102,12 +102,18 @@ function requestLegalConsent(onAccept){
 }
 async function signGoogle(){requestLegalConsent(async()=>{const x=configure();if(!x.ok){say(x.reason);return}try{await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())}catch(e){console.error(e);say(authError(e))}})}
 async function signEmail(mode){requestLegalConsent(async()=>{const x=configure();if(!x.ok){say(x.reason);return}const email=($('#backend-email')?.value||'').trim(),pass=$('#backend-password')?.value||'';if(!email||!pass){say('Enter your email and password.');return}try{if(mode==='create')await auth.createUserWithEmailAndPassword(email,pass);else await auth.signInWithEmailAndPassword(email,pass)}catch(e){say(authError(e))}})}
-function authError(e){return ({'auth/unauthorized-domain':'Add the Creator OS GitHub Pages URL to Firebase Authentication → Settings → Authorized domains.','auth/operation-not-allowed':'Enable this sign-in method in Firebase Authentication → Sign-in method.','auth/popup-blocked':'Allow pop-ups for Creator OS and try again.','auth/invalid-credential':'Email/password is incorrect, or this account does not exist.'})[e.code]||e.message||'Sign-in failed.'}
+function authError(e){return ({'auth/unauthorized-domain':'Add the Creator OS GitHub Pages URL to Firebase Authentication → Settings → Authorized domains.','auth/operation-not-allowed':'Enable this sign-in method in Firebase Authentication → Sign-in method.','auth/popup-blocked':'Allow pop-ups for Creator OS and try again.','auth/invalid-credential':'Email/password is incorrect, or this account does not exist.','auth/popup-closed-by-user':'The Google window was closed before finishing. Try again.','auth/cancelled-popup-request':'Another sign-in window is already open.','auth/user-mismatch':'Choose the same Google account you are signed in with.','auth/credential-already-in-use':'That Google account already belongs to another Vyro account. Sign out, then sign in with Google.','auth/provider-already-linked':'Google is already linked to this account. Try again.','auth/network-request-failed':'Network error. Check your connection and try again.'})[e.code]||e.message||'Sign-in failed.'}
 async function signOut(){if(auth)await auth.signOut();say('Signed out of Creator OS cloud sync.')}
 async function youtubeRequest(path,token,key){
- const res=await fetch('https://www.googleapis.com/youtube/v3/'+path+(path.includes('?')?'&':'?')+'key='+encodeURIComponent(key),{headers:{Authorization:'Bearer '+token}});
+ const url='https://www.googleapis.com/youtube/v3/'+path+(key?(path.includes('?')?'&':'?')+'key='+encodeURIComponent(key):'');
+ const res=await fetch(url,{headers:{Authorization:'Bearer '+token}});
  let data={};try{data=await res.json()}catch(e){}
- if(!res.ok)throw new Error(data.error?.message||'YouTube API request failed ('+res.status+').');
+ if(!res.ok){
+  const msg=data.error?.message||'YouTube API request failed ('+res.status+').';
+  if(res.status===403&&/not been used|disabled/i.test(msg))throw new Error('Enable “YouTube Data API v3” for this Firebase project in Google Cloud Console, then try again.');
+  if(res.status===401)throw new Error('YouTube access expired. Press Connect YouTube again.');
+  throw new Error(msg);
+ }
  return data;
 }
 async function syncChannelVideos(channel,token,key){
@@ -138,27 +144,46 @@ async function syncChannelVideos(channel,token,key){
   return {id:Date.now()*1000+Math.floor(Math.random()*100000),youtubeVideoId:id,title:String(sn.title||'Untitled YouTube video').slice(0,100),status:published,views:String(stat.viewCount||'0'),notes:'Imported from YouTube · '+(sn.publishedAt?new Date(sn.publishedAt).toLocaleDateString():'Publication date unavailable'),thumb:sn.thumbnails?.maxres?.url||sn.thumbnails?.high?.url||sn.thumbnails?.medium?.url||sn.thumbnails?.default?.url||'',youtubeUrl:'https://www.youtube.com/watch?v='+id,publishedAt:sn.publishedAt||''};
  }).filter(Boolean);
 }
+const YT_SCOPE='https://www.googleapis.com/auth/youtube.readonly';
+function ytBusy(on){document.querySelectorAll('[data-yt-connect]').forEach(b=>{if(on){if(b.dataset.html===undefined)b.dataset.html=b.innerHTML;b.disabled=true;b.classList.add('is-busy');b.textContent='Connecting…'}else{b.disabled=false;b.classList.remove('is-busy');if(b.dataset.html!==undefined){b.innerHTML=b.dataset.html;delete b.dataset.html}}})}
+async function youtubeAccessToken(){
+ const x=configure();if(!x.ok)throw new Error(x.reason);
+ const provider=new firebase.auth.GoogleAuthProvider();
+ provider.addScope(YT_SCOPE);
+ const u=auth.currentUser;
+ let result;
+ if(!u){provider.setCustomParameters({prompt:'select_account consent'});result=await auth.signInWithPopup(provider)}
+ else if(u.providerData.some(p=>p.providerId==='google.com')){provider.setCustomParameters({prompt:'consent',login_hint:u.email||''});result=await u.reauthenticateWithPopup(provider)}
+ else{provider.setCustomParameters({prompt:'select_account consent'});result=await u.linkWithPopup(provider)}
+ const token=result?.credential?.accessToken;
+ if(!token)throw new Error('Google did not return YouTube access. Try again and approve the YouTube permission.');
+ return token;
+}
 function connectYouTube(){
- const c=cfg();if(!c.youtubeClientId||!c.youtubeApiKey){say('Add your YouTube OAuth Client ID and API key in Settings first.');return}
- if(!window.google?.accounts?.oauth2){say('Google authorization did not load. Check your connection and reload.');return}
- googleTokenClient=google.accounts.oauth2.initTokenClient({client_id:c.youtubeClientId,scope:'https://www.googleapis.com/auth/youtube.readonly',callback:async response=>{
-  if(response.error){say('YouTube authorization was not completed.');return}
+ requestLegalConsent(async()=>{
+  if(typeof S==='undefined'||!S?.settings){say('Workspace is still loading. Try again in a moment.');return}
+  const key=cfg().youtubeApiKey||'';
+  ytBusy(true);
   try{
-   say('Connecting YouTube and syncing your latest videos…');
-   const data=await youtubeRequest('channels?part=snippet,statistics,contentDetails&mine=true',response.access_token,c.youtubeApiKey);
-   if(!data.items?.length)throw new Error('No YouTube channel was returned for this Google account.');
+   const token=await youtubeAccessToken();
+   say('Connected to Google. Syncing your YouTube channel…');
+   const data=await youtubeRequest('channels?part=snippet,statistics,contentDetails&mine=true',token,key);
+   if(!data.items?.length)throw new Error('No YouTube channel was found on that Google account. Pick the account that owns your channel.');
    const ch=data.items[0];
-   const imported=await syncChannelVideos(ch,response.access_token,c.youtubeApiKey);
-   // Replace starter/demo workspace content with the connected channel's real videos.
-   S.settings.youtubeChannel={id:ch.id,title:ch.snippet.title,thumbnail:ch.snippet.thumbnails?.default?.url||'',subscribers:ch.statistics.hiddenSubscriberCount?null:Number(ch.statistics.subscriberCount||0),views:Number(ch.statistics.viewCount||0),videoCount:Number(ch.statistics.videoCount||0),connectedAt:new Date().toISOString(),lastSyncedAt:new Date().toISOString(),syncedVideoCount:imported.length};
-   S.videos=imported;
-   S.tasks=[];S.brands=[];S.events=[];
+   const imported=await syncChannelVideos(ch,token,key);
+   // Keep manual videos and any pipeline progress; refresh stats on videos imported earlier.
+   const known=new Map((S.videos||[]).filter(v=>v.youtubeVideoId).map(v=>[v.youtubeVideoId,v]));
+   const merged=imported.map(v=>known.has(v.youtubeVideoId)?{...known.get(v.youtubeVideoId),views:v.views,thumb:v.thumb||known.get(v.youtubeVideoId).thumb}:v);
+   S.videos=[...merged,...(S.videos||[]).filter(v=>!v.youtubeVideoId)];
+   S.settings.youtubeChannel={id:ch.id,title:ch.snippet.title,thumbnail:ch.snippet.thumbnails?.default?.url||'',subscribers:ch.statistics.hiddenSubscriberCount?null:Number(ch.statistics.subscriberCount||0),views:Number(ch.statistics.viewCount||0),videoCount:Number(ch.statistics.videoCount||0),connectedAt:S.settings.youtubeChannel?.connectedAt||new Date().toISOString(),lastSyncedAt:new Date().toISOString(),syncedVideoCount:imported.length};
    if(typeof save==='function'&&!save())throw new Error('Your browser could not save the synced workspace. Free up storage and try again.');
    if(typeof draw==='function')draw();
-   say('YouTube connected. Imported '+imported.length+' videos into Pipeline; cleared demo tasks, deals, and calendar events.');
-  }catch(e){console.error(e);say(e.message||'Could not sync YouTube data. Check API access, key restrictions, and quota.')}
- }});
- googleTokenClient.requestAccessToken({prompt:'consent'});
+   say('YouTube connected. Synced '+imported.length+' videos.');
+  }catch(e){
+   console.error('YouTube connect:',e);
+   say(e.code?authError(e):(e.message||'Could not sync YouTube data.'));
+  }finally{ytBusy(false)}
+ });
 }
 function disconnectYouTube(){
  if(typeof S==='undefined'||!S?.settings){say('Workspace is still loading. Wait a moment and try again.');return}

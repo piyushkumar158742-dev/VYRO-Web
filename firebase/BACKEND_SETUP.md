@@ -10,13 +10,13 @@ The app is a static GitHub Pages site. Firebase client configuration and a YouTu
 5. Build → Firestore Database → Create database. Open Rules and paste the contents of `firestore.rules`, then Publish.
 6. Return to Creator OS → Settings and select **Save connection settings**, then sign in. Workspace changes sync to `users/{uid}/workspace/main`; each user can access only their own document.
 
-## YouTube (free quota)
-1. Open https://console.cloud.google.com/ and select the same or a separate project.
-2. APIs & Services → Library → enable **YouTube Data API v3**.
-3. Configure OAuth consent. While in Testing, add your Google account as a test user.
-4. Create Credentials → OAuth client ID → **Web application**. Add this Authorized JavaScript origin exactly: `https://piyushkumar158742-dev.github.io`.
-5. Create an API key. Restrict it to **YouTube Data API v3** and HTTP referrer `https://piyushkumar158742-dev.github.io/*`.
-6. Paste the OAuth client ID and API key in Settings, save connection settings, then choose **Connect YouTube channel** and approve read-only access.
+## YouTube (works on Firebase Hosting, no client ID or API key needed)
+Connect YouTube now uses the same Google sign-in as Firebase Auth, with the read-only YouTube scope. One-time setup in the Google Cloud project behind Firebase (`vyro-cd2fd`):
+1. APIs & Services → Library → enable **YouTube Data API v3**.
+2. APIs & Services → OAuth consent screen → Data access → add scope `https://www.googleapis.com/auth/youtube.readonly`.
+3. While the consent screen is in **Testing**, add every Google account that will connect as a test user (or publish the app).
+4. Firebase → Authentication → Settings → Authorized domains must include your hosting domains (`vyro-cd2fd.web.app` and `vyro-cd2fd.firebaseapp.com` are there by default).
+5. Deploy with `firebase deploy --only hosting`, open the site, Settings → **Connect YouTube**.
 
 ## Free-plan notes
 - Firebase Authentication (Google and email/password) and Firestore have no-cost usage, subject to Firebase quotas. Spark projects are capped at the free quota instead of automatically billing overages.

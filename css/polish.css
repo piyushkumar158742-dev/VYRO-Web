@@ -333,40 +333,52 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
 .sx-banner-name .sx-icon-btn{transition:transform .18s ease,background .18s ease,color .18s ease}
 .sx-banner-name .sx-icon-btn:hover{transform:translateY(-1px)}
 
-/* Keep the profile header and identity row visually separated and balanced. */
-.sx-banner{position:relative}
-.sx-banner-name{padding:0 14px}
-.sx-banner-name h2{max-width:calc(100% - 42px);line-height:1.25;min-height:1.25em}
-.sx-hero-body{column-gap:24px}
-.sx-id{padding-right:8px}
-.sx-hero-body .sx-btn,.sx-hero-body button{flex-shrink:0}
-@media(max-width:560px){.sx-hero-body{gap:14px;padding-left:16px;padding-right:16px}.sx-id{padding-right:0}.sx-meta{overflow-wrap:anywhere}}
 
-/* Native input gives reliable caret behaviour at the 20-character limit. */
-.sx-banner-name{display:flex;align-items:center;justify-content:center;gap:10px;max-width:100%;min-width:0}
-.sx-name-input{appearance:none;-webkit-appearance:none;display:block;width:min(70vw,520px);min-width:2ch;max-width:100%;padding:5px 9px;margin:-5px -9px;border:1px solid transparent!important;border-radius:8px!important;outline:0!important;box-shadow:none!important;background:transparent!important;color:var(--ink);font:760 clamp(20px,3vw,27px)/1.25 var(--font);letter-spacing:-.045em;text-align:center;transition:background .16s ease,border-color .16s ease}
-.sx-name-input[readonly]{cursor:default}
-.sx-name-input:not([readonly]){cursor:text;background:color-mix(in srgb,var(--ink) 5%,transparent)!important;border-color:transparent!important}
-.sx-name-input:focus,.sx-name-input:focus-visible{outline:0!important;box-shadow:none!important}
-@media(max-width:560px){.sx-name-input{font-size:20px;width:min(68vw,420px)}}
-
-/* Settings profile hero — calm, spacious, aligned layout. */
-.sx-banner{height:104px;display:flex;align-items:center;justify-content:center;padding:0 24px;background:linear-gradient(180deg,color-mix(in srgb,var(--ink) 5%,var(--pan)),var(--pan));border-bottom:1px solid var(--ln)}
-.sx-banner-name{width:100%;gap:12px;justify-content:center}
-.sx-name-input{width:auto;max-width:min(68%,560px);min-width:0;flex:0 1 auto;padding:7px 10px;margin:0;border-radius:9px!important;font-size:clamp(21px,2.8vw,27px);line-height:1.2;text-overflow:clip}
-.sx-name-input:not([readonly]){background:color-mix(in srgb,var(--ink) 4%,transparent)!important}
-.sx-banner-name .sx-icon-btn{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px}
-.sx-hero-body{align-items:center;gap:24px;padding:22px calc(var(--sx-pad) + 16px) 26px}
-.sx-avatar{flex:0 0 80px}
-.sx-id{flex:1 1 auto;min-width:0;padding:0 18px 0 0}
-.sx-meta{margin:0;gap:10px 12px}
-.sx-signout{align-self:center;margin-left:18px;flex:0 0 auto}
-.sx-hero-body .sx-signout{margin-left:18px}
-@media(max-width:560px){
- .sx-banner{height:88px;padding:0 14px}
- .sx-name-input{font-size:20px;max-width:calc(100vw - 110px)}
- .sx-hero-body{display:flex;align-items:center;flex-wrap:wrap;gap:14px;padding:18px 18px 22px}
- .sx-avatar{flex-basis:64px;width:64px;height:64px}
- .sx-id{flex:1 1 calc(100% - 90px);padding:0;min-width:0}
- .sx-hero-body .sx-signout{margin-left:78px}
+/* Profile header — one consistent layout system (replaces conflicting overrides). */
+.sx-banner{
+  min-height:100px;height:auto;display:flex;align-items:center;justify-content:center;
+  padding:22px 24px;background:linear-gradient(180deg,color-mix(in srgb,var(--ink) 4%,var(--pan)),var(--pan));
+  border-bottom:1px solid var(--ln)
 }
+.sx-banner-name{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-width:0;padding:0 8px}
+.sx-name-input{
+  appearance:none;-webkit-appearance:none;display:block;flex:0 1 auto;width:auto;min-width:0;
+  max-width:min(68vw,560px);padding:7px 10px;margin:0;border:1px solid transparent!important;
+  border-radius:9px!important;outline:0!important;box-shadow:none!important;background:transparent!important;
+  color:var(--ink);font:760 clamp(21px,2.8vw,27px)/1.2 var(--font);letter-spacing:-.04em;
+  text-align:center;transition:background .16s ease
+}
+.sx-name-input[readonly]{cursor:default}
+.sx-name-input:not([readonly]){cursor:text;background:color-mix(in srgb,var(--ink) 5%,transparent)!important}
+.sx-name-input:focus,.sx-name-input:focus-visible{outline:0!important;box-shadow:none!important}
+.sx-banner-name .sx-icon-btn{flex:0 0 34px;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px}
+.sx-banner-name .sx-icon-btn:hover{transform:translateY(-1px)}
+.sx-hero-body{display:flex;align-items:center;gap:24px;padding:22px calc(var(--sx-pad) + 16px) 26px}
+.sx-avatar{flex:0 0 80px}
+.sx-id{flex:1 1 auto;min-width:0;padding:0 20px 0 0}
+.sx-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0}
+.sx-hero-body .sx-signout{flex:0 0 auto;align-self:center;margin-left:18px}
+.sx-hero-body .sx-btn,.sx-hero-body button{flex-shrink:0}
+@media(max-width:560px){
+ .sx-banner{min-height:84px;padding:16px 12px}
+ .sx-name-input{font-size:20px;max-width:calc(100vw - 108px)}
+ .sx-hero-body{flex-wrap:wrap;gap:14px;padding:18px}
+ .sx-avatar{flex:0 0 64px;width:64px;height:64px}
+ .sx-id{flex:1 1 calc(100% - 84px);padding:0;min-width:0}
+ .sx-hero-body .sx-signout{margin-left:78px}
+ .sx-meta{overflow-wrap:anywhere}
+}
+
+/* Legal pages: clear hierarchy, comfortable reading width, and calm spacing. */
+.doc{max-width:100%;line-height:1.78}
+.doc h1{max-width:18ch}
+.doc h2{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);scroll-margin-top:24px}
+.doc h2:first-of-type{border-top:0;padding-top:0}
+.doc h3{margin-top:26px}
+.doc p{max-width:78ch}
+.doc li{margin:5px 0}
+.doc .notice{border-radius:12px}
+.doc .toc{line-height:1.6}
+.doc .toc a{color:var(--blue);text-decoration:none}
+.doc .toc a:hover{text-decoration:underline}
+@media print{.doc{box-shadow:none!important;border:0!important}.doc h2{break-after:avoid}}

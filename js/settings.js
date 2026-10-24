@@ -23,11 +23,12 @@ V.settings=()=>{
  return `<div class="sx">
 <section class="sx-card" aria-label="Settings">
  <div class="sx-hero">
-  <div class="sx-banner" aria-hidden="true"></div>
+  <div class="sx-banner">
+   <div class="sx-banner-name"><h2 id="settings-display-name">${name}</h2><button type="button" class="sx-icon-btn" onclick="seditname()" aria-label="Change your name" title="Change name">${sxi('pencil')}</button></div>
+  </div>
   <div class="sx-hero-body">
    <div class="sx-avatar" aria-hidden="true">${esc((S.settings.name||'Creator').trim().charAt(0).toUpperCase())}</div>
    <div class="sx-id">
-    <div class="sx-name"><h2 id="settings-display-name">${name}</h2><button type="button" class="sx-icon-btn" onclick="seditname()" aria-label="Change your name" title="Change name">${sxi('pencil')}</button></div>
     <div class="sx-meta"><span class="sx-email">${bc.user?esc(bc.user.email||bc.user.displayName||'Connected account'):'Local workspace'}</span><span class="sx-pill ${bc.user?'is-on':''}"><i></i>${bc.user?'Connected':'On this device'}</span></div>
     <div id="name-edit-row" class="sx-edit" hidden><input id="sn" value="${name}" maxlength="20" autocomplete="nickname" aria-label="Your name" onkeydown="if(event.key==='Enter')ssave();if(event.key==='Escape')scancelname()"><button class="sx-btn sx-btn-primary" type="button" onclick="ssave()">Save</button><button class="sx-btn" type="button" onclick="scancelname()">Cancel</button></div>
    </div>

@@ -382,3 +382,40 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
 .doc .toc a{color:var(--blue);text-decoration:none}
 .doc .toc a:hover{text-decoration:underline}
 @media print{.doc{box-shadow:none!important;border:0!important}.doc h2{break-after:avoid}}
+
+/* Mobile settings: stack profile identity and actions into clear, roomy rows. */
+@media (max-width: 560px) {
+ .sx-panel,.sx-settings,.sx-wrap{max-width:100%;min-width:0}
+ .sx-banner{min-height:76px;padding:14px 16px}
+ .sx-banner-name{gap:8px;padding:0 4px}
+ .sx-name-input{max-width:calc(100vw - 100px);font-size:20px;padding:6px 4px}
+ .sx-hero-body{display:grid;grid-template-columns:56px minmax(0,1fr);align-items:center;column-gap:14px;row-gap:14px;padding:18px 16px 20px}
+ .sx-avatar{grid-column:1;grid-row:1;width:56px;height:56px;flex:none;margin:0;border-radius:16px;font-size:23px;box-shadow:none}
+ .sx-id{grid-column:2;grid-row:1;min-width:0;width:100%;padding:0}
+ .sx-meta{display:flex;flex-direction:column;align-items:flex-start;gap:7px;margin:0;min-width:0}
+ .sx-email{display:block;max-width:100%;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+ .sx-pill{margin:0}
+ .sx-hero-body .sx-signout{grid-column:2;grid-row:2;justify-self:start;margin:0;min-height:38px}
+ .sx-row{display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px 12px;padding:18px 16px}
+ .sx-row>.sx-ico{grid-column:1;grid-row:1;width:34px;height:34px}
+ .sx-row>.sx-copy{grid-column:2;grid-row:1;min-width:0}
+ .sx-row>.sx-actions,.sx-row>.sx-seg{grid-column:2;grid-row:2;justify-self:stretch;width:100%;min-width:0}
+ .sx-row>.sx-actions{display:flex;flex-wrap:wrap;gap:8px}
+ .sx-row .sx-btn{min-height:40px;max-width:100%;white-space:normal}
+ .sx-row .sx-seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+ .sx-row .sx-cur{min-width:0;padding:9px 4px}
+ .sx-row .sx-copy p{line-height:1.55}
+ .sx-row-yt .sx-actions{display:grid;grid-template-columns:1fr;align-items:stretch}
+ .sx-row-yt .sx-actions .sx-btn{width:100%;justify-content:center}
+ .sx-channel{min-width:0;overflow-wrap:anywhere}
+ .sx-row-sync .sx-actions{grid-column:2}
+ .sx-foot{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:18px 16px}
+ .sx-foot nav{display:flex;flex-wrap:wrap;gap:12px}
+}
+@media (max-width: 380px) {
+ .sx-hero-body{grid-template-columns:48px minmax(0,1fr);column-gap:11px;padding-left:12px;padding-right:12px}
+ .sx-avatar{width:48px;height:48px;font-size:20px;border-radius:14px}
+ .sx-row{grid-template-columns:30px minmax(0,1fr);gap:10px;padding:16px 12px}
+ .sx-row>.sx-ico{width:30px;height:30px}
+ .sx-row .sx-cur span{font-size:10px}
+}

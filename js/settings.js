@@ -30,7 +30,7 @@ V.settings=()=>{
    <div class="sx-avatar" aria-hidden="true">${esc((S.settings.name||'Creator').trim().charAt(0).toUpperCase())}</div>
    <div class="sx-id">
     <div class="sx-meta"><span class="sx-email">${bc.user?esc(bc.user.email||bc.user.displayName||'Connected account'):'Local workspace'}</span><span class="sx-pill ${bc.user?'is-on':''}"><i></i>${bc.user?'Connected':'On this device'}</span></div>
-    <div id="name-edit-row" class="sx-edit" hidden><input id="sn" value="${name}" maxlength="20" autocomplete="nickname" aria-label="Your name" onkeydown="if(event.key==='Enter')ssave();if(event.key==='Escape')scancelname()"><button class="sx-btn sx-btn-primary" type="button" onclick="ssave()">Save</button><button class="sx-btn" type="button" onclick="scancelname()">Cancel</button></div>
+
    </div>
    ${bc.user?`<button type="button" class="sx-btn sx-signout" onclick="VyroBackend.signOut()">${sxi('logout')}Sign out</button>`:''}
   </div>
@@ -61,8 +61,12 @@ V.settings=()=>{
 <footer class="sx-foot"><span>${sxi('shield')}Review how Vyro handles workspace and YouTube data.</span><nav><a href="html/privacy.html" target="_blank" rel="noopener">Privacy Policy${sxi('out')}</a><a href="html/terms.html" target="_blank" rel="noopener">Terms of Service${sxi('out')}</a></nav></footer>
 </div>`;
 };
-function seditname(){const row=$('#name-edit-row');if(row){row.hidden=false;$('#sn')?.focus();$('#sn')?.select()}}
-function scancelname(){const row=$('#name-edit-row');if(row)row.hidden=true}
+function seditname(){const title=$('#settings-display-name');if(!title)return;if(title.isContentEditable){title.blur();return}title.dataset.previousName=title.textContent.trim();title.contentEditable='true';title.setAttribute('role','textbox');title.setAttribute('aria-label','Edit display name');title.focus();const range=document.createRange();range.selectNodeContents(title);range.collapse(false);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);title.classList.add('is-editing-name')}
+function sfinishname(cancel=false){const title=$('#settings-display-name');if(!title)return;const before=title.dataset.previousName||'Creator';const name=(cancel?before:title.textContent).trim().slice(0,20)||before;title.textContent=name;title.contentEditable='false';title.removeAttribute('role');title.removeAttribute('aria-label');title.classList.remove('is-editing-name');S.settings.name=name;const avatar=document.querySelector('.sx-avatar');if(avatar)avatar.textContent=name.charAt(0).toUpperCase();if(!cancel&&name!==before){save();toast('Name updated')}delete title.dataset.previousName}
+function scancelname(){sfinishname(true)}
+document.addEventListener('input',e=>{if(e.target?.id==='settings-display-name'&&e.target.isContentEditable){const title=e.target;if(title.textContent.length>20)title.textContent=title.textContent.slice(0,20);S.settings.name=title.textContent.trim()||'Creator';const avatar=document.querySelector('.sx-avatar');if(avatar)avatar.textContent=(S.settings.name||'C').charAt(0).toUpperCase();save()}});
+document.addEventListener('keydown',e=>{if(e.target?.id!=='settings-display-name'||!e.target.isContentEditable)return;if(e.key==='Enter'){e.preventDefault();sfinishname(false)}if(e.key==='Escape'){e.preventDefault();scancelname()}});
+document.addEventListener('focusout',e=>{if(e.target?.id==='settings-display-name'&&e.target.isContentEditable)sfinishname(false)});
 function scurrency(symbol){const input=$('#sc');if(input)input.value=symbol;document.querySelectorAll('.sx-cur').forEach(b=>{const on=b.dataset.currency===symbol;b.classList.toggle('is-on',on);b.setAttribute('aria-pressed',String(on))});if(S.settings.cur!==symbol){S.settings.cur=symbol;if(save())toast('Currency set to '+symbol)}}
 function ssave(){const name=$('#sn').value.trim().slice(0,20)||'Creator';S.settings.name=name;S.settings.cur=$('#sc').value||'₹';save();draw();toast('Settings saved')}
 function sexp(){const a=document.createElement('a');const url=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.href=url;a.download='vyro-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}

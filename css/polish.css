@@ -313,3 +313,22 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
 
 /* Toast: always high-contrast, any theme */
 :root[data-theme] #toast{background:var(--ink)!important;color:var(--bin)!important}
+
+
+/* Inline profile-name editor: no native input box, just elegant editable text. */
+.sx-banner-name h2[contenteditable="true"]{
+  outline:0!important;border:0!important;box-shadow:none!important;background:transparent!important;
+  border-radius:7px;padding:5px 9px;margin:-5px -9px;min-width:2ch;max-width:min(70vw,520px);
+  caret-color:var(--ink);cursor:text;transition:background .16s ease,color .16s ease;
+  text-decoration:none;
+}
+.sx-banner-name h2[contenteditable="true"]:focus,
+.sx-banner-name h2[contenteditable="true"]:focus-visible{
+  outline:0!important;border:0!important;box-shadow:none!important;
+  background:color-mix(in srgb,var(--ink) 5%,transparent)!important;
+}
+.sx-banner-name h2[contenteditable="true"]:empty:before{
+  content:attr(data-placeholder);color:var(--mut);font-weight:500;pointer-events:none;
+}
+.sx-banner-name .sx-icon-btn{transition:transform .18s ease,background .18s ease,color .18s ease}
+.sx-banner-name .sx-icon-btn:hover{transform:translateY(-1px)}

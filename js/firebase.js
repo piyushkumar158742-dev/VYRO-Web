@@ -3,7 +3,7 @@
 (function(){
 'use strict';
 const CFG='vyro_backend_config_v1';
-let auth=null,db=null,user=null,saveTimer=null,googleTokenClient=null,ready=false;
+let auth=null,db=null,user=null,saveTimer=null,googleTokenClient=null,ready=false,authResolved=false;
 const $=s=>document.querySelector(s);
 const say=m=>{if(typeof toast==='function')toast(m);else alert(m)};
 const DEFAULT_CFG={firebaseApiKey:'AIzaSyCoiNZ0WtsxrC-rHX-xGEkQkWIurnj5J4k',firebaseAuthDomain:'vyro-cd2fd.firebaseapp.com',firebaseProjectId:'vyro-cd2fd',firebaseAppId:'1:574510502743:web:947b8e4e768de1025ea412'};
@@ -21,6 +21,7 @@ function configure(){
   auth=app.auth();db=app.firestore();ready=true;
   auth.onAuthStateChanged(async u=>{
    user=u||null;
+   authResolved=true;
    window.VyroBackend.user=user;
    if(user){
     try{
@@ -210,7 +211,7 @@ function saveSettingsFromForm(){
  c.firebaseApiKey=$('#fb-api-key')?.value.trim()||'';c.firebaseAuthDomain=$('#fb-auth-domain')?.value.trim()||'';c.firebaseProjectId=$('#fb-project-id')?.value.trim()||'';c.firebaseAppId=$('#fb-app-id')?.value.trim()||'';c.youtubeClientId=$('#yt-client-id')?.value.trim()||'';c.youtubeApiKey=$('#yt-api-key')?.value.trim()||'';
  saveCfg(c);const result=configure();if(result.ok)say('Connection settings saved. You can now sign in.');else say('Settings saved on this device. '+result.reason);
 }
-function status(){return {configured:ready,user,config:cfg()}}
+function status(){return {configured:ready,user,authResolved,config:cfg()}}
 window.VyroBackend={configure,queueSync,signGoogle,signEmail,signOut,connectYouTube,disconnectYouTube,saveSettingsFromForm,status,user:null};
-document.addEventListener('DOMContentLoaded',()=>{const x=configure();if(!x.ok)console.info('Vyro backend not configured yet:',x.reason)});
+document.addEventListener('DOMContentLoaded',()=>{const x=configure();if(!x.ok){authResolved=true;document.dispatchEvent(new CustomEvent('vyro-auth-change',{detail:{user:null,unavailable:true}}));console.info('Vyro backend not configured yet:',x.reason)}});
 })();

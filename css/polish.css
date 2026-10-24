@@ -341,3 +341,11 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
 .sx-id{padding-right:8px}
 .sx-hero-body .sx-btn,.sx-hero-body button{flex-shrink:0}
 @media(max-width:560px){.sx-hero-body{gap:14px;padding-left:16px;padding-right:16px}.sx-id{padding-right:0}.sx-meta{overflow-wrap:anywhere}}
+
+/* Native input gives reliable caret behaviour at the 20-character limit. */
+.sx-banner-name{display:flex;align-items:center;justify-content:center;gap:10px;max-width:100%;min-width:0}
+.sx-name-input{appearance:none;-webkit-appearance:none;display:block;width:min(70vw,520px);min-width:2ch;max-width:100%;padding:5px 9px;margin:-5px -9px;border:1px solid transparent!important;border-radius:8px!important;outline:0!important;box-shadow:none!important;background:transparent!important;color:var(--ink);font:760 clamp(20px,3vw,27px)/1.25 var(--font);letter-spacing:-.045em;text-align:center;transition:background .16s ease,border-color .16s ease}
+.sx-name-input[readonly]{cursor:default}
+.sx-name-input:not([readonly]){cursor:text;background:color-mix(in srgb,var(--ink) 5%,transparent)!important;border-color:transparent!important}
+.sx-name-input:focus,.sx-name-input:focus-visible{outline:0!important;box-shadow:none!important}
+@media(max-width:560px){.sx-name-input{font-size:20px;width:min(68vw,420px)}}

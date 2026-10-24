@@ -167,7 +167,7 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
 .sx-banner-name{display:flex;align-items:center;justify-content:center;gap:10px;max-width:100%;min-width:0}
 .sx-banner-name h2{font:760 clamp(20px,3vw,27px)/1.2 var(--font);letter-spacing:-.045em;text-align:center;overflow-wrap:anywhere;color:var(--ink)}
 .sx-banner-name .sx-icon-btn{flex:0 0 auto;border:1px solid var(--ln);background:color-mix(in srgb,var(--ink) 4%,var(--pan))}
-.sx-hero-body{display:flex;align-items:flex-end;gap:18px;padding:0 var(--sx-pad) 24px}
+.sx-hero-body{display:flex;align-items:flex-end;gap:22px;padding:0 calc(var(--sx-pad) + 12px) 24px}
 .sx-avatar{flex:0 0 80px;width:80px;height:80px;margin-top:-40px;display:grid;place-items:center;border-radius:22px;font-size:30px;font-weight:750;letter-spacing:-.04em;color:var(--ink);background:color-mix(in srgb,var(--ink) 7%,var(--pan));border:1px solid var(--ln);box-shadow:0 0 0 5px var(--pan);position:relative}
 .sx-id{flex:1;min-width:0;padding-bottom:2px}
 .sx-name{display:flex;align-items:center;gap:8px}
@@ -332,3 +332,12 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
 }
 .sx-banner-name .sx-icon-btn{transition:transform .18s ease,background .18s ease,color .18s ease}
 .sx-banner-name .sx-icon-btn:hover{transform:translateY(-1px)}
+
+/* Keep the profile header and identity row visually separated and balanced. */
+.sx-banner{position:relative}
+.sx-banner-name{padding:0 14px}
+.sx-banner-name h2{max-width:calc(100% - 42px);line-height:1.25;min-height:1.25em}
+.sx-hero-body{column-gap:24px}
+.sx-id{padding-right:8px}
+.sx-hero-body .sx-btn,.sx-hero-body button{flex-shrink:0}
+@media(max-width:560px){.sx-hero-body{gap:14px;padding-left:16px;padding-right:16px}.sx-id{padding-right:0}.sx-meta{overflow-wrap:anywhere}}

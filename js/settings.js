@@ -35,7 +35,7 @@ V.settings=()=>{
    ${bc.user?`<button type="button" class="sx-btn sx-signout" onclick="VyroBackend.signOut()">${sxi('logout')}Sign out</button>`:''}
   </div>
  </div>
- ${bc.user?'':`<div class="sx-row sx-row-sync"><div class="sx-ico">${sxi('cloud')}</div><div class="sx-copy"><h3>Sync across devices</h3><p>Sign in to keep your workspace backed up and available everywhere.</p></div><div class="sx-actions"><button type="button" class="sx-btn sx-btn-primary" onclick="VyroBackend.signGoogle()">Continue with Google</button></div>
+ ${bc.authResolved&&!bc.user?`<div class="sx-row sx-row-sync"><div class="sx-ico">${sxi('cloud')}</div><div class="sx-copy"><h3>Sync across devices</h3><p>Sign in to keep your workspace backed up and available everywhere.</p></div><div class="sx-actions"><button type="button" class="sx-btn sx-btn-primary" onclick="VyroBackend.signGoogle()">Continue with Google</button></div>
   <details class="sx-email-login"><summary>Use email instead</summary><div class="sx-fields"><label>Email<input id="backend-email" type="email" placeholder="you@example.com" autocomplete="email"></label><label>Password<input id="backend-password" type="password" minlength="6" placeholder="At least 6 characters" autocomplete="current-password"></label></div><div class="sx-actions sx-actions-start"><button type="button" class="sx-btn sx-btn-primary" onclick="VyroBackend.signEmail('login')">Sign in</button><button type="button" class="sx-btn" onclick="VyroBackend.signEmail('create')">Create account</button></div></details></div>`}
  <div class="sx-row">
   <div class="sx-ico">${sxi('coins')}</div>

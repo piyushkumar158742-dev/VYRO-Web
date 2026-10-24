@@ -349,3 +349,24 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
 .sx-name-input:not([readonly]){cursor:text;background:color-mix(in srgb,var(--ink) 5%,transparent)!important;border-color:transparent!important}
 .sx-name-input:focus,.sx-name-input:focus-visible{outline:0!important;box-shadow:none!important}
 @media(max-width:560px){.sx-name-input{font-size:20px;width:min(68vw,420px)}}
+
+/* Settings profile hero — calm, spacious, aligned layout. */
+.sx-banner{height:104px;display:flex;align-items:center;justify-content:center;padding:0 24px;background:linear-gradient(180deg,color-mix(in srgb,var(--ink) 5%,var(--pan)),var(--pan));border-bottom:1px solid var(--ln)}
+.sx-banner-name{width:100%;gap:12px;justify-content:center}
+.sx-name-input{width:auto;max-width:min(68%,560px);min-width:0;flex:0 1 auto;padding:7px 10px;margin:0;border-radius:9px!important;font-size:clamp(21px,2.8vw,27px);line-height:1.2;text-overflow:clip}
+.sx-name-input:not([readonly]){background:color-mix(in srgb,var(--ink) 4%,transparent)!important}
+.sx-banner-name .sx-icon-btn{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px}
+.sx-hero-body{align-items:center;gap:24px;padding:22px calc(var(--sx-pad) + 16px) 26px}
+.sx-avatar{flex:0 0 80px}
+.sx-id{flex:1 1 auto;min-width:0;padding:0 18px 0 0}
+.sx-meta{margin:0;gap:10px 12px}
+.sx-signout{align-self:center;margin-left:18px;flex:0 0 auto}
+.sx-hero-body .sx-signout{margin-left:18px}
+@media(max-width:560px){
+ .sx-banner{height:88px;padding:0 14px}
+ .sx-name-input{font-size:20px;max-width:calc(100vw - 110px)}
+ .sx-hero-body{display:flex;align-items:center;flex-wrap:wrap;gap:14px;padding:18px 18px 22px}
+ .sx-avatar{flex-basis:64px;width:64px;height:64px}
+ .sx-id{flex:1 1 calc(100% - 90px);padding:0;min-width:0}
+ .sx-hero-body .sx-signout{margin-left:78px}
+}

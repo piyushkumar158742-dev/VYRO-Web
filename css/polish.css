@@ -419,3 +419,46 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
  .sx-row>.sx-ico{width:30px;height:30px}
  .sx-row .sx-cur span{font-size:10px}
 }
+
+/* Final mobile Settings redesign: vertical, calm, no squeezed side-by-side controls. */
+@media (max-width: 560px) {
+  .sx-hero, .sx-profile, .sx-panel { border-radius: 16px; overflow: hidden; }
+  .sx-banner { min-height: 68px; padding: 12px 14px; }
+  .sx-banner-name { justify-content: flex-start; padding: 0 2px; gap: 8px; }
+  .sx-name-input { text-align: left; max-width: calc(100vw - 92px); font-size: 19px; }
+  .sx-hero-body {
+    display: grid; grid-template-columns: 52px minmax(0,1fr); gap: 12px;
+    align-items: center; padding: 18px 16px 16px;
+  }
+  .sx-avatar { grid-column: 1; grid-row: 1; width: 52px; height: 52px; margin: 0; flex: none; border-radius: 15px; box-shadow: none; font-size: 22px; }
+  .sx-id { grid-column: 2; grid-row: 1; padding: 0; min-width: 0; }
+  .sx-meta { align-items: flex-start; gap: 6px; }
+  .sx-email { font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+  .sx-hero-body .sx-signout { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; width: 100%; margin: 2px 0 0; justify-content: center; }
+  .sx-row {
+    display: grid; grid-template-columns: minmax(0,1fr); gap: 12px;
+    padding: 20px 16px; align-items: start;
+  }
+  .sx-row > .sx-ico { grid-column: 1; grid-row: auto; width: 32px; height: 32px; }
+  .sx-row > .sx-copy { grid-column: 1; grid-row: auto; min-width: 0; }
+  .sx-row > .sx-actions, .sx-row > .sx-seg { grid-column: 1; grid-row: auto; width: 100%; min-width: 0; justify-self: stretch; }
+  .sx-row > .sx-actions { display: flex; flex-direction: column; align-items: stretch; gap: 9px; }
+  .sx-row .sx-btn { width: 100%; min-height: 42px; justify-content: center; white-space: normal; }
+  .sx-row .sx-seg { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 6px; }
+  .sx-row .sx-cur { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 10px 3px; min-width: 0; }
+  .sx-row .sx-cur b { font-size: 16px; }
+  .sx-row .sx-cur span { font-size: 10px; }
+  .sx-row .sx-copy h3 { font-size: 15px; line-height: 1.4; }
+  .sx-row .sx-copy p { margin-top: 5px; line-height: 1.6; font-size: 12.5px; }
+  .sx-row-yt .sx-actions { display: flex; flex-direction: column; }
+  .sx-channel { min-width: 0; overflow-wrap: anywhere; }
+  .sx-row-sync .sx-actions { grid-column: 1; }
+  .sx-row .sx-fields { display: grid; grid-template-columns: minmax(0,1fr); gap: 10px; }
+  .sx-foot { padding: 20px 16px; gap: 14px; }
+  .sx-foot nav { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+}
+@media (max-width: 380px) {
+  .sx-hero-body { padding-left: 14px; padding-right: 14px; }
+  .sx-row { padding: 18px 14px; }
+  .sx-row .sx-cur span { font-size: 9px; }
+}

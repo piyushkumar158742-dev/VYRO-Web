@@ -493,3 +493,19 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
  .sx-row-yt>.sx-actions .sx-btn,.sx-row:not(.sx-row-sync)>.sx-actions .sx-btn{width:100%;min-height:42px;justify-content:center}
  .sx-row{gap:10px;padding:18px 16px}
 }
+
+/* Center local workspace identity when no account is signed in. */
+.sx-hero-body:not(:has(.sx-signout)) .sx-id{width:100%;display:flex;justify-content:center;text-align:center;padding:0!important}
+.sx-hero-body:not(:has(.sx-signout)) .sx-meta{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;width:100%}
+.sx-hero-body:not(:has(.sx-signout)) .sx-email{text-align:center;font-weight:600}
+.sx-hero-body:not(:has(.sx-signout)) .sx-pill{margin:0 auto}
+.sx-row .sx-actions{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:8px;min-width:0}
+.sx-row .sx-actions .sx-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:42px;height:42px;box-sizing:border-box;flex:0 0 42px;white-space:nowrap}
+.sx-row-yt .sx-actions,.sx-row:not(.sx-row-sync) .sx-actions{min-width:0}
+@media(max-width:560px){
+ .sx-hero-body:not(:has(.sx-signout)){grid-template-columns:minmax(0,1fr)}
+ .sx-hero-body:not(:has(.sx-signout)) .sx-avatar{grid-column:1;grid-row:1;justify-self:center;width:52px;height:52px}
+ .sx-hero-body:not(:has(.sx-signout)) .sx-id{grid-column:1;grid-row:2;padding:8px 0 4px!important}
+ .sx-row .sx-actions{width:100%;gap:8px}
+ .sx-row .sx-actions .sx-btn{height:44px;min-height:44px;flex-basis:44px}
+}

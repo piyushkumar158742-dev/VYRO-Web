@@ -611,3 +611,23 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
  .sx-email-login{width:100%;box-sizing:border-box}
  .sx-email-login summary{min-height:40px;padding:10px 12px}
 }
+
+/* Mobile Settings: four workspace/YouTube actions span the content width with a small inset. */
+@media(max-width:560px){
+ .sx-row-yt>.sx-actions,
+ .sx-row:not(.sx-row-sync)>.sx-actions{
+   grid-column:1 / -1!important;
+   width:100%!important;min-width:0!important;
+   box-sizing:border-box;
+   padding:0 3px;
+   margin-top:8px;
+ }
+ .sx-row-yt>.sx-actions .sx-btn,
+ .sx-row:not(.sx-row-sync)>.sx-actions .sx-btn{
+   display:flex!important;width:100%!important;
+   min-width:0!important;height:44px!important;min-height:44px!important;
+   flex:0 0 44px!important;box-sizing:border-box;
+   justify-content:center;align-items:center;
+ }
+ .sx-row-yt,.sx-row:not(.sx-row-sync){row-gap:8px}
+}

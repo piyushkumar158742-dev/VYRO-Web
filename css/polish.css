@@ -537,3 +537,43 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
   }
   .sx-hero-body:not(:has(.sx-signout)) .sx-meta{gap:5px}
 }
+
+/* Sign-in card: make the device-sync explanation and primary action feel intentional. */
+.sx-row-sync{
+  align-items:center;
+  grid-template-columns:36px minmax(0,1fr) minmax(190px,220px);
+  column-gap:16px;row-gap:14px;
+  padding-top:22px;padding-bottom:22px;
+}
+.sx-row-sync .sx-ico{
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  border-radius:11px;background:color-mix(in srgb,var(--ink) 5%,transparent);
+}
+.sx-row-sync .sx-copy{min-width:0}
+.sx-row-sync .sx-copy h3{font-size:14px;line-height:1.4;letter-spacing:-.02em;margin:0 0 5px}
+.sx-row-sync .sx-copy p{font-size:12px;line-height:1.65;max-width:34ch;margin:0;color:var(--muted)}
+.sx-row-sync .sx-actions{grid-column:3;grid-row:1;min-width:0;align-self:center}
+.sx-row-sync .sx-actions .sx-btn{width:100%;min-height:42px;border-radius:11px;font-weight:650}
+.sx-email-login{grid-column:2 / 4;min-width:0;margin-top:2px;padding-top:12px;border-top:1px solid var(--ln)}
+.sx-email-login summary{width:max-content;max-width:100%;font-size:11px;color:var(--muted);cursor:pointer;transition:color .15s ease}
+.sx-email-login summary:hover{color:var(--ink)}
+.sx-email-login[open] .sx-fields{margin-top:14px}
+.sx-email-login .sx-actions{display:flex;flex-direction:row;gap:8px;flex-wrap:wrap;margin-top:12px}
+.sx-email-login .sx-actions .sx-btn{flex:1 1 130px;min-height:40px}
+@media(max-width:560px){
+ .sx-row-sync{
+   display:grid;grid-template-columns:minmax(0,1fr);gap:12px;
+   padding:20px 16px 18px;
+ }
+ .sx-row-sync .sx-ico{grid-column:1;grid-row:auto;width:32px;height:32px}
+ .sx-row-sync .sx-copy{grid-column:1;grid-row:auto}
+ .sx-row-sync .sx-copy h3{font-size:15px;margin-bottom:5px}
+ .sx-row-sync .sx-copy p{font-size:12px;line-height:1.65;max-width:38ch}
+ .sx-row-sync .sx-actions{grid-column:1;grid-row:auto;width:100%;margin-top:2px}
+ .sx-row-sync .sx-actions .sx-btn{width:100%;min-height:44px;border-radius:11px}
+ .sx-email-login{grid-column:1;margin-top:3px;padding-top:12px;width:100%;box-sizing:border-box}
+ .sx-email-login summary{font-size:12px;padding:2px 0}
+ .sx-email-login .sx-fields{grid-template-columns:minmax(0,1fr);gap:12px}
+ .sx-email-login .sx-actions{display:flex;flex-direction:column;gap:8px}
+ .sx-email-login .sx-actions .sx-btn{width:100%;flex:auto}
+}

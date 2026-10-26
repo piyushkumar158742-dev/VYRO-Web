@@ -577,3 +577,37 @@ h1,h2,h3,h4,.strip b,.deal .amt,.sheet h3{font-family:var(--font)}
  .sx-email-login .sx-actions{display:flex;flex-direction:column;gap:8px}
  .sx-email-login .sx-actions .sx-btn{width:100%;flex:auto}
 }
+
+/* Sync action: nearly edge-to-edge with a comfortable, consistent inset. */
+.sx-row-sync .sx-actions{width:100%;min-width:0}
+.sx-row-sync .sx-actions .sx-btn{
+  display:flex;width:100%;box-sizing:border-box;
+  min-height:44px;height:44px;padding:0 16px;
+  justify-content:center;border-radius:11px;
+}
+.sx-email-login{
+  margin-top:4px;padding-top:13px;
+}
+.sx-email-login summary{
+  display:flex;align-items:center;gap:8px;
+  width:100%;box-sizing:border-box;list-style:none;
+  padding:10px 12px;border:1px solid var(--ln);border-radius:10px;
+  color:var(--muted);font-size:12px;font-weight:600;
+  background:color-mix(in srgb,var(--ink) 3%,transparent);
+  transition:background .16s ease,border-color .16s ease,color .16s ease;
+}
+.sx-email-login summary::-webkit-details-marker{display:none}
+.sx-email-login summary:after{content:"+";margin-left:auto;font-size:16px;line-height:1;color:var(--ink)}
+.sx-email-login[open] summary:after{content:"−"}
+.sx-email-login summary:hover{
+  color:var(--ink);border-color:color-mix(in srgb,var(--ink) 18%,var(--ln));
+  background:color-mix(in srgb,var(--ink) 6%,transparent)
+}
+.sx-email-login summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(max-width:560px){
+ .sx-row-sync{padding-left:16px;padding-right:16px}
+ .sx-row-sync .sx-actions{width:100%;padding:0 2px;box-sizing:border-box}
+ .sx-row-sync .sx-actions .sx-btn{width:100%;height:46px;min-height:46px}
+ .sx-email-login{width:100%;box-sizing:border-box}
+ .sx-email-login summary{min-height:40px;padding:10px 12px}
+}

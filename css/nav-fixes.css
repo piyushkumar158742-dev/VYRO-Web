@@ -81,3 +81,12 @@
   stroke: #FFFFFF !important;
   stroke-width: 1.65 !important;
 }
+
+/* Keep navigation icons optically centered within their hit areas. */
+.rail button{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.rail button .nav-ico,.rail button b.nav-icon-settings{display:flex;align-items:center;justify-content:center;margin-inline:auto}
+.rail button .nav-ico svg,.rail button b.nav-icon-settings svg{display:block;margin:auto}
+@media(max-width:860px){
+ .rail button{gap:4px}
+ .rail button .nav-ico,.rail button b.nav-icon-settings{width:22px;height:22px}
+}

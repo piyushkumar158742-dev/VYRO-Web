@@ -17,3 +17,27 @@
 .dashboard-tasks .task-title{min-width:0;flex:1;text-align:left;overflow:hidden}.dashboard-tasks .task-title strong{display:block;white-space:normal;overflow-wrap:anywhere}.dashboard-tasks .row{min-width:0}
 @media(max-width:860px){.strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.strip div{min-height:105px;padding:16px}.two{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:520px){.hi{margin:14px 0 18px}.strip{gap:8px}.strip div{min-height:92px;padding:14px}.strip b{font-size:27px}.strip span{font-size:9px}.panel>header{padding:10px 12px}.dashboard-tasks .row{gap:8px;padding:10px}.dashboard-tasks .tag{font-size:10px}}
+
+/* Timeline: center the current-date marker and give day/date labels room to breathe. */
+.tl-head{align-items:start}
+.tl-head i{
+ display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+ gap:5px;padding:2px 0 8px;min-width:0;line-height:1.1;
+}
+.tl-head i b{
+ display:grid;place-items:center;width:28px;height:28px;min-width:28px;
+ margin:0 auto;border-radius:50%;font-size:14px;line-height:1;
+ font-weight:750;box-sizing:border-box;
+}
+.tl-head i.now b{
+ background:var(--ink);color:var(--pan);
+}
+.tl-head i:not(.now) b{background:transparent}
+.tl-head i.now{color:var(--mut);font-weight:700}
+@media(max-width:860px){
+ .tl-in{padding-left:10px;padding-right:10px}
+ .tl-head,.tl-row{grid-template-columns:54px minmax(0,1fr)}
+ .tl-head i{font-size:10px;gap:6px}
+ .tl-head i b{width:27px;height:27px;min-width:27px;font-size:13px}
+ .tl-row em{font-size:11px}
+}

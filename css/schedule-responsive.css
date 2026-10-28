@@ -85,15 +85,27 @@
 .cal aside .row .btn.del:hover{opacity:1}
 .cal aside .empty{color:var(--mut);font-size:13px;line-height:1.5}
 @media(max-width:600px){
-  .cal{gap:14px}
-  .cal>section.panel,.cal aside .panel{border-radius:16px}
-  .cal .dow{padding:0 6px}
-  .cal .grid{padding:0 6px 8px}
-  .cal .dow span{font-size:0;letter-spacing:0}
-  .cal .day{border-left:0!important;border-radius:8px;min-height:56px}
+  .cal{gap:16px}
+  .cal>section.panel,.cal aside .panel{border-radius:17px}
+  .cal>section.panel>header{padding:16px 16px!important;min-height:62px}
+  .cal .dow{padding:2px 8px 0}
+  .cal .dow span{font-size:0;letter-spacing:0;padding:13px 0 11px}
+  .cal .grid{padding:0 8px 10px}
+  .cal .day{border-left:0!important;border-radius:9px;min-height:60px;padding:6px 2px;gap:4px}
+  .cal .day .n{width:28px;height:28px;font-size:12px}
   .cal .day:not(.mute):hover{box-shadow:none}
-  .cal .day.sel{border-radius:9px}
-  .cal aside .panel>header{min-height:52px}
+  .cal .day.sel{border-radius:10px}
+  .cal aside{gap:14px}
+  .cal aside .panel>header{min-height:56px;padding:16px 18px!important}
+  .cal aside .row{padding:14px 18px!important}
+  .cal aside .empty{padding:25px 18px}
+}
+@media(max-width:360px){
+  .cal .day{min-height:52px;padding:5px 0}
+  .cal .day .n{width:25px;height:25px;font-size:11px}
+  .cal>section.panel>header{padding:14px 12px!important}
+  .cal .grid{padding-left:6px;padding-right:6px}
+  .cal .dow{padding-left:6px;padding-right:6px}
 }
 @media(prefers-reduced-motion:reduce){
   .cal .day,.cal .day .n,.cal aside .row{transition:none!important}

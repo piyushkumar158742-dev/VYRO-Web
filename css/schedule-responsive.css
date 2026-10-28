@@ -1,0 +1,51 @@
+/* Schedule: spacious, touch-friendly responsive layout */
+.cal{width:100%;min-width:0;grid-template-columns:minmax(0,1fr) minmax(260px,340px);align-items:start;gap:18px}
+.cal>section,.cal>aside,.cal aside,.cal .panel{min-width:0}
+.cal .grid{grid-template-columns:repeat(7,minmax(0,1fr));width:100%}
+.cal .dow{grid-template-columns:repeat(7,minmax(0,1fr))}
+.cal .day{box-sizing:border-box;min-width:0;min-height:92px;padding:7px 5px;align-items:flex-start;overflow:hidden}
+.cal .day .n{flex:0 0 auto}
+.cal .day i{display:block;max-width:100%;box-sizing:border-box}
+.cal aside{display:flex;flex-direction:column;gap:0;min-width:0}
+.cal aside .panel{overflow:hidden}
+.cal aside .row{gap:10px;min-width:0}
+.cal aside .row>div{min-width:0;overflow-wrap:anywhere}
+.cal aside .row small{display:block;overflow-wrap:anywhere}
+@media(max-width:1000px){
+  .cal{grid-template-columns:minmax(0,1fr)}
+  .cal .day{min-height:68px}
+  .cal aside{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .cal aside .panel{margin-bottom:0}
+}
+@media(max-width:600px){
+  .cal{gap:14px}
+  .cal>section.panel>header{padding:14px 14px!important;gap:10px;flex-wrap:wrap}
+  .cal>section.panel>header h3{font-size:15px;line-height:1.3}
+  .cal .nav2{gap:5px;flex-shrink:0}
+  .cal .nav2 button{width:34px;height:34px;min-width:34px}
+  .cal .nav2 button:nth-child(2){width:auto;min-width:54px;padding:0 10px}
+  .cal .dow span{font-size:0;line-height:1;padding:10px 0}
+  .cal .dow span:before{font-size:10px;content:attr(data-short)}
+  .cal .dow span:nth-child(1):before{content:"S"}
+  .cal .dow span:nth-child(2):before{content:"M"}
+  .cal .dow span:nth-child(3):before{content:"T"}
+  .cal .dow span:nth-child(4):before{content:"W"}
+  .cal .dow span:nth-child(5):before{content:"T"}
+  .cal .dow span:nth-child(6):before{content:"F"}
+  .cal .dow span:nth-child(7):before{content:"S"}
+  .cal .day{min-height:54px;padding:5px 2px;align-items:center;gap:4px}
+  .cal .day .n{width:27px;height:27px;font-size:12px;display:grid;place-items:center}
+  .cal .day i{display:none}
+  .cal .day.has:after{content:"";display:block;width:5px;height:5px;border-radius:50%;background:var(--ink);margin:0 auto}
+  .cal .day.sel{box-shadow:inset 0 0 0 1.5px var(--ink)!important;border-radius:8px}
+  .cal aside{grid-template-columns:minmax(0,1fr);gap:12px}
+  .cal aside .panel>header{padding:14px 16px!important}
+  .cal aside .row{padding:12px 16px!important}
+  .cal aside .empty{padding:22px 16px}
+}
+@media(max-width:360px){
+  .cal .day{min-height:48px;padding:4px 0}
+  .cal .day .n{width:24px;height:24px;font-size:11px}
+  .cal .nav2 button{width:30px;height:32px;min-width:30px}
+  .cal .nav2 button:nth-child(2){min-width:48px;padding:0 7px}
+}

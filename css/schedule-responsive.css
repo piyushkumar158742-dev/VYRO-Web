@@ -49,3 +49,52 @@
   .cal .nav2 button{width:30px;height:32px;min-width:30px}
   .cal .nav2 button:nth-child(2){min-width:48px;padding:0 7px}
 }
+
+/* Schedule visual refinement: calm, editorial calendar with clearer hierarchy */
+.cal{gap:20px}
+.cal>section.panel,.cal aside .panel{border-radius:18px;overflow:hidden}
+.cal>section.panel{box-shadow:var(--shadow-card)}
+.cal>section.panel>header,.cal aside .panel>header{
+  min-height:58px;padding:16px 20px!important;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;border-bottom:1px solid var(--ln)!important;background:var(--pan)!important
+}
+.cal>section.panel>header h3,.cal aside .panel>header h3{
+  margin:0;font-size:15px;font-weight:750;letter-spacing:-.025em;color:var(--ink)
+}
+.cal .dow{padding:4px 8px 0}
+.cal .dow span{font-size:10px;letter-spacing:.08em;padding:12px 0 10px}
+.cal .grid{padding:0 8px 10px}
+.cal .day{
+  border-top:1px solid var(--ln)!important;border-left:1px solid var(--ln)!important;
+  border-radius:0;transition:background .16s ease,box-shadow .16s ease;
+}
+.cal .day:nth-child(7n+1){border-left:0!important}
+.cal .day:not(.mute):hover{background:var(--soft)!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ink) 12%,transparent)}
+.cal .day .n{transition:transform .16s ease}
+.cal .day:not(.mute):hover .n{transform:scale(1.04)}
+.cal .day.today .n{font-weight:750}
+.cal .day.sel{border-radius:8px;z-index:1;position:relative}
+.cal aside .panel{box-shadow:var(--shadow-card)}
+.cal aside .panel>header{min-height:56px}
+.cal aside .row{align-items:center;border-bottom:1px solid var(--ln);transition:background .15s ease}
+.cal aside .row:last-child{border-bottom:0}
+.cal aside .row:hover{background:var(--soft)}
+.cal aside .row strong{font-size:13px;font-weight:700;line-height:1.4;color:var(--ink)}
+.cal aside .row small{margin-top:4px;font-size:11.5px;line-height:1.4;color:var(--mut)}
+.cal aside .row .btn.del{flex:0 0 auto;width:30px;height:30px;border-radius:9px;opacity:.72}
+.cal aside .row .btn.del:hover{opacity:1}
+.cal aside .empty{color:var(--mut);font-size:13px;line-height:1.5}
+@media(max-width:600px){
+  .cal{gap:14px}
+  .cal>section.panel,.cal aside .panel{border-radius:16px}
+  .cal .dow{padding:0 6px}
+  .cal .grid{padding:0 6px 8px}
+  .cal .dow span{font-size:0;letter-spacing:0}
+  .cal .day{border-left:0!important;border-radius:8px;min-height:56px}
+  .cal .day:not(.mute):hover{box-shadow:none}
+  .cal .day.sel{border-radius:9px}
+  .cal aside .panel>header{min-height:52px}
+}
+@media(prefers-reduced-motion:reduce){
+  .cal .day,.cal .day .n,.cal aside .row{transition:none!important}
+}

@@ -110,3 +110,17 @@
 @media(prefers-reduced-motion:reduce){
   .cal .day,.cal .day .n,.cal aside .row{transition:none!important}
 }
+
+
+/* Schedule sidebar must scroll naturally with the calendar page.
+   Prevent sticky positioning from making the selected-day panel drift. */
+.cal>aside{
+  position:static!important;
+  inset:auto!important;
+  align-self:start!important;
+  transform:none!important;
+}
+.cal>aside>.panel{
+  position:static!important;
+  inset:auto!important;
+}

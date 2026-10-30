@@ -164,28 +164,51 @@
   .rail button:hover b.nav-ico svg,.cal .day:hover i,.deal-mail{transition:none!important;transform:none!important}
 }
 
-/* ---------- 13. Schedule: fixed-height, internally scrollable side panels ---------- */
+/* ---------- 13. Schedule: equal-height side panels, internally scrollable ---------- */
 .cal aside .panel{display:flex;flex-direction:column}
-.cal aside .cal-scroll{max-height:320px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin!important;-ms-overflow-style:auto!important;scroll-behavior:smooth}
+.cal aside .cal-scroll{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin!important;-ms-overflow-style:auto!important;scroll-behavior:smooth}
 .cal aside .cal-scroll::-webkit-scrollbar{display:block!important;width:9px!important;height:9px!important}
 .cal aside .cal-scroll::-webkit-scrollbar-track{display:block!important;background:transparent!important}
 .cal aside .cal-scroll::-webkit-scrollbar-thumb{display:block!important;background:color-mix(in srgb,var(--ink) 18%,transparent);border-radius:99px;border:2px solid transparent;background-clip:content-box}
 .cal aside .cal-scroll:hover::-webkit-scrollbar-thumb,.cal aside .cal-scroll:focus-within::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 34%,transparent);background-clip:content-box}
 .cal aside .cal-scroll .empty{padding:26px 18px}
 /* The Today / Coming-up sections must NOT slide down the page while scrolling:
-   they stay pinned in place and only their inner list scrolls. */
+   they stay pinned in place as ONE unit and only their inner lists scroll.
+   Both panels are forced to the SAME height — the taller of the two (capped to
+   the viewport). On desktop JS measures each panel's natural height and pins
+   both via --cal-panel-h; below 1001px plain CSS grid stretch does it. */
 @media(min-width:1001px){
-  .cal aside{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);display:flex;flex-direction:column;gap:16px;z-index:5}
-  .cal aside .panel{position:static;flex:0 1 auto;min-height:0;max-height:none}
-  .cal aside .cal-up-panel{flex-grow:2}
-  .cal aside .cal-day-panel .cal-scroll,.cal aside .cal-up-panel .cal-scroll{max-height:none;flex:1 1 auto;min-height:0}
+  .cal aside{position:sticky;top:16px;align-self:start;display:flex;flex-direction:column;gap:16px;z-index:5}
+  .cal aside .panel{min-height:0}
+  .cal aside .cal-scroll{max-height:none;flex:1 1 auto;min-height:0}
 }
 @media(max-width:1000px){
-  .cal aside{position:static}
+  .cal aside{position:static;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important}
+  .cal aside .panel{height:auto}
+  .cal aside .cal-scroll{max-height:360px}
 }
 @media(max-width:600px){
+  .cal aside{grid-template-columns:minmax(0,1fr)!important}
   .cal aside .cal-scroll{max-height:250px}
 }
+
+/* Desktop: pin BOTH side panels to one shared height (set by calPanels()).
+   Lists inside then scroll within the box instead of stretching the page. */
+.cal aside[data-cal-sync="1"] .panel{height:var(--cal-panel-h);max-height:var(--cal-panel-h)}
+.cal aside[data-cal-sync="1"] .cal-scroll{max-height:none}
+
+/* ---------- 13b. Subtle delete animation for schedule rows ---------- */
+.cal aside .row.row-removing{
+  --rm-h:52px;
+  animation:cal-row-out .34s cubic-bezier(.4,0,.2,1) forwards;
+  pointer-events:none;overflow:hidden;
+}
+@keyframes cal-row-out{
+  0%{opacity:1;transform:none;max-height:var(--rm-h)}
+  55%{opacity:0;transform:translateX(14px) scale(.97);max-height:var(--rm-h)}
+  100%{opacity:0;transform:translateX(14px) scale(.97);max-height:0;padding-top:0;padding-bottom:0;margin:0;border-bottom-width:0}
+}
+@media(prefers-reduced-motion:reduce){.cal aside .row.row-removing{animation:none}}
 
 /* ---------- 14. Dropdowns: unified, polished select styling ---------- */
 :root[data-theme] select{
@@ -250,3 +273,32 @@
 .vd-opt.sel:hover{background:var(--ink)}
 /* keep form labels aligned with the custom control */
 .f label:has(.vd),label:has(.vd){gap:inherit}
+
+/* ---------- 16. Manage pipeline: easier reordering, themed to the site ---------- */
+#sheet.sheet:has(.pipeline-manager) .pipeline-manager-list{user-select:none}
+#sheet.sheet:has(.pipeline-manager) .pipeline-manager-row input{user-select:text;-webkit-user-select:text}
+#sheet.sheet:has(.pipeline-manager) .pipeline-manager-row{grid-template-columns:34px minmax(0,1fr) auto auto 34px!important;gap:7px!important}
+#sheet.sheet:has(.pipeline-manager) .pipeline-manager-number{cursor:grab;touch-action:none;font-size:15px;background:color-mix(in srgb,var(--ink) 8%,var(--pan));color:var(--mut);transition:background .16s ease,color .16s ease}
+#sheet.sheet:has(.pipeline-manager) .pipeline-manager-number:hover{background:color-mix(in srgb,var(--ink) 16%,var(--pan));color:var(--ink)}
+#sheet.sheet:has(.pipeline-manager) .pipeline-manager-number:active{cursor:grabbing}
+.pipeline-move{display:flex;gap:4px;flex:none}
+.pm-btn{display:grid;place-items:center;width:30px;height:32px;padding:0;border:1px solid var(--ln);border-radius:9px;
+  background:var(--pan);color:var(--ink);font-size:13px;font-weight:800;line-height:1;cursor:pointer;
+  box-shadow:0 1px 2px rgba(16,24,40,.04);
+  transition:border-color .16s ease,background .16s ease,transform .14s ease,opacity .16s ease}
+.pm-btn:hover:not(:disabled){border-color:color-mix(in srgb,var(--ink) 34%,var(--ln));background:var(--bin);transform:translateY(-1px)}
+.pm-btn:active:not(:disabled){transform:scale(.92)}
+.pm-btn:disabled{opacity:.3;cursor:not-allowed}
+@media(max-width:600px){
+  #sheet.sheet:has(.pipeline-manager) .pipeline-manager-row{grid-template-columns:30px minmax(0,1fr) auto auto 32px!important;gap:5px!important}
+  .pm-btn{width:27px;height:30px;font-size:12px}
+}
+/* insertion lines follow the site theme instead of a fixed white glow */
+#sheet.sheet:has(.pipeline-manager) .pipeline-drop-slot.drop-active{background:color-mix(in srgb,var(--ink) 8%,transparent)}
+#sheet.sheet:has(.pipeline-manager) .pipeline-drop-slot.drop-active:after{background:var(--ink);box-shadow:0 0 0 1px color-mix(in srgb,var(--ink) 22%,transparent),0 0 14px color-mix(in srgb,var(--ink) 30%,transparent)}
+#sheet.sheet:has(.pipeline-manager) .pipeline-drop-slot.drop-ready:not(.drop-active):after{background:color-mix(in srgb,var(--ink) 26%,transparent)}
+/* rows glide into their new slot after reorder (FLIP via JS animate) */
+#sheet.sheet:has(.pipeline-manager) .pipeline-manager-row{will-change:auto}
+@media(prefers-reduced-motion:reduce){
+  .pm-btn,#sheet.sheet:has(.pipeline-manager) .pipeline-manager-number{transition:none!important;transform:none!important}
+}

@@ -163,3 +163,35 @@
   .strip-note-link,.video-tile-add:hover .add-mark,.clip,.rail button:not(.logo),
   .rail button:hover b.nav-ico svg,.cal .day:hover i,.deal-mail{transition:none!important;transform:none!important}
 }
+
+/* ---------- 13. Schedule: fixed-height, internally scrollable side panels ---------- */
+.cal aside .panel{display:flex;flex-direction:column}
+.cal aside .cal-scroll{max-height:320px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin!important;-ms-overflow-style:auto!important;scroll-behavior:smooth}
+.cal aside .cal-scroll::-webkit-scrollbar{display:block!important;width:9px!important;height:9px!important}
+.cal aside .cal-scroll::-webkit-scrollbar-track{display:block!important;background:transparent!important}
+.cal aside .cal-scroll::-webkit-scrollbar-thumb{display:block!important;background:color-mix(in srgb,var(--ink) 18%,transparent);border-radius:99px;border:2px solid transparent;background-clip:content-box}
+.cal aside .cal-scroll:hover::-webkit-scrollbar-thumb,.cal aside .cal-scroll:focus-within::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 34%,transparent);background-clip:content-box}
+.cal aside .cal-scroll .empty{padding:26px 18px}
+@media(min-width:1001px){
+  .cal aside .panel{position:sticky;top:14px}
+}
+@media(max-width:600px){
+  .cal aside .cal-scroll{max-height:250px}
+}
+
+/* ---------- 14. Dropdowns: unified, polished select styling ---------- */
+:root[data-theme] select{
+  -webkit-appearance:none;appearance:none;
+  height:44px;box-sizing:border-box;
+  padding:0 42px 0 14px;border-radius:11px;
+  border:1px solid var(--ln);background-color:var(--pan);color:var(--ink);
+  font-size:14px;font-weight:600;line-height:normal;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;background-size:17px 17px;
+  box-shadow:0 1px 2px rgba(16,24,40,.04);
+  transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease;
+}
+:root[data-theme] select:hover{border-color:color-mix(in srgb,var(--ink) 32%,var(--ln))}
+:root[data-theme] select:focus{outline:none!important;border-color:var(--ink)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--ink) 12%,transparent)!important}
+:root[data-theme="dark"] select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='%23B3B3B3' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")}
+.sheet select,.standard-form select,.f select{height:44px;border-radius:11px!important;padding-right:42px!important}

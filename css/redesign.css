@@ -1,0 +1,165 @@
+/* =========================================================================
+   Vyro — UI redesign & visual-cue fix layer (loaded LAST, after polish.css)
+
+   Visual cues found and fixed:
+   1. Empty states were plain gray text with no icon, illustration or action
+      → every empty panel now gets an icon medallion, a headline, helper copy
+        and a clear primary/secondary action.
+   2. "Connect YouTube to sync" on Desk was dead-looking caption text
+      → it is now a real, clickable cue that jumps to Settings.
+   3. Priority tags read as generic pills → they now carry a colored dot +
+      capitalized label (high / medium / low), in both themes.
+   4. Completed tasks had no status color language → done rows now dim, get a
+      green check and a struck title; pending rows keep priority color.
+   5. Calendar event chips used muted fills with unreadable contrast and the
+      weekday header fell back to broken attr() labels on mobile
+      → solid ink chips with inverse text, always-visible day initials.
+   6. Deals carried only a tiny colored dot → status pills now have a tinted
+      dot-chip per stage so pipeline state reads at a glance.
+   7. The dashboard timeline's "today" marker was invisible next to future
+      clips → today gets a filled token + a soft vertical guide line.
+   8. No keyboard discoverability → the New video button shows its shortcut.
+   9. Rail nav items had no tooltips and no hover feedback on mobile →
+      title hints + gentle lift/scale feedback everywhere it is tappable.
+   10. Stat cards looked identical whether synced or not → unsynced cards get
+       a dashed treatment so "needs connecting" reads visually.
+   11. Focus visibility was inconsistent across legacy layers → one global
+       :focus-visible ring wins over all older outlines.
+   ========================================================================= */
+
+/* ---------- 1. Global focus ring (wins over every legacy override) ---------- */
+:root[data-theme] a:focus-visible,
+:root[data-theme] button:focus-visible,
+:root[data-theme] input:focus-visible,
+:root[data-theme] select:focus-visible,
+:root[data-theme] textarea:focus-visible,
+:root[data-theme] summary:focus-visible,
+:root[data-theme] [tabindex]:focus-visible{
+  outline:2px solid var(--ink)!important;
+  outline-offset:2px!important;
+  box-shadow:0 0 0 5px color-mix(in srgb,var(--ink) 14%,transparent)!important;
+}
+
+/* ---------- 2. Top bar ---------- */
+.top .top-kbd{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-left:2px;padding:2px 6px;border-radius:6px;
+  border:1px solid color-mix(in srgb,var(--bin) 35%,transparent);
+  background:color-mix(in srgb,var(--bin) 22%,transparent);
+  color:inherit;font-family:var(--font);font-size:10px;font-weight:750;line-height:1.4;
+  pointer-events:none;
+}
+#clock{cursor:default}
+@media(max-width:700px){.top .top-kbd{display:none}}
+
+/* ---------- 3. Left rail: clearer active + hover affordances ---------- */
+:root .app .rail button:not(.logo){transition:background-color .16s ease,color .16s ease,transform .16s ease}
+:root .app .rail button:not(.logo):active{transform:scale(.94)}
+.rail button b.nav-ico svg{transition:transform .18s ease}
+:root .app .rail button:not(.logo):hover b.nav-ico svg{transform:translateY(-1px)}
+/* active item keeps a persistent leading tick even on the mobile dock */
+@media(max-width:860px){
+  :root .app .rail button.on{position:relative}
+  :root .app .rail button.on:after{
+    content:"";position:absolute;left:14px;top:50%;width:4px;height:4px;margin-top:-2px;
+    border-radius:50%;background:#fff;opacity:.9;
+  }
+}
+
+/* ---------- 4. Desk: stat cards become meaningful states ---------- */
+:root[data-theme] .strip>div{overflow:hidden}
+:root[data-theme] .strip>div.is-muted b{color:var(--mut)!important}
+:root[data-theme] .strip>div.is-muted{border-style:dashed!important;background:color-mix(in srgb,var(--soft) 55%,var(--pan))!important;box-shadow:none!important}
+.strip-note-link{
+  appearance:none;display:inline-flex;align-items:center;gap:4px;width:max-content;max-width:100%;
+  margin-top:1px;padding:3px 9px 3px 7px;border:1px solid var(--ln);border-radius:99px;
+  background:var(--pan);color:var(--ink);font:650 11px/1.5 var(--font);letter-spacing:-.01em;
+  cursor:pointer;transition:border-color .16s ease,background .16s ease,transform .16s ease;
+}
+.strip-note-link:hover{border-color:color-mix(in srgb,var(--ink) 35%,var(--ln));background:var(--soft);transform:translateY(-1px)}
+.strip-note-link i{width:6px;height:6px;flex:none;border-radius:50%;background:var(--amb);box-shadow:0 0 0 3px color-mix(in srgb,var(--amb) 22%,transparent)}
+:root[data-theme="dark"] .strip-note-link i{background:#F5C063}
+
+/* ---------- 5. Shared empty states: icon + message + action ---------- */
+.v-empty{display:flex;flex-direction:column;align-items:center;gap:5px;padding:34px 20px 32px;text-align:center}
+.v-empty-ico{
+  display:grid;place-items:center;width:46px;height:46px;margin-bottom:6px;border-radius:15px;
+  border:1px solid var(--ln);background:var(--soft);color:var(--mut);font-size:20px;line-height:1;
+}
+.v-empty-title{margin:0;font:700 14px/1.4 var(--font);letter-spacing:-.015em;color:var(--ink)}
+.v-empty-sub{margin:0;max-width:34ch;font:500 12.5px/1.6 var(--font);color:var(--mut)}
+.v-empty-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px}
+.v-empty-actions .btn,.v-empty-actions .sx-btn{min-height:38px;border-radius:10px;font-size:12.5px;font-weight:700}
+.v-empty-actions .btn.ghost{background:var(--pan);border-color:var(--ln);color:var(--ink)}
+.v-empty-actions .btn.ghost:hover{background:var(--soft)}
+
+/* ---------- 6. Priority tags: dot + capitalization everywhere ---------- */
+.tag{text-transform:capitalize}
+.tag.high,.tag.medium,.tag.low{display:inline-flex;align-items:center;gap:6px}
+.tag.high:before,.tag.medium:before,.tag.low:before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:currentColor}
+
+/* ---------- 7. Task rows: stronger completed-state color language ---------- */
+:root[data-theme] .task-row.done{opacity:1;background:color-mix(in srgb,#2BB673 5%,var(--pan))}
+:root[data-theme] .task-row.done:hover{background:color-mix(in srgb,#2BB673 8%,var(--pan))}
+:root[data-theme] .task-row.done .chk.on{border-color:#1E9E63!important;background:#1E9E63!important;color:#fff!important}
+:root[data-theme] .task-row.done .chk.on span{color:#fff!important}
+:root[data-theme="dark"] .task-row.done{background:color-mix(in srgb,#2BB673 9%,var(--pan))}
+:root[data-theme="dark"] .task-row.done .chk.on{border-color:#3ECF8E!important;background:#3ECF8E!important;color:#0B1210!important}
+:root[data-theme="dark"] .task-row.done .chk.on span{color:#0B1210!important}
+.task-panel-done .task-heading-icon{color:#1E9E63;border-color:color-mix(in srgb,#2BB673 40%,var(--ln));background:color-mix(in srgb,#2BB673 10%,var(--pan))}
+:root[data-theme="dark"] .task-panel-done .task-heading-icon{color:#4BDB9B}
+
+/* ---------- 8. Schedule: readable event chips + real weekday fallback ---------- */
+.cal .dow span{font-size:0;line-height:1;padding:12px 0 10px}
+.cal .dow span:before{font-size:10.5px;font-weight:700;letter-spacing:.08em;color:var(--mut)}
+.cal .dow span:nth-child(1):before{content:"SUN"}.cal .dow span:nth-child(2):before{content:"MON"}
+.cal .dow span:nth-child(3):before{content:"TUE"}.cal .dow span:nth-child(4):before{content:"WED"}
+.cal .dow span:nth-child(5):before{content:"THU"}.cal .dow span:nth-child(6):before{content:"FRI"}
+.cal .dow span:nth-child(7):before{content:"SAT"}
+@media(max-width:600px){
+  .cal .dow span:before{font-size:9.5px;letter-spacing:.02em}
+  .cal .dow span:nth-child(1):before{content:"S"}.cal .dow span:nth-child(2):before{content:"M"}
+  .cal .dow span:nth-child(3):before{content:"T"}.cal .dow span:nth-child(4):before{content:"W"}
+  .cal .dow span:nth-child(5):before{content:"T"}.cal .dow span:nth-child(6):before{content:"F"}
+  .cal .dow span:nth-child(7):before{content:"S"}
+}
+:root[data-theme] .day i{background:var(--ink)!important;color:var(--bin)!important;border:0;font-weight:650;letter-spacing:-.01em}
+:root[data-theme] .day i.video{background:var(--ink)!important}
+:root[data-theme] .day i.brand{background:color-mix(in srgb,var(--ink) 55%,var(--bin))!important;color:var(--bin)!important}
+:root[data-theme] .day i.other{background:var(--soft)!important;color:var(--ink)!important;border:1px solid var(--ln)}
+.cal .day i{max-width:100%;text-align:left}
+.cal .day:hover i{filter:brightness(1.15)}
+
+/* ---------- 9. Dashboard timeline: visible "today" guide ---------- */
+.tl-head i.now b{box-shadow:0 0 0 4px color-mix(in srgb,var(--ink) 8%,transparent)}
+.tl-in{position:relative}
+.tl-in>.tl-guide{
+  position:absolute;z-index:0;top:8px;bottom:8px;width:1.5px;margin-left:-0.75px;pointer-events:none;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ink) 26%,transparent),color-mix(in srgb,var(--ink) 6%,transparent));
+  border-radius:2px;
+}
+.tl-in>*{position:relative}
+.tl-head,.tl-row,.tl-in>.tl-guide{z-index:1}
+.clip{cursor:pointer;transition:transform .15s ease,filter .15s ease}
+.clip:hover{transform:translateY(-1px);filter:brightness(1.12)}
+
+/* ---------- 10. Deals: stage chip with matching dot color ---------- */
+.deal .deal-status{border:1px solid color-mix(in srgb,var(--c,#98A2B3) 45%,var(--ln));background:color-mix(in srgb,var(--c,#98A2B3) 10%,var(--pan));color:var(--ink)}
+.deal .deal-status:before{background:var(--c,#98A2B3);box-shadow:0 0 0 3px color-mix(in srgb,var(--c,#98A2B3) 20%,transparent)}
+.deal footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px;padding-top:12px;border-top:1px solid var(--ln)}
+.deal footer small{font-size:11.5px;font-weight:600;color:var(--mut);overflow-wrap:anywhere}
+.deal-mail{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--ink);text-decoration:none;white-space:nowrap}
+.deal-mail:hover{text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- 11. Pipeline library: clearer open affordance ---------- */
+.video-tile-open{display:inline-flex;align-items:center;gap:5px;color:var(--mut)!important;font-weight:700;font-size:11.5px;letter-spacing:.01em}
+.video-tile:hover .video-tile-open{color:var(--ink)!important}
+.video-tile-add{cursor:pointer}
+.add-mark{transition:transform .22s ease,border-color .22s ease,color .22s ease}
+.video-tile-add:hover .add-mark{transform:rotate(90deg);border-color:color-mix(in srgb,var(--ink) 45%,var(--ln));color:var(--ink)}
+
+/* ---------- 12. Motion safety ---------- */
+@media(prefers-reduced-motion:reduce){
+  .strip-note-link,.video-tile-add:hover .add-mark,.clip,.rail button:not(.logo),
+  .rail button:hover b.nav-ico svg,.cal .day:hover i,.deal-mail{transition:none!important;transform:none!important}
+}

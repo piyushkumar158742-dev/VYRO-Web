@@ -16,10 +16,15 @@ function calPanels(){try{
   if(!matchMedia('(min-width:1001px)').matches){delete aside.dataset.calSync;aside.style.removeProperty('--cal-panel-h');return}
   aside.style.setProperty('--cal-panel-h','auto');aside.removeAttribute('data-cal-sync');
   const P=[...aside.querySelectorAll('.panel')];if(P.length!==2)return;
-  const H=P.map(p=>p.offsetHeight);
-  const cap=Math.max(360,window.innerHeight-32),shared=Math.min(Math.max(...H),cap);
+  /* natural content height of each panel = header + its list (capped per list) */
+  const listCap=Math.max(360,window.innerHeight-170);
+  const H=P.map(p=>{const hd=p.querySelector('header'),sc=p.querySelector('.cal-scroll');
+    return (hd?hd.offsetHeight:0)+Math.min(sc?sc.scrollHeight:0,listCap)+(sc?parseFloat(getComputedStyle(sc).paddingTop||0)+parseFloat(getComputedStyle(sc).paddingBottom||0):0)});
+  const cap=Math.max(480,window.innerHeight-32),shared=Math.min(Math.max(...H),cap);
   aside.style.setProperty('--cal-panel-h',Math.round(shared)+'px');
   aside.setAttribute('data-cal-sync','1');
+  /* one extra pass after paint: fonts/images may have changed row heights */
+  if(!calPanels._q){calPanels._q=1;requestAnimationFrame(()=>{calPanels._q=0;try{calPanels()}catch(_){}})}
 }catch(_){}}
 addEventListener('resize',()=>{if(S&&S.view==='calendar')calPanels()});
 function calMove(n){const d=new Date(cal.y,cal.m+n,1);cal.y=d.getFullYear();cal.m=d.getMonth();cal.sel=iso(d);draw()}

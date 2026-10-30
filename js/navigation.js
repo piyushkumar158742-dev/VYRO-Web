@@ -10,14 +10,6 @@ function draw(){
 function go(v){if(v==='admin'&&window.VyroBackend?.status?.().user&&!isVyroAdmin()){toast('Admin access only.');return}if(!TT[v]&&v!=='admin')return;S.view=v;save();draw();scrollTo(0,0)}
 function tick(){const now=new Date();$('#clock').textContent=new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',hour12:true}).format(now).replace(/ am| pm/i,m=>m.toLowerCase())}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')shut()});
-/* Global shortcuts: N = new video, ⌘/Ctrl+K = new video, 1–5 = switch workspace pages */
-document.addEventListener('keydown',e=>{
- if(e.ctrlKey||e.metaKey||e.altKey)return;
- const t=e.target,tag=(t&&t.tagName||'').toLowerCase();
- if(tag==='input'||tag==='select'||tag==='textarea'||(t&&t.isContentEditable))return;
- if(e.key==='n'||e.key==='N'){e.preventDefault();vm();return}
- if(/^[1-5]$/.test(e.key)){e.preventDefault();go(['home','videos','tasks','brands','calendar'][+e.key-1])}
-});
 const ADMIN_ENTRY=new URLSearchParams(window.location.search).get('admin')==='1';
 if(ADMIN_ENTRY)S.view='admin';
 document.addEventListener('vyro-auth-change',()=>{

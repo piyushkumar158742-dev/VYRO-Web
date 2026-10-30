@@ -8,8 +8,8 @@ V.home=()=>{const{videos:v,brands:b,tasks}=S;
 const latest=(tasks||[]).slice().reverse().slice(0,3);
 return`<h2 class="hi">${esc(S.settings.name)}'s workspace</h2>
 <section class="strip" aria-label="Channel overview">
-  <div><b>${S.settings.youtubeChannel?.subscribers==null?'—':Number(S.settings.youtubeChannel.subscribers).toLocaleString('en-IN')}</b><span>Subscribers</span><small class="stat-note" style="display:block">${S.settings.youtubeChannel?'YouTube channel':'Connect YouTube to sync'}</small></div>
-  <div><b>${S.settings.youtubeChannel?Number(S.settings.youtubeChannel.views||0).toLocaleString('en-IN'):'—'}</b><span>Total views</span><small class="stat-note" style="display:block">${S.settings.youtubeChannel?'Across your channel':'Connect YouTube to sync'}</small></div>
+  <div><b>${S.settings.youtubeChannel?.subscribers==null?'—':Number(S.settings.youtubeChannel.subscribers).toLocaleString('en-IN')}</b><span>Subscribers</span><small class="stat-note">${S.settings.youtubeChannel?'YouTube channel':'Connect YouTube to sync'}</small></div>
+  <div><b>${S.settings.youtubeChannel?Number(S.settings.youtubeChannel.views||0).toLocaleString('en-IN'):'—'}</b><span>Total views</span><small class="stat-note">${S.settings.youtubeChannel?'Across your channel':'Connect YouTube to sync'}</small></div>
   <div><b>${b.length}</b><span>Brands</span></div>
   <div><b>${v.length}</b><span>Videos</span></div>
 </section>

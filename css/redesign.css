@@ -172,8 +172,16 @@
 .cal aside .cal-scroll::-webkit-scrollbar-thumb{display:block!important;background:color-mix(in srgb,var(--ink) 18%,transparent);border-radius:99px;border:2px solid transparent;background-clip:content-box}
 .cal aside .cal-scroll:hover::-webkit-scrollbar-thumb,.cal aside .cal-scroll:focus-within::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 34%,transparent);background-clip:content-box}
 .cal aside .cal-scroll .empty{padding:26px 18px}
+/* The Today / Coming-up sections must NOT slide down the page while scrolling:
+   they stay pinned in place and only their inner list scrolls. */
 @media(min-width:1001px){
-  .cal aside .panel{position:sticky;top:14px}
+  .cal aside{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);display:flex;flex-direction:column;gap:16px;z-index:5}
+  .cal aside .panel{position:static;flex:0 1 auto;min-height:0;max-height:none}
+  .cal aside .cal-up-panel{flex-grow:2}
+  .cal aside .cal-day-panel .cal-scroll,.cal aside .cal-up-panel .cal-scroll{max-height:none;flex:1 1 auto;min-height:0}
+}
+@media(max-width:1000px){
+  .cal aside{position:static}
 }
 @media(max-width:600px){
   .cal aside .cal-scroll{max-height:250px}
@@ -195,3 +203,50 @@
 :root[data-theme] select:focus{outline:none!important;border-color:var(--ink)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--ink) 12%,transparent)!important}
 :root[data-theme="dark"] select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='%23B3B3B3' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")}
 .sheet select,.standard-form select,.f select{height:44px;border-radius:11px!important;padding-right:42px!important}
+
+/* ---------- 15. Custom dropdowns (vd): no native selects anywhere ---------- */
+.vd-native{position:absolute!important;width:1px;height:1px;min-width:0;opacity:0;margin:0;padding:0;border:0;pointer-events:none;z-index:-1}
+.vd{position:relative;width:100%}
+.vd-trigger{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;box-sizing:border-box;
+  height:46px;padding:0 14px;border-radius:13px;cursor:pointer;text-align:left;
+  border:1px solid var(--ln);background-color:var(--pan);color:var(--ink);
+  font:600 14px/1.2 Figtree,system-ui,sans-serif;letter-spacing:-.01em;
+  box-shadow:0 1px 2px rgba(16,24,40,.04);
+  transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease,transform .12s ease;
+}
+.vd-trigger:hover{border-color:color-mix(in srgb,var(--ink) 30%,var(--ln))}
+.vd.vd-open>.vd-trigger,.vd-trigger:focus-visible{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px color-mix(in srgb,var(--ink) 13%,transparent)}
+.vd.vd-disabled>.vd-trigger{opacity:.55;cursor:not-allowed}
+.vd-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vd-ico{flex:none;width:17px;height:17px;background-color:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;color:var(--mut);transition:transform .2s cubic-bezier(.2,.8,.2,1),color .18s ease}
+.vd.vd-open .vd-ico{transform:rotate(180deg);color:var(--ink)}
+.vd-panel{
+  position:absolute;top:calc(100% + 7px);left:0;right:0;z-index:70;display:none;
+  max-height:262px;overflow-y:auto;overscroll-behavior:contain;
+  padding:6px;border-radius:15px;border:1px solid var(--ln);
+  background:color-mix(in srgb,var(--pan) 97%,transparent);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:0 20px 48px rgba(9,16,38,.18),0 3px 10px rgba(9,16,38,.08);
+  scrollbar-width:thin!important;-ms-overflow-style:auto!important;
+}
+.vd.vd-up .vd-panel{top:auto;bottom:calc(100% + 7px)}
+.vd.vd-open .vd-panel{display:block;animation:vd-in .16s cubic-bezier(.2,.8,.2,1) both}
+@keyframes vd-in{from{opacity:0;transform:translateY(-5px) scale(.985)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.vd.vd-open .vd-panel{animation:none}.vd-ico{transition:none}}
+.vd-panel::-webkit-scrollbar{display:block!important;width:8px!important}
+.vd-panel::-webkit-scrollbar-track{background:transparent}
+.vd-panel::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 18%,transparent);border-radius:99px;border:2px solid transparent;background-clip:content-box}
+.vd-opt{
+  display:flex;align-items:center;gap:9px;width:100%;box-sizing:border-box;
+  padding:9px 11px;border:0;border-radius:10px;background:transparent;cursor:pointer;text-align:left;
+  font:600 13.5px/1.35 Figtree,system-ui,sans-serif;color:var(--ink);
+  transition:background .13s ease;
+}
+.vd-opt:hover{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.vd-dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--mut)}
+.vd-opt.sel{background:var(--ink);color:var(--bin)}
+.vd-opt.sel .vd-dot{background:var(--bin)!important;box-shadow:0 0 0 2px color-mix(in srgb,var(--bin) 45%,transparent)}
+.vd-opt.sel:hover{background:var(--ink)}
+/* keep form labels aligned with the custom control */
+.f label:has(.vd),label:has(.vd){gap:inherit}

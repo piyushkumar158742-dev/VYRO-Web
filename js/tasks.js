@@ -50,9 +50,9 @@ function tm() {
       <label>Task<input name="title" required maxlength="100" placeholder="What needs to get done?"></label>
       <label>Priority
         <select name="priority">
-          <option value="high">High priority</option>
-          <option value="medium" selected>Medium priority</option>
-          <option value="low">Low priority</option>
+          <option value="high">High</option>
+          <option value="medium" selected>Medium</option>
+          <option value="low">Low</option>
         </select>
       </label>
       <div class="acts"><button type="button" class="btn ghost" onclick="shut()">Cancel</button><button class="btn">Add task</button></div>

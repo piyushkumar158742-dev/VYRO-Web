@@ -35,6 +35,9 @@ function ask(h){$('#sheet').innerHTML=h;enhanceSelects($('#main'));enhanceSelect
 function shut(){$('#modal').hidden=true;document.querySelectorAll('.vd-open').forEach(o=>o.classList.remove('vd-open'));pend=null}
 
 /* ---------- Custom dropdowns: replace every native <select> app-wide ---------- */
+var vdSeq=0;/* V39 FIX: was undeclared -> strict-mode ReferenceError "vdSeq is not
+   defined" crashed ask() for EVERY sheet containing a <select> (Add event,
+   New video, tasks...). Now initialised here so buildVd() can use it. */
 function vdId(){vdSeq=(vdSeq||0)+1;return 'vd-'+vdSeq}
 function buildVd(sel){
   if(sel.dataset.vd)return;

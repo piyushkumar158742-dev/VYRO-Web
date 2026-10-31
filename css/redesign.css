@@ -187,9 +187,29 @@ html,body{overscroll-behavior-y:none}
    The whole page scrolls as one normal document. */
 #main{overflow:visible!important}
 /* The Add-event sheet must ALWAYS be visible & clickable when opened:
-   force the modal layer above everything (rail z:40, toast z:1000). */
-#modal.modal:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important;z-index:9999!important;pointer-events:auto!important}
+   force the modal layer above everything (rail z:40, toast z:1000).
+   V38 ROOT CAUSE FIX: global.css/components.css attach entrance
+   animations (sheet-in / premium-sheet-in) to .modal itself. A running
+   or filled animation promotes #modal into its OWN stacking context on
+   top of position:fixed - which is fine by itself - but combined with
+   the layered rules below, the veil could end up painted under the page
+   content, so the Add-event form "did nothing" when clicked. Kill every
+   animation/transition on the veil and give it an absolute-max z-index. */
+#modal.modal:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important;z-index:2147483000!important;pointer-events:auto!important;animation:none!important;-webkit-animation:none!important;transition:none!important}
 #modal .sheet{z-index:10000;pointer-events:auto}
+/* V37: the blurred modal veil created a containing/stacking context that,
+   combined with layered rules elsewhere, could keep the sheet invisible or
+   unclickable. The Add-event sheet must ALWAYS render on top of everything
+   and be fully interactive — force it, both themes, no exceptions. */
+#modal.modal:not([hidden]){-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgba(16,24,40,.55)!important}
+#modal #sheet.sheet{position:relative!important;display:block!important;visibility:visible!important;opacity:1!important;z-index:10001!important;pointer-events:auto!important}
+/* V38: the sheet's own entrance animation also promotes it into a
+   stacking context inside the veil - harmless, but disable it for the
+   Add-event form so nothing about the overlay is animated while open. */
+#modal #sheet.sheet:not([style*="video-detail"]){animation:none!important;-webkit-animation:none!important}
+#modal #sheet.sheet *{pointer-events:auto}
+#modal #sheet.sheet button,#modal #sheet.sheet input,#modal #sheet.sheet .vd{pointer-events:auto!important;cursor:pointer}
+#modal #sheet.sheet input,#modal #sheet.sheet textarea{cursor:text}
 /* "+ Add event" must always look & behave like a real button (theme ink,
    rounded, clickable) regardless of theme overrides on .lnk/.btn. */
 #calAddEventBtn,.cal-add-event{

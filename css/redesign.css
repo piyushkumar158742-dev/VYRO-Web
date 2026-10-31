@@ -190,6 +190,15 @@ html,body{overscroll-behavior-y:none}
    force the modal layer above everything (rail z:40, toast z:1000). */
 #modal.modal:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important;z-index:9999!important;pointer-events:auto!important}
 #modal .sheet{z-index:10000;pointer-events:auto}
+/* V37: the blurred modal veil created a containing/stacking context that,
+   combined with layered rules elsewhere, could keep the sheet invisible or
+   unclickable. The Add-event sheet must ALWAYS render on top of everything
+   and be fully interactive — force it, both themes, no exceptions. */
+#modal.modal:not([hidden]){-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgba(16,24,40,.55)!important}
+#modal #sheet.sheet{position:relative!important;display:block!important;visibility:visible!important;opacity:1!important;z-index:10001!important;pointer-events:auto!important}
+#modal #sheet.sheet *{pointer-events:auto}
+#modal #sheet.sheet button,#modal #sheet.sheet input,#modal #sheet.sheet .vd{pointer-events:auto!important;cursor:pointer}
+#modal #sheet.sheet input,#modal #sheet.sheet textarea{cursor:text}
 /* "+ Add event" must always look & behave like a real button (theme ink,
    rounded, clickable) regardless of theme overrides on .lnk/.btn. */
 #calAddEventBtn,.cal-add-event{

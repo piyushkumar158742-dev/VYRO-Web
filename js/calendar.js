@@ -26,12 +26,13 @@ var CAL_MAX_ROWS=4;
    then builds the Add-event form fresh via em(). */
 window.calAddEvent=function(ev){
   if(ev&&typeof ev.preventDefault==='function')ev.preventDefault();
-  var modal=document.getElementById('modal');
-  if(modal&&!modal.hidden){shut()}
-  if(typeof em!=='function'){toast('Add event unavailable: form helper missing');return}
-  em();
+  /* V37: fully reset any leftover overlay state (stale sheet from another
+     view, half-closed dropdowns) before opening — then build fresh. */
+  try{shut()}catch(_){}
+  if(typeof em!=='function'){alert('Add event: form helper missing');return}
+  try{em()}catch(err){console.error('calAddEvent',err);alert('Add event could not open the form: '+err.message);return}
   var m2=document.getElementById('modal');
-  if(!m2||m2.hidden){toast('Add event could not open the form');return}
+  if(!m2||m2.hidden){alert('Add event could not open the form');return}
   var ti=m2.querySelector('input[name="title"]');if(ti)setTimeout(function(){ti.focus()},60);
 };
 window.calQuickAdd=function(e){e.preventDefault();var f=new FormData(e.target);S.events.push({id:uid(),title:String(f.get('title')||'').trim()||'Event',date:f.get('date'),time:'',type:'other'});save();shut();calSel(f.get('date'));toast('Event added')};
@@ -44,7 +45,7 @@ const li=e=>`<div class="row"><div><strong>${esc(e.title)}</strong><small>${fmt(
 const moreN=(list)=>list.length>CAL_MAX_ROWS?`<div class="cal-more">+${list.length-CAL_MAX_ROWS} more</div>`:'';
 return`<div class="cal"><section class="panel cal-month-panel"><header><h3>${new Date(y,m,1).toLocaleString('en-IN',{month:'long',year:'numeric'})}</h3><div class="nav2"><button onclick="calMove(-1)" aria-label="Previous month">&#8249;</button><button onclick="calSel('${td}')">Today</button><button onclick="calMove(1)" aria-label="Next month">&#8250;</button></div></header>
 <div class="dow">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<span>${d}</span>`).join('')}</div><div class="grid">${c}</div></section>
-<aside><section class="panel cal-day-panel"><header><h3>${fmt(cal.sel)}</h3><button type="button" class="btn cal-add-event" id="calAddEventBtn">+ Add event</button></header><div class="cal-list">${day.slice(0,CAL_MAX_ROWS).map(li).join('')||'<div class="empty">Nothing planned for this day.</div>'}${moreN(day)}</div></section>
+<aside><section class="panel cal-day-panel"><header><h3>${fmt(cal.sel)}</h3><button type="button" class="btn cal-add-event" id="calAddEventBtn" onclick="calAddEvent(event)">+ Add event</button></header><div class="cal-list">${day.slice(0,CAL_MAX_ROWS).map(li).join('')||'<div class="empty">Nothing planned for this day.</div>'}${moreN(day)}</div></section>
 <section class="panel cal-up-panel"><header><h3>Coming up</h3></header><div class="cal-list">${up.slice(0,CAL_MAX_ROWS).map(li).join('')||'<div class="empty">No upcoming events.</div>'}${moreN(up)}</div></section></aside></div>`};
 
 

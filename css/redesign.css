@@ -116,6 +116,10 @@
    JS a browser has, "SUN / MON / TUE…" can only ever appear once per column. */
 .cal .dow span{font-size:10.5px!important;font-weight:700;letter-spacing:.08em;color:var(--mut);text-transform:none;padding:12px 0 10px;text-align:center}
 .cal .dow span:before,.cal .dow span:after{display:none!important;content:none!important}
+/* Belt-and-braces: even a stale cached stylesheet that injected pseudo
+   copies (e.g. "SUN" via :before) can never duplicate the labels now,
+   because any pseudo content is forced to none here as well. */
+.cal .dow>*:before,.cal .dow>*:after,.dow span::before,.dow span::after{content:none!important;display:none!important}
 @media(max-width:600px){
   /* single-letter fallback on small screens — still rendered exactly once */
   .cal .dow span{font-size:9.5px!important;letter-spacing:.02em}
@@ -161,7 +165,7 @@
   .rail button:hover b.nav-ico svg,.cal .day:hover i,.deal-mail{transition:none!important;transform:none!important}
 }
 
-/* ---------- 13. Schedule side panels (V31) ---------- */
+/* ---------- 13. Schedule side panels (V34) ---------- */
 /* One clean rule set, no sticky, no inner scroll containers anywhere.
    Both boxes are ALWAYS exactly four event rows tall and share one
    fixed height (--cal-list-h, set by calPanels()). The lists themselves
@@ -174,9 +178,22 @@
 .cal aside .cal-list > .row{flex:0 0 auto}
 html,body{overscroll-behavior-y:none}
 .cal aside{position:static!important}
+/* "+ Add event" must always look & behave like a real button (theme ink,
+   rounded, clickable) regardless of theme overrides on .lnk/.btn. */
+#calAddEventBtn,.cal-add-event{
+  display:inline-flex!important;align-items:center;gap:6px;
+  min-height:34px;padding:6px 13px;border-radius:10px;
+  background:var(--ink)!important;color:var(--bin)!important;
+  border:1px solid var(--ink)!important;font-size:12.5px;font-weight:700;
+  cursor:pointer;white-space:nowrap;box-shadow:none!important;
+  transition:opacity .15s ease,transform .15s ease;
+}
+#calAddEventBtn:hover,.cal-add-event:hover{opacity:.85;transform:translateY(-1px)}
+#calAddEventBtn:active,.cal-add-event:active{transform:scale(.97)}
 @media(min-width:1001px){
   .cal aside{display:flex;flex-direction:column;gap:16px;align-self:start}
-  .cal,.wrap,#main,.app{overflow:visible!important}
+  /* No overflow rules here - overriding body/html overflow caused the
+     bottom-of-page jump/glitch. The document scrolls normally. */
 }
 @media(max-width:1000px){
   .cal aside{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px;align-items:stretch!important}

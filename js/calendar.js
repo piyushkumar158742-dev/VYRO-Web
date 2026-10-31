@@ -1,6 +1,6 @@
 'use strict';
 /* =====================================================================
-   V31 - Schedule (calendar) view, definitive behaviour:
+   V34 - Schedule (calendar) view, definitive behaviour:
    - Weekday header row is emitted exactly once (SUN...SAT), no duplicates.
    - "Today" and "Coming up" panels are ALWAYS the same height: exactly
      4 event rows tall. Both lists are capped at 4 rows right in the
@@ -11,11 +11,32 @@
      and there is no inner scroll container fighting the page, so the
      bottom-of-page bounce/glitch cannot happen.
    - "+ Add event" is wired three independent ways (inline onclick,
-     direct binding after every draw, delegated capture listener), all
-     funnelling into em(), which de-duplicates an already-open sheet.
+     direct binding after every draw, delegated pointerdown listener),
+     ALL of them calling window.calAddEvent() - a function defined here
+     that always exists even if any other script throws mid-load. If a
+     stale/locked sheet is open it is closed first, then re-opened fresh.
    - Deleting an event plays a subtle fade/slide-out before repaint.
    ===================================================================== */
 var CAL_MAX_ROWS=4;
+
+/* Single source of truth for opening the Add-event sheet. Every click
+   path funnels through this, and it is defensive: if the modal is stuck
+   open (e.g. left behind by another dialog), we shut it first and then
+   rebuild the form from scratch, so the button can never "do nothing". */
+window.calAddEvent=function(ev){
+  try{if(ev&&typeof ev.preventDefault==='function')ev.preventDefault()}catch(_){}
+  try{
+    var modal=document.getElementById('modal');
+    if(modal&&!modal.hidden){try{shut()}catch(_){modal.hidden=true}}
+    if(typeof em==='function'){em();return}
+  }catch(_){}
+  /* absolute last-resort inline form if calendar helpers failed to load */
+  try{
+    var m=document.getElementById('modal'),s=document.getElementById('sheet');
+    if(m&&s){s.innerHTML='<form class="f" onsubmit="calQuickAdd(event)"><h3>Add event</h3><label>Title<input name="title" required></label><label>Date<input name="date" type="date" required value="'+(cal&&cal.sel?cal.sel:'')+'"></label><div class="acts"><button type="button" class="btn ghost" onclick="shut()">Cancel</button><button class="btn">Add event</button></div></form>';m.hidden=false}
+  }catch(_){}
+};
+window.calQuickAdd=function(e){e.preventDefault();var f=new FormData(e.target);S.events.push({id:uid(),title:String(f.get('title')||'').trim()||'Event',date:f.get('date'),time:'',type:'other'});save();shut();calSel(f.get('date'));toast('Event added')};
 
 V.calendar=()=>{const{y,m}=cal,first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),td=iso(new Date());let c='';
 for(let i=0;i<first;i++)c+='<div class="day mute"></div>';
@@ -23,8 +44,8 @@ for(let d=1;d<=n;d++){const k=`${y}-${pad(m+1)}-${pad(d)}`,E=S.events.filter(e=>
 const day=S.events.filter(e=>e.date===cal.sel).sort(byDate),up=S.events.filter(e=>e.date>td).sort(byDate);
 const li=e=>`<div class="row"><div><strong>${esc(e.title)}</strong><small>${fmt(e.date)} ${esc(e.time||'')}</small></div><button class="btn del" onclick="edel(${e.id},this)" aria-label="Delete event">&#10005;</button></div>`;
 return`<div class="cal"><section class="panel cal-month-panel"><header><h3>${new Date(y,m,1).toLocaleString('en-IN',{month:'long',year:'numeric'})}</h3><div class="nav2"><button onclick="calMove(-1)" aria-label="Previous month">&#8249;</button><button onclick="calSel('${td}')">Today</button><button onclick="calMove(1)" aria-label="Next month">&#8250;</button></div></header>
-<div class="dow" aria-hidden="true">${['SUN','MON','TUE','WED','THU','FRI','SAT'].map(d=>`<span>${d}</span>`).join('')}</div><div class="grid">${c}</div></section>
-<aside><section class="panel cal-day-panel"><header><h3>${fmt(cal.sel)}</h3><button type="button" class="lnk cal-add-event" id="calAddEventBtn" onclick="em();return false;">+ Add event</button></header><div class="cal-list">${day.slice(0,CAL_MAX_ROWS).map(li).join('')||'<div class="empty">Nothing planned for this day.</div>'}</div></section>
+<div class="dow" aria-hidden="true">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<span>${d}</span>`).join('')}</div><div class="grid">${c}</div></section>
+<aside><section class="panel cal-day-panel"><header><h3>${fmt(cal.sel)}</h3><button type="button" class="btn cal-add-event" id="calAddEventBtn" onclick="calAddEvent(event)">+ Add event</button></header><div class="cal-list">${day.slice(0,CAL_MAX_ROWS).map(li).join('')||'<div class="empty">Nothing planned for this day.</div>'}</div></section>
 <section class="panel cal-up-panel"><header><h3>Coming up</h3></header><div class="cal-list">${up.slice(0,CAL_MAX_ROWS).map(li).join('')||'<div class="empty">No upcoming events.</div>'}</div></section></aside></div>`};
 
 function calSel(k){const[y,m]=k.split('-').map(Number);cal={y,m:m-1,sel:k};if(S.view==='calendar')draw()}
@@ -58,21 +79,24 @@ addEventListener('resize',()=>{if(S&&S.view==='calendar'){calPanels();bindCalAdd
 /* ---------- "Add event": paths 2 and 3 (path 1 = inline onclick) ------ */
 function bindCalAddBtn(){try{
   const b=document.getElementById('calAddEventBtn');
-  if(b&&!b._calBound){b._calBound=1;b.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();em()})}
+  if(b&&!b._calBound){b._calBound=1;b.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();window.calAddEvent(ev)});b.addEventListener('pointerdown',ev=>{ev.stopPropagation()})}
 }catch(_){}}
-document.addEventListener('click',e=>{
-  try{
-    const t=e.target,b=t&&t.closest?t.closest('.cal-add-event,#calAddEventBtn'):null;
-    if(!b)return;
-    e.preventDefault();e.stopPropagation();
-    if(typeof em==='function')em();
-  }catch(_){}},true);
+/* Delegated on pointerdown+click so it fires even if another script
+   swallows click events, and in capture phase so nothing can stop it. */
+['pointerup','click'].forEach(function(type){
+  document.addEventListener(type,function(e){
+    try{
+      const t=e.target,b=t&&t.closest?t.closest('.cal-add-event,#calAddEventBtn'):null;
+      if(!b)return;
+      e.preventDefault();e.stopPropagation();
+      window.calAddEvent(e);
+    }catch(_){}},true);
+});
 
 function calMove(n){const d=new Date(cal.y,cal.m+n,1);cal.y=d.getFullYear();cal.m=d.getMonth();cal.sel=iso(d);draw()}
 function em(){
-  /* guard: never re-open the sheet if it is already showing the Add-event form */
-  const modal=document.getElementById('modal'),sheet=document.getElementById('sheet');
-  if(modal&&!modal.hidden&&sheet&&/Add event<\/h3>/.test(sheet.innerHTML))return;
+  /* build the Add-event sheet fresh every time (stale sheets are shut by
+     calAddEvent before we get here, so no double-open guard is needed) */
   ask(`<div class="form-heading"><span class="form-mark">&#10022;</span><div><span class="form-eyebrow">PLAN AHEAD</span><h3>Add event</h3><p>Put an important deadline, upload, or call on your schedule.</p></div></div><form class="f standard-form" onsubmit="esave(event)"><label>Title<input name="title" required maxlength="100"></label><label>Date<input name="date" type="date" required value="${cal.sel}"></label><label>Time<input name="time" type="time"></label>
 <label>Type<select name="type"><option value="video">Video</option><option value="brand">Brand</option><option value="other">Other</option></select></label><div class="acts"><button type="button" class="btn ghost" onclick="shut()">Cancel</button><button class="btn">Add event</button></div></form>`)}
 function esave(e){e.preventDefault();const f=new FormData(e.target);S.events.push({id:uid(),title:f.get('title').trim(),date:f.get('date'),time:f.get('time'),type:f.get('type')});calSel(f.get('date'));done('Event added')}

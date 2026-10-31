@@ -24,15 +24,8 @@
   .cal .nav2{gap:5px;flex-shrink:0}
   .cal .nav2 button{width:34px;height:34px;min-width:34px}
   .cal .nav2 button:nth-child(2){width:auto;min-width:54px;padding:0 10px}
-  .cal .dow span{font-size:0;line-height:1;padding:10px 0}
-  .cal .dow span:before{font-size:10px;content:attr(data-short)}
-  .cal .dow span:nth-child(1):before{content:"S"}
-  .cal .dow span:nth-child(2):before{content:"M"}
-  .cal .dow span:nth-child(3):before{content:"T"}
-  .cal .dow span:nth-child(4):before{content:"W"}
-  .cal .dow span:nth-child(5):before{content:"T"}
-  .cal .dow span:nth-child(6):before{content:"F"}
-  .cal .dow span:nth-child(7):before{content:"S"}
+  /* weekday labels are rendered ONCE via the :before pseudo-element (see the
+     redesign layer) — no duplicate text here */
   .cal .day{min-height:54px;padding:5px 2px;align-items:center;gap:4px}
   .cal .day .n{width:27px;height:27px;font-size:12px;display:grid;place-items:center}
   .cal .day i{display:none}
@@ -50,7 +43,27 @@
   .cal .nav2 button:nth-child(2){min-width:48px;padding:0 7px}
 }
 
-/* Schedule visual refinement: calm, editorial calendar with clearer hierarchy */
+/* ---------- Schedule: side panels — equal height, exactly 4 rows tall ---------- */
+/* Both boxes (Today + Coming up) are forced to the SAME fixed height set by
+   calPanels() via --cal-list-h. The "Coming up" box is no longer shorter. */
+.cal aside .panel{display:flex;flex-direction:column}
+.cal aside[data-cal-sync="1"] .cal-scroll{height:var(--cal-list-h,208px);max-height:var(--cal-list-h,208px);min-height:0;flex:0 0 auto}
+/* Never let a list that hit its top/bottom edge scroll the whole page —
+   this is the "website completely moves" glitch. */
+.cal aside,.cal aside *{overscroll-behavior:contain!important}
+@media(min-width:1001px){
+  .cal aside{position:sticky;top:16px;align-self:start;display:flex;flex-direction:column;gap:16px;z-index:5;max-height:calc(100vh - 32px)}
+  .cal aside .panel{min-height:0}
+}
+@media(max-width:1000px){
+  .cal aside{position:static;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important}
+  .cal aside .panel{height:auto}
+}
+@media(max-width:600px){
+  .cal aside{grid-template-columns:minmax(0,1fr)!important}
+}
+
+/* ---------- Schedule visual refinement: calm, editorial calendar with clearer hierarchy ---------- */
 .cal{gap:20px}
 .cal>section.panel,.cal aside .panel{border-radius:18px;overflow:hidden}
 .cal>section.panel{box-shadow:var(--shadow-card)}
@@ -62,7 +75,7 @@
   margin:0;font-size:15px;font-weight:750;letter-spacing:-.025em;color:var(--ink)
 }
 .cal .dow{padding:4px 8px 0}
-.cal .dow span{font-size:10px;letter-spacing:.08em;padding:12px 0 10px}
+.cal .dow span{font-size:0!important;letter-spacing:0;padding:12px 0 10px}
 .cal .grid{padding:0 8px 10px}
 .cal .day{
   border-top:1px solid var(--ln)!important;border-left:1px solid var(--ln)!important;
@@ -89,12 +102,14 @@
   .cal>section.panel,.cal aside .panel{border-radius:17px}
   .cal>section.panel>header{padding:16px 16px!important;min-height:62px}
   .cal .dow{padding:2px 8px 0}
-  .cal .dow span{font-size:0;letter-spacing:0;padding:13px 0 11px}
+  .cal .dow span{font-size:0!important;letter-spacing:0;padding:13px 0 11px}
   .cal .grid{padding:0 8px 10px}
   .cal .day{border-left:0!important;border-radius:9px;min-height:60px;padding:6px 2px;gap:4px}
   .cal .day .n{width:28px;height:28px;font-size:12px}
   .cal .day:not(.mute):hover{box-shadow:none}
   .cal .day.sel{border-radius:10px}
+  /* weekday labels come from the redesign layer's :before pseudo-element only —
+     no second copy is injected here */
   .cal aside{gap:14px}
   .cal aside .panel>header{min-height:56px;padding:16px 18px!important}
   .cal aside .row{padding:14px 18px!important}

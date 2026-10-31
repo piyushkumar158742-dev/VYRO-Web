@@ -31,7 +31,7 @@ n.events=(n.events||[]).filter(e=>/^\d{4}-\d\d-\d\d$/.test(e.date||''));return r
 let S=load(),cal=(d=>({y:d.getFullYear(),m:d.getMonth(),sel:iso(d)}))(new Date()),pend=null;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));if(window.VyroBackend?.queueSync)window.VyroBackend.queueSync(S);return true}catch(e){toast('Storage is full. Use a smaller thumbnail or export your data in Settings.');return false}}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2800)}
-function ask(h){$('#sheet').innerHTML=h;enhanceSelects($('#sheet'));$('#modal').hidden=false;const fi=$('#sheet input:not([type=hidden]),#sheet .vd-trigger,#sheet textarea');fi&&fi.focus()}
+function ask(h){$('#sheet').innerHTML=h;enhanceSelects($('#main'));enhanceSelects($('#sheet'));$('#modal').hidden=false;const fi=$('#sheet input:not([type=hidden]),#sheet .vd-trigger,#sheet textarea');fi&&fi.focus()}
 function shut(){$('#modal').hidden=true;document.querySelectorAll('.vd-open').forEach(o=>o.classList.remove('vd-open'));pend=null}
 
 /* ---------- Custom dropdowns: replace every native <select> app-wide ---------- */

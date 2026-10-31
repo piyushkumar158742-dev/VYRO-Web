@@ -110,22 +110,15 @@
 :root[data-theme="dark"] .task-panel-done .task-heading-icon{color:#4BDB9B}
 
 /* ---------- 8. Schedule: readable event chips + weekday header shown ONCE ---------- */
-/* The weekday labels used to render twice: the text inside each <span> plus a
-   CSS :before pseudo-element on top of it. Now the real text is hidden and the
-   label comes solely from the pseudo-element — one clean "SUN / MON / TUE…" row. */
-.cal .dow span{font-size:0!important;line-height:1;padding:12px 0 10px;text-transform:none}
-.cal .dow span:before{font-size:10.5px;font-weight:700;letter-spacing:.08em;color:var(--mut)}
-.cal .dow span:nth-child(1):before{content:"SUN"}.cal .dow span:nth-child(2):before{content:"MON"}
-.cal .dow span:nth-child(3):before{content:"TUE"}.cal .dow span:nth-child(4):before{content:"WED"}
-.cal .dow span:nth-child(5):before{content:"THU"}.cal .dow span:nth-child(6):before{content:"FRI"}
-.cal .dow span:nth-child(7):before{content:"SAT"}
+/* The weekday labels used to render twice (real text + a :before pseudo copy).
+   Now there is exactly ONE rendering: the real text from calendar.js, styled
+   here. No pseudo-elements are injected anywhere — so no matter which cached
+   JS a browser has, "SUN / MON / TUE…" can only ever appear once per column. */
+.cal .dow span{font-size:10.5px!important;font-weight:700;letter-spacing:.08em;color:var(--mut);text-transform:none;padding:12px 0 10px;text-align:center}
+.cal .dow span:before,.cal .dow span:after{display:none!important;content:none!important}
 @media(max-width:600px){
-  /* mobile keeps the single-letter fallback — still rendered exactly once */
-  .cal .dow span:before{font-size:9.5px;letter-spacing:.02em}
-  .cal .dow span:nth-child(1):before{content:"S"}.cal .dow span:nth-child(2):before{content:"M"}
-  .cal .dow span:nth-child(3):before{content:"T"}.cal .dow span:nth-child(4):before{content:"W"}
-  .cal .dow span:nth-child(5):before{content:"T"}.cal .dow span:nth-child(6):before{content:"F"}
-  .cal .dow span:nth-child(7):before{content:"S"}
+  /* single-letter fallback on small screens — still rendered exactly once */
+  .cal .dow span{font-size:9.5px!important;letter-spacing:.02em}
 }
 :root[data-theme] .day i{background:var(--ink)!important;color:var(--bin)!important;border:0;font-weight:650;letter-spacing:-.01em}
 :root[data-theme] .day i.video{background:var(--ink)!important}
@@ -169,21 +162,35 @@
 }
 
 /* ---------- 13. Schedule: side panels — equal height, exactly 4 rows tall ---------- */
-/* Both boxes (Today + Coming up) are forced to the SAME fixed height set by
-   calPanels() via --cal-list-h — the "Coming up" box is no longer shorter than
-   Today's. The lists scroll inside their own box; when a list hits its top or
-   bottom edge the scroll hands over to the page so the whole site moves
-   smoothly (no trapped/parallax glitch). Neither panel is sticky anymore. */
+/* Both boxes (Today + Coming up) share ONE fixed height set by calPanels()
+   through --cal-list-h, so "Coming up" is never shorter than Today's.
+   The lists scroll inside their own box ONLY while there is room left inside
+   the list. When a box reaches its top or bottom edge the scroll hands over to
+   the page — but only then. While the mouse stays over a box that can still
+   scroll, the page underneath never moves (overscroll-behavior:contain), which
+   kills both the "whole section slides under Coming up" behaviour and the
+   end-of-page bounce/glitch. */
 .cal aside .panel{display:flex;flex-direction:column}
-.cal aside .cal-scroll{overflow-y:auto;overscroll-behavior:auto;scrollbar-width:thin!important;-ms-overflow-style:auto!important;scroll-behavior:smooth}
+.cal aside .cal-scroll{overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin!important;-ms-overflow-style:auto!important;scroll-behavior:auto}
 .cal aside .cal-scroll::-webkit-scrollbar{display:block!important;width:9px!important;height:9px!important}
 .cal aside .cal-scroll::-webkit-scrollbar-track{display:block!important;background:transparent!important}
 .cal aside .cal-scroll::-webkit-scrollbar-thumb{display:block!important;background:color-mix(in srgb,var(--ink) 18%,transparent);border-radius:99px;border:2px solid transparent;background-clip:content-box}
 .cal aside .cal-scroll:hover::-webkit-scrollbar-thumb,.cal aside .cal-scroll:focus-within::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 34%,transparent);background-clip:content-box}
 .cal aside .cal-scroll .empty{padding:26px 18px}
+/* The page itself never rubber-bands past its ends (kills the bottom "bounce"
+   glitch), and no ancestor between .cal aside and <html> may create a scroll
+   container — otherwise sticky positioning would break. */
+html,body{overscroll-behavior-y:none}
 @media(min-width:1001px){
-  .cal aside{position:static;display:flex;flex-direction:column;gap:16px}
-  .cal aside .panel{min-height:0}
+  /* Today + Coming up travel together as ONE sticky unit while the whole page
+     is scrolled — the day panel can no longer slide down under "Coming up".
+     The unit releases right where the month grid ends, so nothing bounces. */
+  .cal aside{position:sticky;top:18px;display:flex;flex-direction:column;gap:16px;align-self:start;max-height:calc(100vh - 36px);z-index:5}
+  .cal aside .panel{min-height:0;flex:0 0 auto}
+  .cal,.wrap,#main,.app{overflow:visible!important}
+}
+@media(max-width:1000px){
+  .cal aside{position:static}
 }
 
 /* ---------- 13b. Subtle delete animation for schedule rows ---------- */

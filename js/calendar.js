@@ -5,7 +5,7 @@ for(let d=1;d<=n;d++){const k=`${y}-${pad(m+1)}-${pad(d)}`,E=S.events.filter(e=>
 const day=S.events.filter(e=>e.date===cal.sel).sort(byDate),up=S.events.filter(e=>e.date>td).sort(byDate);
 const li=e=>`<div class="row"><div><strong>${esc(e.title)}</strong><small>${fmt(e.date)} ${esc(e.time||'')}</small></div><button class="btn del" onclick="edel(${e.id},this)" aria-label="Delete event">✕</button></div>`;
 return`<div class="cal"><section class="panel"><header><h3>${new Date(y,m,1).toLocaleString('en-IN',{month:'long',year:'numeric'})}</h3><div class="nav2"><button onclick="calMove(-1)" aria-label="Previous month">‹</button><button onclick="calSel('${td}')">Today</button><button onclick="calMove(1)" aria-label="Next month">›</button></div></header>
-<div class="dow" aria-hidden="true">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<span>${d}</span>`).join('')}</div><div class="grid">${c}</div></section>
+<div class="dow" aria-hidden="true">${['SUN','MON','TUE','WED','THU','FRI','SAT'].map(d=>`<span>${d}</span>`).join('')}</div><div class="grid">${c}</div></section>
 <aside><section class="panel cal-day-panel"><header><h3>${fmt(cal.sel)}</h3><button class="lnk" onclick="em()">+ Add event</button></header><div class="cal-scroll">${day.map(li).join('')||'<div class="empty">Nothing planned for this day.</div>'}</div></section>
 <section class="panel cal-up-panel"><header><h3>Coming up</h3></header><div class="cal-scroll">${up.map(li).join('')||'<div class="empty">No upcoming events.</div>'}</div></section></aside></div>`};
 function calSel(k){const[y,m]=k.split('-').map(Number);cal={y,m:m-1,sel:k};if(S.view==='calendar')draw()}

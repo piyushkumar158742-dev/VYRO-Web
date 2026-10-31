@@ -109,14 +109,18 @@
 .task-panel-done .task-heading-icon{color:#1E9E63;border-color:color-mix(in srgb,#2BB673 40%,var(--ln));background:color-mix(in srgb,#2BB673 10%,var(--pan))}
 :root[data-theme="dark"] .task-panel-done .task-heading-icon{color:#4BDB9B}
 
-/* ---------- 8. Schedule: readable event chips + real weekday fallback ---------- */
-.cal .dow span{font-size:0;line-height:1;padding:12px 0 10px}
+/* ---------- 8. Schedule: readable event chips + weekday header shown ONCE ---------- */
+/* The weekday labels used to render twice: the text inside each <span> plus a
+   CSS :before pseudo-element on top of it. Now the real text is hidden and the
+   label comes solely from the pseudo-element — one clean "SUN / MON / TUE…" row. */
+.cal .dow span{font-size:0!important;line-height:1;padding:12px 0 10px;text-transform:none}
 .cal .dow span:before{font-size:10.5px;font-weight:700;letter-spacing:.08em;color:var(--mut)}
 .cal .dow span:nth-child(1):before{content:"SUN"}.cal .dow span:nth-child(2):before{content:"MON"}
 .cal .dow span:nth-child(3):before{content:"TUE"}.cal .dow span:nth-child(4):before{content:"WED"}
 .cal .dow span:nth-child(5):before{content:"THU"}.cal .dow span:nth-child(6):before{content:"FRI"}
 .cal .dow span:nth-child(7):before{content:"SAT"}
 @media(max-width:600px){
+  /* mobile keeps the single-letter fallback — still rendered exactly once */
   .cal .dow span:before{font-size:9.5px;letter-spacing:.02em}
   .cal .dow span:nth-child(1):before{content:"S"}.cal .dow span:nth-child(2):before{content:"M"}
   .cal .dow span:nth-child(3):before{content:"T"}.cal .dow span:nth-child(4):before{content:"W"}
@@ -164,7 +168,11 @@
   .rail button:hover b.nav-ico svg,.cal .day:hover i,.deal-mail{transition:none!important;transform:none!important}
 }
 
-/* ---------- 13. Schedule: equal-height side panels, internally scrollable ---------- */
+/* ---------- 13. Schedule: side panels — equal height, exactly 4 rows tall ---------- */
+/* Both boxes (Today + Coming up) are forced to the SAME fixed height set by
+   calPanels() via --cal-list-h — the "Coming up" box is no longer shorter than
+   Today's. The lists scroll inside their own box; the page never grows. On
+   desktop the pair is ONE sticky unit that stays pinned while you scroll. */
 .cal aside .panel{display:flex;flex-direction:column}
 .cal aside .cal-scroll{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin!important;-ms-overflow-style:auto!important;scroll-behavior:smooth}
 .cal aside .cal-scroll::-webkit-scrollbar{display:block!important;width:9px!important;height:9px!important}
@@ -172,30 +180,10 @@
 .cal aside .cal-scroll::-webkit-scrollbar-thumb{display:block!important;background:color-mix(in srgb,var(--ink) 18%,transparent);border-radius:99px;border:2px solid transparent;background-clip:content-box}
 .cal aside .cal-scroll:hover::-webkit-scrollbar-thumb,.cal aside .cal-scroll:focus-within::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 34%,transparent);background-clip:content-box}
 .cal aside .cal-scroll .empty{padding:26px 18px}
-/* The Today / Coming-up sections must NOT slide down the page while scrolling:
-   they stay pinned in place as ONE unit and only their inner lists scroll.
-   Both panels are forced to the SAME height — the taller of the two (capped to
-   the viewport). On desktop JS measures each panel's natural height and pins
-   both via --cal-panel-h; below 1001px plain CSS grid stretch does it. */
 @media(min-width:1001px){
   .cal aside{position:sticky;top:16px;align-self:start;display:flex;flex-direction:column;gap:16px;z-index:5}
   .cal aside .panel{min-height:0}
-  .cal aside .cal-scroll{max-height:none;flex:1 1 auto;min-height:0}
 }
-@media(max-width:1000px){
-  .cal aside{position:static;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important}
-  .cal aside .panel{height:auto}
-  .cal aside .cal-scroll{max-height:360px}
-}
-@media(max-width:600px){
-  .cal aside{grid-template-columns:minmax(0,1fr)!important}
-  .cal aside .cal-scroll{max-height:250px}
-}
-
-/* Desktop: pin BOTH side panels to one shared height (set by calPanels()).
-   Lists inside then scroll within the box instead of stretching the page. */
-.cal aside[data-cal-sync="1"] .panel{height:var(--cal-panel-h);max-height:var(--cal-panel-h)}
-.cal aside[data-cal-sync="1"] .cal-scroll{max-height:none}
 
 /* ---------- 13b. Subtle delete animation for schedule rows ---------- */
 .cal aside .row.row-removing{
@@ -229,6 +217,9 @@
 
 /* ---------- 15. Custom dropdowns (vd): no native selects anywhere ---------- */
 .vd-native{position:absolute!important;width:1px;height:1px;min-width:0;opacity:0;margin:0;padding:0;border:0;pointer-events:none;z-index:-1}
+/* Safety net: if a select is ever rendered outside ask() (or before enhancement
+   runs), it must stay invisible — only the custom widget is shown. */
+select[data-vd]{position:absolute!important;width:1px!important;height:1px!important;min-width:0!important;max-width:1px!important;opacity:0!important;margin:0!important;padding:0!important;border:0!important;pointer-events:none!important;overflow:hidden!important}
 .vd{position:relative;width:100%}
 .vd-trigger{
   display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;box-sizing:border-box;

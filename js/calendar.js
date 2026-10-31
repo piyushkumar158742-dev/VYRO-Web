@@ -5,26 +5,34 @@ for(let d=1;d<=n;d++){const k=`${y}-${pad(m+1)}-${pad(d)}`,E=S.events.filter(e=>
 const day=S.events.filter(e=>e.date===cal.sel).sort(byDate),up=S.events.filter(e=>e.date>td).sort(byDate);
 const li=e=>`<div class="row"><div><strong>${esc(e.title)}</strong><small>${fmt(e.date)} ${esc(e.time||'')}</small></div><button class="btn del" onclick="edel(${e.id},this)" aria-label="Delete event">✕</button></div>`;
 return`<div class="cal"><section class="panel"><header><h3>${new Date(y,m,1).toLocaleString('en-IN',{month:'long',year:'numeric'})}</h3><div class="nav2"><button onclick="calMove(-1)" aria-label="Previous month">‹</button><button onclick="calSel('${td}')">Today</button><button onclick="calMove(1)" aria-label="Next month">›</button></div></header>
-<div class="dow">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<span>${d}</span>`).join('')}</div><div class="grid">${c}</div></section>
+<div class="dow" aria-hidden="true">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<span>${d}</span>`).join('')}</div><div class="grid">${c}</div></section>
 <aside><section class="panel cal-day-panel"><header><h3>${fmt(cal.sel)}</h3><button class="lnk" onclick="em()">+ Add event</button></header><div class="cal-scroll">${day.map(li).join('')||'<div class="empty">Nothing planned for this day.</div>'}</div></section>
 <section class="panel cal-up-panel"><header><h3>Coming up</h3></header><div class="cal-scroll">${up.map(li).join('')||'<div class="empty">No upcoming events.</div>'}</div></section></aside></div>`};
 function calSel(k){const[y,m]=k.split('-').map(Number);cal={y,m:m-1,sel:k};if(S.view==='calendar')draw()}
-/* Equal-height side panels: measure both at their natural content height, then
-   pin both to the taller one (capped to the viewport). Lists scroll inside. */
+/* Side panels are ALWAYS exactly four event rows tall (plus the header).
+   Both boxes get the identical fixed height so they line up perfectly; any
+   events beyond the fourth scroll inside the box — never the whole page. */
 function calPanels(){try{
   const aside=document.querySelector('.cal aside');if(!aside)return;
-  if(!matchMedia('(min-width:1001px)').matches){delete aside.dataset.calSync;aside.style.removeProperty('--cal-panel-h');return}
-  aside.style.setProperty('--cal-panel-h','auto');aside.removeAttribute('data-cal-sync');
-  const P=[...aside.querySelectorAll('.panel')];if(P.length!==2)return;
-  /* natural content height of each panel = header + its list (capped per list) */
-  const listCap=Math.max(360,window.innerHeight-170);
-  const H=P.map(p=>{const hd=p.querySelector('header'),sc=p.querySelector('.cal-scroll');
-    return (hd?hd.offsetHeight:0)+Math.min(sc?sc.scrollHeight:0,listCap)+(sc?parseFloat(getComputedStyle(sc).paddingTop||0)+parseFloat(getComputedStyle(sc).paddingBottom||0):0)});
-  const cap=Math.max(480,window.innerHeight-32),shared=Math.min(Math.max(...H),cap);
-  aside.style.setProperty('--cal-panel-h',Math.round(shared)+'px');
+  const P=[...aside.querySelectorAll('.panel')];if(!P.length)return;
+  /* measure a single row once (rows are equal height by design) */
+  let rh=52;
+  const probe=aside.querySelector('.cal-scroll .row');
+  if(probe){const h=probe.getBoundingClientRect().height;if(h>8)rh=h}
+  else{/* no rows anywhere yet — build a temp probe row with the real panel markup */
+    const tmp=document.createElement('div');tmp.className='cal';tmp.setAttribute('data-cal-sync','0');tmp.style.cssText='position:absolute;left:-9999px;top:0;width:'+Math.max(260,(P[0].getBoundingClientRect().width||300))+'px;visibility:hidden;height:auto;max-height:none';
+    tmp.innerHTML='<section class="panel"><header><h3>.</h3></header><div class="cal-scroll"><div class="row"><div><strong>Probe row height</strong><small>probe probe</small></div><button class="btn del">✕</button></div></div></section>';
+    document.body.appendChild(tmp);const r=tmp.querySelector('.row');if(r){const h=r.getBoundingClientRect().height;if(h>8)rh=h}
+    tmp.remove();
+  }
+  const vh=window.innerHeight||document.documentElement.clientHeight||800;
+  /* desktop: generous cap so 4 rows always fit even on short windows;
+     mobile/tablet: keep the box inside the viewport */
+  const wide=matchMedia('(min-width:1001px)').matches;
+  const maxList=wide?Math.max(4*rh,vh-230):Math.max(2.4*rh,vh-330);
+  const listH=Math.min(4*rh,maxList);
+  aside.style.setProperty('--cal-list-h',Math.round(listH)+'px');
   aside.setAttribute('data-cal-sync','1');
-  /* one extra pass after paint: fonts/images may have changed row heights */
-  if(!calPanels._q){calPanels._q=1;requestAnimationFrame(()=>{calPanels._q=0;try{calPanels()}catch(_){}})}
 }catch(_){}}
 addEventListener('resize',()=>{if(S&&S.view==='calendar')calPanels()});
 function calMove(n){const d=new Date(cal.y,cal.m+n,1);cal.y=d.getFullYear();cal.m=d.getMonth();cal.sel=iso(d);draw()}

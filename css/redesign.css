@@ -165,19 +165,31 @@
   .rail button:hover b.nav-ico svg,.cal .day:hover i,.deal-mail{transition:none!important;transform:none!important}
 }
 
-/* ---------- 13. Schedule side panels (V34) ---------- */
-/* One clean rule set, no sticky, no inner scroll containers anywhere.
-   Both boxes are ALWAYS exactly four event rows tall and share one
-   fixed height (--cal-list-h, set by calPanels()). The lists themselves
-   are hard-capped at 4 items in calendar.js, so "Coming up" has a real
-   end and the page height never grows to fit it. The whole document is
-   the only scroller - nothing detaches, slides under, or bounces. */
+/* ---------- 13. Schedule side panels (V36) ---------- */
+/* Deterministic, self-contained boxes:
+   - Both "Today" and "Coming up" lists are hard-capped at 4 rows in the
+     markup; anything extra shows as a "+N more" footer, so neither box
+     can grow unbounded and the page height never stretches around them.
+   - One shared fixed height (--cal-list-h, set by calPanels() after EVERY
+     calendar repaint — not just on resize), so both boxes are always the
+     exact same size, even when one is empty.
+   - No sticky, no inner scroll containers, no overflow overrides on
+     html/body/#main — the document is the only scroller, which removes
+     the bottom-of-page bounce/glitch entirely. */
 .cal aside .panel{display:flex;flex-direction:column;margin-bottom:0}
 .cal aside .cal-list{height:var(--cal-list-h,208px);min-height:0;overflow:hidden;display:flex;flex-direction:column}
 .cal aside .cal-list .empty{padding:26px 18px;text-align:center;color:var(--mut)}
 .cal aside .cal-list > .row{flex:0 0 auto}
+.cal-more{flex:0 0 auto;display:flex;align-items:center;justify-content:center;height:28px;font-size:11.5px;font-weight:700;letter-spacing:.02em;color:var(--mut);background:var(--soft);border-top:1px solid var(--ln)}
 html,body{overscroll-behavior-y:none}
 .cal aside{position:static!important}
+/* Belt-and-braces: nothing inside #main may create a competing scroller.
+   The whole page scrolls as one normal document. */
+#main{overflow:visible!important}
+/* The Add-event sheet must ALWAYS be visible & clickable when opened:
+   force the modal layer above everything (rail z:40, toast z:1000). */
+#modal.modal:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important;z-index:9999!important;pointer-events:auto!important}
+#modal .sheet{z-index:10000;pointer-events:auto}
 /* "+ Add event" must always look & behave like a real button (theme ink,
    rounded, clickable) regardless of theme overrides on .lnk/.btn. */
 #calAddEventBtn,.cal-add-event{

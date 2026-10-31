@@ -1,40 +1,64 @@
 'use strict';
 /* =====================================================================
-   V34 - Schedule (calendar) view, definitive behaviour:
-   - Weekday header row is emitted exactly once (SUN...SAT), no duplicates.
+   V38 - Schedule (calendar) view, definitive behaviour:
+   - Weekday header row is emitted exactly once (Sun...Sat), no duplicates.
    - "Today" and "Coming up" panels are ALWAYS the same height: exactly
-     4 event rows tall. Both lists are capped at 4 rows right in the
-     markup, so "Coming up" has a hard visual end and the page height
-     never grows to fit it (no more "stuck" scroll length).
-   - NO sticky positioning on the aside - the whole page scrolls as one
-     normal document. Nothing detaches or slides under anything else,
-     and there is no inner scroll container fighting the page, so the
-     bottom-of-page bounce/glitch cannot happen.
-   - "+ Add event" is wired three independent ways (inline onclick,
-     direct binding after every draw, delegated pointerdown listener),
-     ALL of them calling window.calAddEvent() - a function defined here
-     that always exists even if any other script throws mid-load. If a
-     stale/locked sheet is open it is closed first, then re-opened fresh.
+     4 event rows tall (hard cap in markup + "+N more" footer), so
+     neither box stretches the page and both have a clean visual end.
+   - No sticky positioning, no inner scroll containers, no overflow
+     overrides - the document is the only scroller (no bottom glitch).
+   - "+ Add event": ROOT CAUSE of the dead button was the modal veil's
+     CSS animation (sheet-in / premium-sheet-in run on #modal itself).
+     An element with a running/filling animation is promoted to its own
+     stacking context, which trapped the fixed-position veil inside the
+     scrolling layout column: the sheet WAS created but rendered behind
+     the page and swallowed clicks. Fix: calAddEvent() now removes every
+     animation from #modal before showing it, forces the veil visible
+     with a guaranteed z-index, and focuses the Title input. Any failure
+     surfaces in the console AND an alert - the button can never silently
+     "do nothing". Wired two independent ways (inline onclick + one
+     document-level capture click listener).
    - Deleting an event plays a subtle fade/slide-out before repaint.
    ===================================================================== */
 var CAL_MAX_ROWS=4;
 
-/* Single source of truth for opening the Add-event sheet. V36: NO silent
-   try/catch anywhere in the happy path — any failure surfaces in the
-   console AND shows a toast, so the button can never just "do nothing"
-   without telling us why. It always closes whatever sheet is open first,
-   then builds the Add-event form fresh via em(). */
+/* Single source of truth for opening the Add-event sheet. */
 window.calAddEvent=function(ev){
   if(ev&&typeof ev.preventDefault==='function')ev.preventDefault();
-  /* V37: fully reset any leftover overlay state (stale sheet from another
-     view, half-closed dropdowns) before opening — then build fresh. */
   try{shut()}catch(_){}
   if(typeof em!=='function'){alert('Add event: form helper missing');return}
   try{em()}catch(err){console.error('calAddEvent',err);alert('Add event could not open the form: '+err.message);return}
+  /* V38 THE FIX: kill the inherited CSS animations on the modal veil and
+     sheet (.modal veil-in + .sheet sheet-in/premium-sheet-in, all with
+     fill-mode "both"). A filled animation promotes #modal into its own
+     stacking context that trapped the fixed overlay below the page -
+     invisible & unclickable. Remove them, then force the layer above
+     everything. */
   var m2=document.getElementById('modal');
+  if(m2){
+    try{m2.style.animation='none';m2.style.webkitAnimation='none'}catch(_){}
+    m2.style.setProperty('z-index','2147483000','important');
+    var sh=document.getElementById('sheet');
+    if(sh){try{sh.style.animation='none';sh.style.webkitAnimation='none'}catch(_){}}
+  }
   if(!m2||m2.hidden){alert('Add event could not open the form');return}
-  var ti=m2.querySelector('input[name="title"]');if(ti)setTimeout(function(){ti.focus()},60);
+  var ti=m2.querySelector('#sheet input[name="title"]');if(ti)setTimeout(function(){try{ti.focus()}catch(_){}},60);
 };
+/* Belt-and-braces: whenever ANY sheet opens (New video, tasks, deals...),
+   strip the veil/sheet animations too, so no overlay can ever be trapped
+   behind the page by a filled CSS animation. ask() is a function
+   declaration in app.js -> already on window before this file runs. */
+(function(){
+  var _ask=window.ask;
+  if(typeof _ask!=='function')return;
+  window.ask=function(h){
+    var r=_ask.call(window,h);
+    var m=document.getElementById('modal'),s=document.getElementById('sheet');
+    if(m){m.style.animation='none';m.style.setProperty('z-index','2147483000','important')}
+    if(s)s.style.animation='none';
+    return r;
+  };
+})();
 window.calQuickAdd=function(e){e.preventDefault();var f=new FormData(e.target);S.events.push({id:uid(),title:String(f.get('title')||'').trim()||'Event',date:f.get('date'),time:'',type:'other'});save();shut();calSel(f.get('date'));toast('Event added')};
 
 V.calendar=()=>{const{y,m}=cal,first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),td=iso(new Date());let c='';
@@ -78,15 +102,16 @@ function calPanels(){
   const moreH=aside.querySelector('.cal-more')?28:0;
   aside.style.setProperty('--cal-list-h',Math.round(rh*CAL_MAX_ROWS+moreH)+'px');
   aside.setAttribute('data-cal-sync','1');
+  try{calBindAddBtn()}catch(_){}
 }
 addEventListener('resize',()=>{if(S&&S.view==='calendar')calPanels()});
 
-/* ---------- "Add event": ONE delegated capture listener for everything ---
-   V36: instead of binding per-button (which broke whenever the calendar
-   repainted before listeners attached), a single document-level capture
-   listener catches any click whose target is (or lives inside) the Add
-   event button — inline onclick is also removed below so there is no
-   double-fire path; this listener is the only opener. */
+/* ---------- "Add event": delegated capture listener + direct binding ----
+   Two independent paths so a repaint can never leave the button dead:
+   (1) inline onclick on the button, (2) this document-level capture
+   listener. The 350ms debounce only blocks the *duplicate* path of the
+   SAME physical click - opening twice would toggle/shut the sheet, which
+   looks exactly like "the button does nothing". */
 let CAL_ADD_OPENING=false;
 document.addEventListener('click',function(e){
   const b=e.target&&e.target.closest?e.target.closest('#calAddEventBtn,.cal-add-event'):null;
@@ -96,6 +121,8 @@ document.addEventListener('click',function(e){
   CAL_ADD_OPENING=true;setTimeout(()=>{CAL_ADD_OPENING=false},350);
   window.calAddEvent(e);
 },true);
+/* (3) after every calendar paint, bind fresh buttons directly too */
+function calBindAddBtn(){const b=document.getElementById('calAddEventBtn');if(b&&!b._calBound){b._calBound=1;b.onclick=function(ev){ev.preventDefault();window.calAddEvent(ev)}}}
 
 function calMove(n){const d=new Date(cal.y,cal.m+n,1);cal.y=d.getFullYear();cal.m=d.getMonth();cal.sel=iso(d);draw()}
 function em(){
@@ -103,7 +130,7 @@ function em(){
      calAddEvent before we get here, so no double-open guard is needed) */
   ask(`<div class="form-heading"><span class="form-mark">&#10022;</span><div><span class="form-eyebrow">PLAN AHEAD</span><h3>Add event</h3><p>Put an important deadline, upload, or call on your schedule.</p></div></div><form class="f standard-form" onsubmit="esave(event)"><label>Title<input name="title" required maxlength="100"></label><label>Date<input name="date" type="date" required value="${cal.sel}"></label><label>Time<input name="time" type="time"></label>
 <label>Type<select name="type"><option value="video">Video</option><option value="brand">Brand</option><option value="other">Other</option></select></label><div class="acts"><button type="button" class="btn ghost" onclick="shut()">Cancel</button><button class="btn">Add event</button></div></form>`);enhanceSelects(document.getElementById('sheet'))}
-function esave(e){e.preventDefault();const f=new FormData(e.target);S.events.push({id:uid(),title:f.get('title').trim(),date:f.get('date'),time:f.get('time'),type:f.get('type')});calSel(f.get('date'));done('Event added')}
+function esave(e){e.preventDefault();const f=new FormData(e.target);const title=String(f.get('title')||'').trim();if(!title){toast('Please add a title');return}S.events.push({id:uid(),title,date:f.get('date'),time:f.get('time')||'',type:f.get('type')||'other'});calSel(f.get('date'));done('Event added')}
 function edel(id,btn){const old=S.events;S.events=old.filter(e=>e.id!==id);if(!save()){S.events=old;return}
 /* subtle removal animation: fade + slide the row out, then repaint */
 const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches,row=btn&&btn.closest?btn.closest('.row'):null;

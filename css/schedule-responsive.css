@@ -48,11 +48,16 @@
    calPanels() via --cal-list-h. The "Coming up" box is no longer shorter. */
 .cal aside .panel{display:flex;flex-direction:column}
 .cal aside[data-cal-sync="1"] .cal-scroll{height:var(--cal-list-h,208px);max-height:var(--cal-list-h,208px);min-height:0;flex:0 0 auto}
-/* Never let a list that hit its top/bottom edge scroll the whole page —
-   this is the "website completely moves" glitch. */
-.cal aside,.cal aside *{overscroll-behavior:contain!important}
+/* While a box still has room inside its own list it scrolls ONLY itself and
+   the page never moves. As soon as the list hits its top/bottom edge the
+   scroll hands over to the whole page ("the website completely moves").
+   The page itself never rubber-bands past its ends — no bottom bounce glitch. */
+.cal aside,.cal aside *{overscroll-behavior-x:auto!important}
+html,body{overscroll-behavior-y:none!important}
 @media(min-width:1001px){
-  .cal aside{position:sticky;top:16px;align-self:start;display:flex;flex-direction:column;gap:16px;z-index:5;max-height:calc(100vh - 32px)}
+  /* Today + Coming up move together as ONE sticky unit while the page is
+     scrolled, so the day panel can never slide down under "Coming up". */
+  .cal aside{position:sticky;top:18px;display:flex;flex-direction:column;gap:16px;align-self:start;max-height:calc(100vh - 36px);z-index:5}
   .cal aside .panel{min-height:0}
 }
 @media(max-width:1000px){
@@ -75,7 +80,7 @@
   margin:0;font-size:15px;font-weight:750;letter-spacing:-.025em;color:var(--ink)
 }
 .cal .dow{padding:4px 8px 0}
-.cal .dow span{font-size:0!important;letter-spacing:0;padding:12px 0 10px}
+.cal .dow span{font-size:10.5px!important;letter-spacing:.08em;padding:12px 0 10px}
 .cal .grid{padding:0 8px 10px}
 .cal .day{
   border-top:1px solid var(--ln)!important;border-left:1px solid var(--ln)!important;
@@ -102,7 +107,7 @@
   .cal>section.panel,.cal aside .panel{border-radius:17px}
   .cal>section.panel>header{padding:16px 16px!important;min-height:62px}
   .cal .dow{padding:2px 8px 0}
-  .cal .dow span{font-size:0!important;letter-spacing:0;padding:13px 0 11px}
+  .cal .dow span{font-size:9.5px!important;letter-spacing:.02em;padding:13px 0 11px}
   .cal .grid{padding:0 8px 10px}
   .cal .day{border-left:0!important;border-radius:9px;min-height:60px;padding:6px 2px;gap:4px}
   .cal .day .n{width:28px;height:28px;font-size:12px}

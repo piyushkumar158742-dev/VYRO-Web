@@ -48,11 +48,15 @@
    calPanels() via --cal-list-h. The "Coming up" box is no longer shorter. */
 .cal aside .panel{display:flex;flex-direction:column}
 .cal aside[data-cal-sync="1"] .cal-scroll{height:var(--cal-list-h,208px);max-height:var(--cal-list-h,208px);min-height:0;flex:0 0 auto}
-/* Never let a list that hit its top/bottom edge scroll the whole page —
-   this is the "website completely moves" glitch. */
-.cal aside,.cal aside *{overscroll-behavior:contain!important}
+/* Scrolling inside a box that has reached its top/bottom edge now bubbles to
+   the PAGE instead of being trapped ("make it like the website completely
+   moves"). The page itself never rubber-bands or jumps. */
+.cal aside,.cal aside *{overscroll-behavior:auto!important}
+html,body{overscroll-behavior-y:none!important}
 @media(min-width:1001px){
-  .cal aside{position:sticky;top:16px;align-self:start;display:flex;flex-direction:column;gap:16px;z-index:5;max-height:calc(100vh - 32px)}
+  /* NOT sticky anymore: while you scroll the whole page, both boxes simply
+     travel with the content instead of pinning/glitching on screen. */
+  .cal aside{position:static;display:flex;flex-direction:column;gap:16px}
   .cal aside .panel{min-height:0}
 }
 @media(max-width:1000px){

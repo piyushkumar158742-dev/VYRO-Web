@@ -35,8 +35,26 @@ function calPanels(){try{
   aside.setAttribute('data-cal-sync','1');
 }catch(_){}}
 addEventListener('resize',()=>{if(S&&S.view==='calendar')calPanels()});
+
+/* ---------- "Add event" robustness ---------- */
+/* If the inline onclick ever fails to fire (stale cache, CSP, etc.), this
+   document-level listener opens the sheet as a fallback. It bails out when
+   #modal is already open, and em() itself guards against double-rendering,
+   so the form can NEVER be created twice. */
+document.addEventListener('click',e=>{
+  try{
+    const t=e.target,b=t&&t.closest?t.closest('.lnk'):null;
+    if(!b||!/Add event/.test(b.textContent||''))return;
+    const modal=document.getElementById('modal');
+    if(modal&&!modal.hidden)return; /* inline handler already opened it */
+    if(typeof em==='function'){e.preventDefault();em()}
+  }catch(_){}},false);
 function calMove(n){const d=new Date(cal.y,cal.m+n,1);cal.y=d.getFullYear();cal.m=d.getMonth();cal.sel=iso(d);draw()}
-function em(){ask(`<div class="form-heading"><span class="form-mark">✦</span><div><span class="form-eyebrow">PLAN AHEAD</span><h3>Add event</h3><p>Put an important deadline, upload, or call on your schedule.</p></div></div><form class="f standard-form" onsubmit="esave(event)"><label>Title<input name="title" required maxlength="100"></label><label>Date<input name="date" type="date" required value="${cal.sel}"></label><label>Time<input name="time" type="time"></label>
+function em(){
+  /* guard: never re-open the sheet if it is already showing the Add-event form */
+  const modal=document.getElementById('modal'),sheet=document.getElementById('sheet');
+  if(modal&&!modal.hidden&&sheet&&/PLAN AHEAD/.test(sheet.innerHTML))return;
+  ask(`<div class="form-heading"><span class="form-mark">✦</span><div><span class="form-eyebrow">PLAN AHEAD</span><h3>Add event</h3><p>Put an important deadline, upload, or call on your schedule.</p></div></div><form class="f standard-form" onsubmit="esave(event)"><label>Title<input name="title" required maxlength="100"></label><label>Date<input name="date" type="date" required value="${cal.sel}"></label><label>Time<input name="time" type="time"></label>
 <label>Type<select name="type"><option value="video">Video</option><option value="brand">Brand</option><option value="other">Other</option></select></label><div class="acts"><button type="button" class="btn ghost" onclick="shut()">Cancel</button><button class="btn">Add event</button></div></form>`)}
 function esave(e){e.preventDefault();const f=new FormData(e.target);S.events.push({id:uid(),title:f.get('title').trim(),date:f.get('date'),time:f.get('time'),type:f.get('type')});calSel(f.get('date'));done('Event added')}
 function edel(id,btn){const old=S.events;S.events=old.filter(e=>e.id!==id);if(!save()){S.events=old;return}

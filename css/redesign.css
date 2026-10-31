@@ -171,17 +171,18 @@
 /* ---------- 13. Schedule: side panels — equal height, exactly 4 rows tall ---------- */
 /* Both boxes (Today + Coming up) are forced to the SAME fixed height set by
    calPanels() via --cal-list-h — the "Coming up" box is no longer shorter than
-   Today's. The lists scroll inside their own box; the page never grows. On
-   desktop the pair is ONE sticky unit that stays pinned while you scroll. */
+   Today's. The lists scroll inside their own box; when a list hits its top or
+   bottom edge the scroll hands over to the page so the whole site moves
+   smoothly (no trapped/parallax glitch). Neither panel is sticky anymore. */
 .cal aside .panel{display:flex;flex-direction:column}
-.cal aside .cal-scroll{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin!important;-ms-overflow-style:auto!important;scroll-behavior:smooth}
+.cal aside .cal-scroll{overflow-y:auto;overscroll-behavior:auto;scrollbar-width:thin!important;-ms-overflow-style:auto!important;scroll-behavior:smooth}
 .cal aside .cal-scroll::-webkit-scrollbar{display:block!important;width:9px!important;height:9px!important}
 .cal aside .cal-scroll::-webkit-scrollbar-track{display:block!important;background:transparent!important}
 .cal aside .cal-scroll::-webkit-scrollbar-thumb{display:block!important;background:color-mix(in srgb,var(--ink) 18%,transparent);border-radius:99px;border:2px solid transparent;background-clip:content-box}
 .cal aside .cal-scroll:hover::-webkit-scrollbar-thumb,.cal aside .cal-scroll:focus-within::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 34%,transparent);background-clip:content-box}
 .cal aside .cal-scroll .empty{padding:26px 18px}
 @media(min-width:1001px){
-  .cal aside{position:sticky;top:16px;align-self:start;display:flex;flex-direction:column;gap:16px;z-index:5}
+  .cal aside{position:static;display:flex;flex-direction:column;gap:16px}
   .cal aside .panel{min-height:0}
 }
 

@@ -43,26 +43,22 @@
   .cal .nav2 button:nth-child(2){min-width:48px;padding:0 7px}
 }
 
-/* ---------- Schedule: side panels — equal height, exactly 4 rows tall ---------- */
-/* Both boxes (Today + Coming up) are forced to the SAME fixed height set by
-   calPanels() via --cal-list-h. The "Coming up" box is no longer shorter. */
-.cal aside .panel{display:flex;flex-direction:column}
-.cal aside[data-cal-sync="1"] .cal-scroll{height:var(--cal-list-h,208px);max-height:var(--cal-list-h,208px);min-height:0;flex:0 0 auto}
-/* While a box still has room inside its own list it scrolls ONLY itself and
-   the page never moves. As soon as the list hits its top/bottom edge the
-   scroll hands over to the whole page ("the website completely moves").
-   The page itself never rubber-bands past its ends — no bottom bounce glitch. */
-.cal aside,.cal aside *{overscroll-behavior-x:auto!important}
+/* ---------- Schedule side panels (V31) ---------- */
+/* Kept in sync with redesign.css section 13: no sticky, no inner
+   scroll containers, both boxes exactly 4 rows tall (--cal-list-h),
+   lists hard-capped at 4 items by calendar.js. The page is the only
+   scroller, so nothing detaches, slides under, or bounces. */
+.cal aside .panel{display:flex;flex-direction:column;margin-bottom:0}
+.cal aside .cal-list{height:var(--cal-list-h,208px);min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.cal aside .cal-list > .row{flex:0 0 auto}
+.cal aside .cal-list .empty{padding:26px 18px;text-align:center;color:var(--mut)}
 html,body{overscroll-behavior-y:none!important}
+.cal aside{position:static!important}
 @media(min-width:1001px){
-  /* Today + Coming up move together as ONE sticky unit while the page is
-     scrolled, so the day panel can never slide down under "Coming up". */
-  .cal aside{position:sticky;top:18px;display:flex;flex-direction:column;gap:16px;align-self:start;max-height:calc(100vh - 36px);z-index:5}
-  .cal aside .panel{min-height:0}
+  .cal aside{display:flex;flex-direction:column;gap:16px;align-self:start}
 }
 @media(max-width:1000px){
-  .cal aside{position:static;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important}
-  .cal aside .panel{height:auto}
+  .cal aside{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px;align-items:stretch!important}
 }
 @media(max-width:600px){
   .cal aside{grid-template-columns:minmax(0,1fr)!important}

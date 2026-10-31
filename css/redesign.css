@@ -161,36 +161,28 @@
   .rail button:hover b.nav-ico svg,.cal .day:hover i,.deal-mail{transition:none!important;transform:none!important}
 }
 
-/* ---------- 13. Schedule: side panels — equal height, exactly 4 rows tall ---------- */
-/* Both boxes (Today + Coming up) share ONE fixed height set by calPanels()
-   through --cal-list-h, so "Coming up" is never shorter than Today's.
-   The lists scroll inside their own box ONLY while there is room left inside
-   the list. When a box reaches its top or bottom edge the scroll hands over to
-   the page — but only then. While the mouse stays over a box that can still
-   scroll, the page underneath never moves (overscroll-behavior:contain), which
-   kills both the "whole section slides under Coming up" behaviour and the
-   end-of-page bounce/glitch. */
-.cal aside .panel{display:flex;flex-direction:column}
-.cal aside .cal-scroll{overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin!important;-ms-overflow-style:auto!important;scroll-behavior:auto}
-.cal aside .cal-scroll::-webkit-scrollbar{display:block!important;width:9px!important;height:9px!important}
-.cal aside .cal-scroll::-webkit-scrollbar-track{display:block!important;background:transparent!important}
-.cal aside .cal-scroll::-webkit-scrollbar-thumb{display:block!important;background:color-mix(in srgb,var(--ink) 18%,transparent);border-radius:99px;border:2px solid transparent;background-clip:content-box}
-.cal aside .cal-scroll:hover::-webkit-scrollbar-thumb,.cal aside .cal-scroll:focus-within::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--ink) 34%,transparent);background-clip:content-box}
-.cal aside .cal-scroll .empty{padding:26px 18px}
-/* The page itself never rubber-bands past its ends (kills the bottom "bounce"
-   glitch), and no ancestor between .cal aside and <html> may create a scroll
-   container — otherwise sticky positioning would break. */
+/* ---------- 13. Schedule side panels (V31) ---------- */
+/* One clean rule set, no sticky, no inner scroll containers anywhere.
+   Both boxes are ALWAYS exactly four event rows tall and share one
+   fixed height (--cal-list-h, set by calPanels()). The lists themselves
+   are hard-capped at 4 items in calendar.js, so "Coming up" has a real
+   end and the page height never grows to fit it. The whole document is
+   the only scroller - nothing detaches, slides under, or bounces. */
+.cal aside .panel{display:flex;flex-direction:column;margin-bottom:0}
+.cal aside .cal-list{height:var(--cal-list-h,208px);min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.cal aside .cal-list .empty{padding:26px 18px;text-align:center;color:var(--mut)}
+.cal aside .cal-list > .row{flex:0 0 auto}
 html,body{overscroll-behavior-y:none}
+.cal aside{position:static!important}
 @media(min-width:1001px){
-  /* Today + Coming up travel together as ONE sticky unit while the whole page
-     is scrolled — the day panel can no longer slide down under "Coming up".
-     The unit releases right where the month grid ends, so nothing bounces. */
-  .cal aside{position:sticky;top:18px;display:flex;flex-direction:column;gap:16px;align-self:start;max-height:calc(100vh - 36px);z-index:5}
-  .cal aside .panel{min-height:0;flex:0 0 auto}
+  .cal aside{display:flex;flex-direction:column;gap:16px;align-self:start}
   .cal,.wrap,#main,.app{overflow:visible!important}
 }
 @media(max-width:1000px){
-  .cal aside{position:static}
+  .cal aside{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px;align-items:stretch!important}
+}
+@media(max-width:600px){
+  .cal aside{grid-template-columns:minmax(0,1fr)!important}
 }
 
 /* ---------- 13b. Subtle delete animation for schedule rows ---------- */

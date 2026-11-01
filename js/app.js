@@ -24,7 +24,7 @@ function cleanViews(value){const raw=String(value??'').trim();if(!raw||raw==='-'
 function formatViews(value){const n=Number(value);if(!Number.isFinite(n)||!value)return String(value||'');if(n>=1e9)return (n/1e9).toFixed(n>=1e10?0:1).replace(/\.0$/,'')+'B';if(n>=1e6)return (n/1e6).toFixed(n>=1e7?0:1).replace(/\.0$/,'')+'M';if(n>=1e4)return (n/1e3).toFixed(n>=1e5?0:1).replace(/\.0$/,'')+'K';return n.toLocaleString('en-IN')}
 function load(){const s=seed();try{const o=JSON.parse(localStorage.getItem(KEY));if(!o){ST=DEFAULT_ST.slice();return s}ST=Array.isArray(o.settings?.pipelineStages)?o.settings.pipelineStages.filter(x=>typeof x==='string'&&x.trim()).map(x=>x.trim()).slice(0,12):DEFAULT_ST.slice();if(ST.length<2)ST=DEFAULT_ST.slice();
 const n={...s,...o,settings:{...s.settings,...o.settings,name:o.settings?.name||o.settings?.creatorName||s.settings.name,pipelineStages:ST.slice()}};
-n.view=TT[o.view]?o.view:'home';
+n.view='home'; // Always start a fresh browser session on Desk; in-session navigation still saves normally.
 n.videos=(n.videos||[]).map(v=>({...v,status:ST.includes(v.status)?v.status:ST[0],views:cleanViews(v.views)}));
 n.brands=(n.brands||[]).map(b=>({...b,amount:Number(String(b.amount).replace(/[^0-9.]/g,''))||0}));
 n.events=(n.events||[]).filter(e=>/^\d{4}-\d\d-\d\d$/.test(e.date||''));return removeDemoData(n)}catch(e){return s}}

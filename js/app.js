@@ -88,11 +88,11 @@ function syncVd(sel){
 }
 function closeVd(){document.querySelectorAll('.vd.vd-open').forEach(w=>{w.classList.remove('vd-open');w._vd&&w._vd.trigger.setAttribute('aria-expanded','false')})}
 function fitVd(w,t,p){
-  w.classList.remove('up');p.style.maxHeight='';
+  w.classList.remove('vd-up');p.style.maxHeight='';
   const r=t.getBoundingClientRect(),vh=window.innerHeight;
   const roomB=vh-r.bottom-14,roomT=r.top-14;
-  if(roomB<Math.min(250,p.scrollHeight+16)&&roomT>roomB){w.classList.add('up')}
-  const room=w.classList.contains('up')?roomT:roomB;
+  if(roomB<Math.min(250,p.scrollHeight+16)&&roomT>roomB){w.classList.add('vd-up')}
+  const room=w.classList.contains('vd-up')?roomT:roomB;
   p.style.maxHeight=Math.max(150,Math.min(p.scrollHeight+10,room-10))+'px';
 }
 function enhanceSelects(root){(root||document).querySelectorAll('select:not([data-vd])').forEach(buildVd)}

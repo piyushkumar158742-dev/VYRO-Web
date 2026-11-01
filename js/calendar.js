@@ -69,8 +69,8 @@ const li=e=>`<div class="row"><div><strong>${esc(e.title)}</strong><small>${fmt(
 const moreN=(list)=>list.length>CAL_MAX_ROWS?`<div class="cal-more">+${list.length-CAL_MAX_ROWS} more</div>`:'';
 return`<div class="cal"><section class="panel cal-month-panel"><header><h3>${new Date(y,m,1).toLocaleString('en-IN',{month:'long',year:'numeric'})}</h3><div class="nav2"><button onclick="calMove(-1)" aria-label="Previous month">&#8249;</button><button onclick="calSel('${td}')">Today</button><button onclick="calMove(1)" aria-label="Next month">&#8250;</button></div></header>
 <div class="dow">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<span>${d}</span>`).join('')}</div><div class="grid">${c}</div></section>
-<aside><section class="panel cal-day-panel"><header><h3>${fmt(cal.sel)}</h3><button type="button" class="btn cal-add-event" id="calAddEventBtn" onclick="calAddEvent(event)">+ Add event</button></header><div class="cal-list">${day.slice(0,CAL_MAX_ROWS).map(li).join('')||'<div class="empty">Nothing planned for this day.</div>'}${moreN(day)}</div></section>
-<section class="panel cal-up-panel"><header><h3>Coming up</h3></header><div class="cal-list">${up.slice(0,CAL_MAX_ROWS).map(li).join('')||'<div class="empty">No upcoming events.</div>'}${moreN(up)}</div></section></aside></div>`};
+<aside><section class="panel cal-day-panel"><header><h3>${fmt(cal.sel)}</h3><button type="button" class="btn cal-add-event" id="calAddEventBtn" onclick="calAddEvent(event)">+ Add event</button></header><div class="cal-list">${day.map(li).join('')||'<div class="empty">Nothing planned for this day.</div>'}</div></section>
+<section class="panel cal-up-panel"><header><h3>Coming up</h3></header><div class="cal-list">${up.map(li).join('')||'<div class="empty">No upcoming events.</div>'}</div></section></aside></div>`};
 
 
 function calSel(k){const[y,m]=k.split('-').map(Number);cal={y,m:m-1,sel:k};if(S.view==='calendar')draw()}

@@ -25,9 +25,9 @@ var CAL_MAX_ROWS=4;
 /* Single source of truth for opening the Add-event sheet. */
 window.calAddEvent=function(ev){
   if(ev&&typeof ev.preventDefault==='function')ev.preventDefault();
-  try{shut()}catch(_){}
-  if(typeof em!=='function'){alert('Add event: form helper missing');return}
-  try{em()}catch(err){console.error('calAddEvent',err);alert('Add event could not open the form: '+err.message);return}
+  try{
+  shut();
+  em();
   /* V38 THE FIX: kill the inherited CSS animations on the modal veil and
      sheet (.modal veil-in + .sheet sheet-in/premium-sheet-in, all with
      fill-mode "both"). A filled animation promotes #modal into its own
@@ -43,6 +43,7 @@ window.calAddEvent=function(ev){
   }
   if(!m2||m2.hidden){alert('Add event could not open the form');return}
   var ti=m2.querySelector('#sheet input[name="title"]');if(ti)setTimeout(function(){try{ti.focus()}catch(_){}},60);
+  }catch(err){console.error('calAddEvent',err);alert('Add event could not open the form: '+err.message)}
 };
 /* Belt-and-braces: whenever ANY sheet opens (New video, tasks, deals...),
    strip the veil/sheet animations too, so no overlay can ever be trapped
@@ -112,15 +113,6 @@ addEventListener('resize',()=>{if(S&&S.view==='calendar')calPanels()});
    listener. The 350ms debounce only blocks the *duplicate* path of the
    SAME physical click - opening twice would toggle/shut the sheet, which
    looks exactly like "the button does nothing". */
-let CAL_ADD_OPENING=false;
-document.addEventListener('click',function(e){
-  const b=e.target&&e.target.closest?e.target.closest('#calAddEventBtn,.cal-add-event'):null;
-  if(!b)return;
-  e.preventDefault();e.stopPropagation();
-  if(CAL_ADD_OPENING)return; /* debounce double paths within same tick */
-  CAL_ADD_OPENING=true;setTimeout(()=>{CAL_ADD_OPENING=false},350);
-  window.calAddEvent(e);
-},true);
 /* (3) after every calendar paint, bind fresh buttons directly too */
 function calBindAddBtn(){const b=document.getElementById('calAddEventBtn');if(b&&!b._calBound){b._calBound=1;b.onclick=function(ev){ev.preventDefault();window.calAddEvent(ev)}}}
 
@@ -130,7 +122,7 @@ function em(){
      calAddEvent before we get here, so no double-open guard is needed) */
   ask(`<div class="form-heading"><span class="form-mark">&#10022;</span><div><span class="form-eyebrow">PLAN AHEAD</span><h3>Add event</h3><p>Put an important deadline, upload, or call on your schedule.</p></div></div><form class="f standard-form" onsubmit="esave(event)"><label>Title<input name="title" required maxlength="100"></label><label>Date<input name="date" type="date" required value="${cal.sel}"></label><label>Time<input name="time" type="time"></label>
 <label>Type<select name="type"><option value="video">Video</option><option value="brand">Brand</option><option value="other">Other</option></select></label><div class="acts"><button type="button" class="btn ghost" onclick="shut()">Cancel</button><button class="btn">Add event</button></div></form>`);enhanceSelects(document.getElementById('sheet'))}
-function esave(e){e.preventDefault();const f=new FormData(e.target);const title=String(f.get('title')||'').trim();if(!title){toast('Please add a title');return}S.events.push({id:uid(),title,date:f.get('date'),time:f.get('time')||'',type:f.get('type')||'other'});S.settingscalSel(f.get('date'));done('Event added')calSel(f.get('date'));done('Event added')1;cal={y:cal.y,m:cal.m,sel:f.get("date")};done("Event added")}
+window.esave=function(e){e.preventDefault();const f=new FormData(e.target);const title=String(f.get('title')||'').trim();if(!title){toast('Please add a title');return}S.events.push({id:uid(),title,date:f.get('date'),time:f.get('time')||'',type:f.get('type')||'other'});calSel(f.get('date'));done('Event added')}
 function edel(id,btn){const old=S.events;S.events=old.filter(e=>e.id!==id);if(!save()){S.events=old;return}
 /* subtle removal animation: fade + slide the row out, then repaint */
 const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches,row=btn&&btn.closest?btn.closest('.row'):null;

@@ -32,6 +32,10 @@ let S=load(),cal=(d=>({y:d.getFullYear(),m:d.getMonth(),sel:iso(d)}))(new Date()
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));if(window.VyroBackend?.queueSync)window.VyroBackend.queueSync(S);return true}catch(e){toast('Storage is full. Use a smaller thumbnail or export your data in Settings.');return false}}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2800)}
 function ask(h){$('#sheet').innerHTML=h;enhanceSelects($('#main'));enhanceSelects($('#sheet'));$('#modal').hidden=false;const fi=$('#sheet input:not([type=hidden]),#sheet .vd-trigger,#sheet textarea');fi&&fi.focus()}
+/* V40: every modal (New video / Add task / Add deal / Add event) goes through
+   ask(). If anything inside ever throws, surface it instead of failing silently,
+   and always force the veil visible above the page. */
+(function(){var _ask=window.ask;window.ask=function(h){try{_ask(h)}catch(err){console.error('modal open failed',err);try{$('#sheet').innerHTML=h}catch(_){}var m=$('#modal');if(m)m.hidden=false}var m=document.getElementById('modal'),sh=document.getElementById('sheet');if(m){m.style.animation='none';m.style.setProperty('z-index','2147483000','important')}if(sh)sh.style.animation='none'}})();
 function shut(){$('#modal').hidden=true;document.querySelectorAll('.vd-open').forEach(o=>o.classList.remove('vd-open'));pend=null}
 
 /* ---------- Custom dropdowns: replace every native <select> app-wide ---------- */

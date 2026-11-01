@@ -31,7 +31,7 @@ n.events=(n.events||[]).filter(e=>/^\d{4}-\d\d-\d\d$/.test(e.date||''));return r
 let S=load(),cal=(d=>({y:d.getFullYear(),m:d.getMonth(),sel:iso(d)}))(new Date()),pend=null;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));if(window.VyroBackend?.queueSync)window.VyroBackend.queueSync(S);return true}catch(e){toast('Storage is full. Use a smaller thumbnail or export your data in Settings.');return false}}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2800)}
-function ask(h){$('#sheet').innerHTML=h;enhanceSelects($('#main'));enhanceSelects($('#sheet'));$('#modal').hidden=false;const fi=$('#sheet input:not([type=hidden]),#sheet .vd-trigger,#sheet textarea');fi&&fi.focus()}
+function ask(h){const modal=$('#modal'),sheet=$('#sheet');if(!modal||!sheet){console.error('Vyro modal container is missing');toast('Could not open this form. Please refresh Vyro.');return}sheet.innerHTML=h;modal.hidden=false;modal.setAttribute('aria-hidden','false');try{enhanceSelects(sheet)}catch(err){console.error('Modal select enhancement failed:',err)}const fi=sheet.querySelector('input:not([type=hidden]),.vd-trigger,textarea');if(fi)requestAnimationFrame(()=>{try{fi.focus()}catch(_){}})}
 function shut(){$('#modal').hidden=true;document.querySelectorAll('.vd-open').forEach(o=>o.classList.remove('vd-open'));pend=null}
 
 /* ---------- Custom dropdowns: replace every native <select> app-wide ---------- */

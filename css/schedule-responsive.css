@@ -126,3 +126,23 @@ html,body{overscroll-behavior-y:none!important}
 @media(prefers-reduced-motion:reduce){
   .cal .day,.cal .day .n,.cal aside .row{transition:none!important}
 }
+
+
+/* VYRO: keep the four-row Schedule viewport, but make every event reachable.
+   The list itself scrolls; the page and the two panels keep their layout. */
+.cal aside .cal-list{
+  height:var(--cal-list-h,208px);
+  min-height:0;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  scrollbar-color:color-mix(in srgb,var(--ink) 22%,transparent) transparent;
+}
+.cal aside .cal-list::-webkit-scrollbar{width:7px}
+.cal aside .cal-list::-webkit-scrollbar-track{background:transparent}
+.cal aside .cal-list::-webkit-scrollbar-thumb{
+  background:color-mix(in srgb,var(--ink) 22%,transparent);
+  border:2px solid transparent;background-clip:content-box;border-radius:99px;
+}
+.cal aside .cal-list>.row{flex:0 0 auto}

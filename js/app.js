@@ -35,7 +35,8 @@ function ask(h){const modal=$('#modal'),sheet=$('#sheet');if(!modal||!sheet){con
 function shut(){$('#modal').hidden=true;document.querySelectorAll('.vd-open').forEach(o=>o.classList.remove('vd-open'));pend=null}
 
 /* ---------- Custom dropdowns: replace every native <select> app-wide ---------- */
-function vdId(){vdSeq=(vdSeq||0)+1;return 'vd-'+vdSeq}
+let vdSeq=0;
+function vdId(){vdSeq+=1;return 'vd-'+vdSeq}
 function buildVd(sel){
   if(sel.dataset.vd)return;
   sel.dataset.vd='1';

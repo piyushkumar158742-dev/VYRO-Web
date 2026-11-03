@@ -492,3 +492,67 @@ body:has(.vyro-legal-modal){overflow:hidden!important}
   #main .panel>header>*{min-width:0;max-width:100%}
   #main .row{gap:8px;padding-left:12px;padding-right:12px}
 }
+
+
+/* ---------- 15. Video add affordance, compact notes, and schedule actions ---------- */
+/* Keep the plus glyph visible in both themes while retaining the hover motion. */
+html[data-theme="dark"] .video-tile-add:hover .add-mark,
+html[data-theme="dark"] .video-tile-add:focus-visible .add-mark,
+[data-theme="dark"] .video-tile-add:hover .add-mark,
+[data-theme="dark"] .video-tile-add:focus-visible .add-mark{
+  color:#111!important;background:#fff!important;border-color:#fff!important;
+}
+html[data-theme="light"] .video-tile-add:hover .add-mark,
+html[data-theme="light"] .video-tile-add:focus-visible .add-mark,
+[data-theme="light"] .video-tile-add:hover .add-mark,
+[data-theme="light"] .video-tile-add:focus-visible .add-mark{
+  color:#fff!important;background:#111!important;border-color:#111!important;
+}
+#modal #sheet .video-detail-section .video-notes.is-collapsed{
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:4!important;
+  overflow:hidden!important;
+  overflow-wrap:anywhere!important;
+  white-space:pre-wrap!important;
+}
+#modal #sheet .video-detail-section .video-notes.is-expanded{
+  display:block!important;
+  overflow:visible!important;
+  white-space:pre-wrap!important;
+  overflow-wrap:anywhere!important;
+}
+.video-notes-toggle{
+  appearance:none!important;border:0!important;background:transparent!important;
+  color:var(--ink)!important;font:inherit!important;font-size:12px!important;
+  font-weight:700!important;padding:7px 0!important;margin-top:4px!important;
+  cursor:pointer!important;text-decoration:underline!important;text-underline-offset:3px!important;
+}
+#modal #sheet .video-detail-section .acts{
+  display:flex!important;align-items:center!important;gap:10px!important;
+  padding:0 16px 14px!important;margin:0!important;box-sizing:border-box!important;
+}
+#modal #sheet .video-detail-section .acts .btn{
+  min-width:0!important;flex:0 1 auto!important;
+}
+#modal #sheet .video-detail-section .acts .sp{flex:1 1 auto!important;min-width:4px!important}
+.cal-month-panel>header{gap:10px!important;flex-wrap:wrap!important}
+.cal-month-panel>header .nav2{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  flex-wrap:wrap!important;gap:6px!important;min-width:0!important;
+}
+.cal-month-panel>header .nav2 .cal-add-event{
+  white-space:nowrap!important;min-height:36px!important;padding:7px 11px!important;
+}
+.cal-day-panel>header{justify-content:flex-start!important}
+@media(max-width:600px){
+  .cal-month-panel>header{align-items:flex-start!important}
+  .cal-month-panel>header .nav2{width:100%!important;justify-content:space-between!important}
+  .cal-month-panel>header .nav2 .cal-add-event{margin-left:auto!important}
+  #modal #sheet .video-detail-section .acts{padding-left:14px!important;padding-right:14px!important;gap:7px!important}
+  #modal #sheet .video-detail-section .acts .btn{padding-left:11px!important;padding-right:11px!important}
+}
+@media(max-width:360px){
+  .cal-month-panel>header .nav2{gap:4px!important}
+  .cal-month-panel>header .nav2 .cal-add-event{font-size:11px!important;padding:7px 8px!important}
+}

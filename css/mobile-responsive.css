@@ -556,3 +556,39 @@ html[data-theme="light"] .video-tile-add:focus-visible .add-mark,
   .cal-month-panel>header .nav2{gap:4px!important}
   .cal-month-panel>header .nav2 .cal-add-event{font-size:11px!important;padding:7px 8px!important}
 }
+
+/* ---------- 16. Precise add-video icon motion + balanced collapsed notes ---------- */
+/* The tile itself must stay still on hover; only the plus badge rotates. */
+.video-tile-add,
+.video-tile-add:hover,
+.video-tile-add:focus-visible{
+  transform:none!important;
+}
+.video-tile-add .add-mark{
+  transform:rotate(0deg)!important;
+  transform-origin:50% 50%!important;
+  transition:transform .22s ease,background-color .22s ease,color .22s ease,border-color .22s ease!important;
+  will-change:transform;
+  backface-visibility:hidden;
+}
+.video-tile-add:hover .add-mark,
+.video-tile-add:focus-visible .add-mark{
+  transform:rotate(90deg)!important;
+}
+@media(hover:none){
+  .video-tile-add,.video-tile-add:hover{transform:none!important}
+  .video-tile-add .add-mark{transform:none!important}
+}
+
+/* Preserve a little bottom breathing room after the fourth clamped line. */
+#modal #sheet .video-detail-section .video-notes.is-collapsed{
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:4!important;
+  overflow:hidden!important;
+  overflow-wrap:anywhere!important;
+  white-space:pre-wrap!important;
+  line-height:1.6!important;
+  padding:15px 16px 21px!important;
+  box-sizing:border-box!important;
+}

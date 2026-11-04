@@ -41,3 +41,18 @@
  .tl-head i b{width:27px;height:27px;min-width:27px;font-size:13px}
  .tl-row em{font-size:11px}
 }
+
+/* Give Desk's latest-task rows comfortable, even side margins. */
+.dashboard-tasks .task-row{
+  width:calc(100% - 24px)!important;
+  max-width:calc(100% - 24px)!important;
+  margin:7px 12px!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:520px){
+  .dashboard-tasks .task-row{
+    width:calc(100% - 20px)!important;
+    max-width:calc(100% - 20px)!important;
+    margin:6px 10px!important;
+  }
+}

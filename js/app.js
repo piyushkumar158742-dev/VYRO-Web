@@ -92,8 +92,10 @@ function fitVd(w,t,p){
   const r=t.getBoundingClientRect(),vh=window.innerHeight;
   const roomB=vh-r.bottom-14,roomT=r.top-14;
   if(roomB<Math.min(250,p.scrollHeight+16)&&roomT>roomB){w.classList.add('vd-up')}
-  const room=w.classList.contains('vd-up')?roomT:roomB;
-  p.style.maxHeight=Math.max(150,Math.min(p.scrollHeight+10,room-10))+'px';
+  const room=Math.max(80,Math.max(roomB,roomT)-18);
+  w.classList.toggle('vd-up',roomT>roomB);
+  p.style.maxHeight=Math.max(80,Math.min(p.scrollHeight+10,room))+'px';
+  p.style.overflowY='auto';
 }
 function enhanceSelects(root){(root||document).querySelectorAll('select:not([data-vd])').forEach(buildVd)}
 document.addEventListener('click',closeVd);

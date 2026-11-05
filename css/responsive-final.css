@@ -149,3 +149,81 @@ body{position:relative!important}
   .app{display:block!important;overflow:visible!important}
   .wrap{padding-bottom:calc(90px + env(safe-area-inset-bottom))!important}
 }
+
+/* Dedicated page-content scroller.
+   The document layout was allowing the app shell to consume the viewport
+   without giving the content area a reliable scroll surface. */
+html,body{
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  overflow:hidden!important;
+}
+.app{
+  display:grid!important;
+  grid-template-columns:84px minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  width:100%!important;
+  height:100vh!important;
+  height:100dvh!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+.rail{
+  grid-column:1!important;
+  grid-row:1!important;
+  position:sticky!important;
+  top:0!important;
+  height:100vh!important;
+  align-self:start!important;
+}
+.wrap{
+  grid-column:2!important;
+  grid-row:1!important;
+  width:100%!important;
+  height:100vh!important;
+  height:100dvh!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior-y:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+  scrollbar-width:auto!important;
+}
+.wrap::-webkit-scrollbar{display:block!important;width:7px!important}
+.wrap::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--mut) 38%,transparent);border-radius:99px}
+#main{min-height:0!important;overflow:visible!important}
+@media(max-width:860px){
+  .app{
+    display:block!important;
+    height:100dvh!important;
+    min-height:0!important;
+    padding-bottom:0!important;
+  }
+  .rail{
+    grid-column:auto!important;grid-row:auto!important;
+    position:fixed!important;inset:auto 0 0!important;
+    height:auto!important;min-height:58px!important;
+  }
+  .wrap{
+    width:100%!important;
+    height:calc(100dvh - 66px - env(safe-area-inset-bottom))!important;
+    min-height:0!important;
+    padding-bottom:24px!important;
+  }
+}
+/* Restore the previous compact Settings hub width. */
+.settings-hub{
+  width:min(100%,820px)!important;
+  max-width:820px!important;
+  margin:28px auto 40px!important;
+}
+@media(max-width:680px){
+  .settings-hub{
+    width:calc(100% - 24px)!important;
+    max-width:820px!important;
+    margin:12px auto 28px!important;
+  }
+}

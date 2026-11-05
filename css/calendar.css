@@ -8,3 +8,28 @@
 @media(max-width:860px){
 .cal{grid-template-columns:1fr}.day{min-height:56px}.day i{display:none}.day.has:after{content:"";width:6px;height:6px;border-radius:50%;background:var(--blue)}
 }
+
+
+/* Complete calendar grid: every date cell has visible outer and inner edges. */
+.cal-month-panel .grid{
+  border-top:1px solid var(--ln)!important;
+  border-left:1px solid var(--ln)!important;
+  border-right:1px solid var(--ln)!important;
+  border-bottom:1px solid var(--ln)!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  border-radius:0 0 12px 12px!important;
+}
+.cal-month-panel .grid .day{
+  border-top:0!important;
+  border-left:0!important;
+  border-right:1px solid var(--ln)!important;
+  border-bottom:1px solid var(--ln)!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+.cal-month-panel .grid .day:nth-child(7n){border-right:0!important}
+.cal-month-panel .grid .day:nth-last-child(-n+7){border-bottom:0!important}
+@media(max-width:860px){
+  .cal-month-panel .grid .day{min-height:56px!important}
+}

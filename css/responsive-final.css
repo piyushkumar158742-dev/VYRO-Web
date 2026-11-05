@@ -1,0 +1,121 @@
+/* Vyro — final cross-page responsive layout layer.
+   Loaded after every page stylesheet so breakpoints stay consistent. */
+:root{--content-gutter:clamp(12px,2.2vw,30px)}
+html,body{width:100%;min-width:0;overflow-x:hidden}
+.app,.app>*,.wrap,#main{min-width:0;max-width:100%}
+.wrap{width:100%;padding-inline:var(--content-gutter)}
+#main>*{min-width:0;max-width:100%}
+img,svg,video,canvas{max-width:100%}
+button,input,select,textarea{max-width:100%;min-width:0}
+.panel,.card,.deal,.task-panel,.video-tile,.brand-card{min-width:0;max-width:100%}
+h1,h2,h3,h4,p,small,strong,span,a,label{overflow-wrap:anywhere}
+.top{min-width:0;flex-wrap:wrap}
+.top h1{min-width:0;overflow-wrap:anywhere}
+.btn,.top .btn{max-width:100%}
+.grid,.strip,.tasks-columns,.backend-grid,.user-settings,.cal,.videos-grid,.brands-grid,.pipeline-grid{
+  min-width:0
+}
+input,textarea,select{width:100%;box-sizing:border-box}
+textarea{max-width:100%;resize:vertical}
+.table-wrap,.table-scroll,.tl{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+#modal{padding:clamp(8px,2vw,24px);overflow-y:auto;overscroll-behavior:contain}
+#sheet.sheet{width:min(100%,760px);max-width:100%;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain}
+#sheet .sheet-body,#sheet .modal-body{min-width:0;max-width:100%}
+#sheet .f,.standard-form,.video-form{min-width:0;max-width:100%}
+.vd-panel{max-width:min(100vw - 24px,520px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+
+/* Compact laptops and tablets: avoid squeezed two-column work areas. */
+@media(max-width:1100px){
+  .wrap{padding-inline:18px}
+  .cal{grid-template-columns:minmax(0,1fr)}
+  .cal>section,.cal>aside{min-width:0}
+  .tasks-columns{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .user-settings{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .videos-grid,.brands-grid,.pipeline-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* Phone/tablet dock and page content. */
+@media(max-width:860px){
+  .app{display:block;min-height:100dvh;padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+  .wrap{padding:15px 14px calc(24px + env(safe-area-inset-bottom))}
+  .rail{position:fixed;inset:auto 0 0;height:auto;min-height:58px;width:100%;z-index:100;
+    display:flex;flex-direction:row;align-items:stretch;justify-content:space-around;
+    gap:2px;padding:6px 5px calc(6px + env(safe-area-inset-bottom));
+    border-radius:16px 16px 0 0;overflow-x:auto;overflow-y:hidden;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .rail::-webkit-scrollbar{display:none}
+  .rail .logo{display:none!important}
+  .rail button{flex:1 0 0;min-width:0;width:auto;height:auto;min-height:48px;
+    padding:5px 1px!important;gap:3px!important;white-space:nowrap;
+    font-size:clamp(9px,2.5vw,11px)!important;line-height:1.1}
+  .rail button .nav-ico,.rail button b.nav-icon-settings{width:21px;height:21px;flex:none}
+  .rail button .nav-ico svg,.rail button b.nav-icon-settings svg{width:19px;height:19px}
+  .rail button:before{display:none!important}
+  .top{gap:10px;margin-bottom:16px}
+  .top h1{font-size:clamp(17px,4vw,21px);flex:1 1 120px}
+  #clock{display:none}
+  .strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tasks-columns{grid-template-columns:minmax(0,1fr)}
+  .cal{grid-template-columns:minmax(0,1fr);gap:14px}
+  .cal aside{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .user-settings{grid-template-columns:minmax(0,1fr);gap:12px}
+  .user-settings>.panel,.user-settings>.panel:nth-child(n){grid-column:1/-1}
+  .backend-grid{grid-template-columns:minmax(0,1fr)}
+  .videos-grid,.brands-grid,.pipeline-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .panel>header{min-width:0;flex-wrap:wrap;gap:9px}
+  .panel>header>*{min-width:0}
+  .row{min-width:0}
+  .row>*{min-width:0}
+}
+
+/* Phones: one-column content, readable controls, no horizontal page overflow. */
+@media(max-width:600px){
+  :root{--content-gutter:12px}
+  .wrap{padding:13px 12px calc(22px + env(safe-area-inset-bottom))}
+  .top{align-items:center}
+  .top h1{font-size:18px}
+  .top .btn{padding:9px 11px;font-size:12px}
+  .strip{gap:9px}
+  .strip>div{min-width:0;padding:12px}
+  .strip b{font-size:clamp(19px,6vw,27px)}
+  .videos-grid,.brands-grid,.pipeline-grid{grid-template-columns:minmax(0,1fr)}
+  .cal aside{grid-template-columns:minmax(0,1fr)}
+  .cal>section.panel>header{align-items:center}
+  .cal .grid,.cal .dow{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .cal .day{min-width:0}
+  .task-panel>header{padding-inline:12px}
+  .task-list{padding-inline:9px}
+  .task-row{gap:8px;padding:10px 8px}
+  .task-row .task-copy{overflow-wrap:anywhere}
+  .currency-options{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .currency-choice{min-width:0}
+  .form-grid,.video-form-grid,.deal-form-grid{grid-template-columns:minmax(0,1fr)!important}
+  .sheet,#sheet.sheet{width:100%;max-width:100%;max-height:calc(100dvh - 12px);border-radius:16px}
+  #modal{align-items:flex-end;padding:6px}
+  #sheet .pad,#sheet .sheet-body{padding:14px!important}
+  #sheet .actions,.modal-actions{display:flex;flex-wrap:wrap;gap:8px}
+  #sheet .actions>* ,.modal-actions>*{flex:1 1 120px;min-width:0}
+  .rail button{font-size:9px!important}
+}
+
+/* Very small phones and landscape height constraints. */
+@media(max-width:380px){
+  .wrap{padding-inline:10px}
+  .rail{gap:0;padding-inline:2px}
+  .rail button{font-size:8.5px!important;letter-spacing:-.02em}
+  .rail button .nav-ico,.rail button b.nav-icon-settings{width:19px;height:19px}
+  .strip{gap:7px}
+  .strip>div{padding:10px}
+  .cal .day{min-height:46px!important}
+  .cal .day .n{width:23px;height:23px;font-size:10px}
+  .top .btn{padding:8px 9px}
+  .task-row .tag{font-size:9px;padding:3px 6px}
+}
+@media(max-height:520px) and (max-width:860px){
+  .rail{min-height:50px;padding-top:3px}
+  .rail button{min-height:42px;padding-block:3px!important}
+  .app{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
+}
+@media(prefers-reduced-motion:reduce){
+  .rail,.rail button{scroll-behavior:auto!important;transition:none!important}
+}

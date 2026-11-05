@@ -100,7 +100,14 @@ function fitVd(w,t,p){
 function enhanceSelects(root){(root||document).querySelectorAll('select:not([data-vd])').forEach(buildVd)}
 document.addEventListener('click',closeVd);
 window.addEventListener('resize',closeVd);
-window.addEventListener('scroll',()=>{if(document.querySelector('.vd.vd-open'))closeVd()},true);
+window.addEventListener('scroll',e=>{
+  const open=document.querySelector('.vd.vd-open');
+  if(!open)return;
+  /* Keep the menu open while its own list is being scrolled; close only
+     when the user scrolls the page or another scroll container. */
+  if(e.target&&e.target.closest&&e.target.closest('.vd-panel'))return;
+  closeVd();
+},true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.querySelector('.vd.vd-open')){e.stopPropagation();closeVd()}},true);
 const th=v=>v.thumb?'<div class="th th-has-upload"><img class="gt-uploaded-main" src="'+esc(v.thumb)+'" alt="'+esc(v.title||'Video thumbnail')+'"><div class="gt-uploaded-shade"></div><span class="gt-uploaded-title">'+esc(v.title||'Video thumbnail')+'</span></div>':`<div class="th"><div class="gt tone-${Math.abs(Number(v.id)||0)%4}"><span class="gt-kicker">VYRO / VIDEO</span><span class="gt-icon" aria-hidden="true">${EM[Math.abs(Number(v.id)||0)%8]}</span><span class="gt-title">${esc(v.title||'New video')}</span><span class="gt-index">${String(Math.abs(Number(v.id)||0)%99+1).padStart(2,'0')}</span></div></div>`;
 const done=(fn)=>{if(!save())return;shut();draw();fn&&toast(fn)};

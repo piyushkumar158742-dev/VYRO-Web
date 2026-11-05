@@ -29,7 +29,7 @@
   box-sizing:border-box!important;
 }
 .cal-month-panel .grid .day:nth-child(7n){border-right:0!important}
-.cal-month-panel .grid .day:nth-last-child(-n+7){border-bottom:0!important}
+.cal-month-panel .grid .day{border-bottom:1px solid var(--ln)!important}
 @media(max-width:860px){
   .cal-month-panel .grid .day{min-height:56px!important}
 }

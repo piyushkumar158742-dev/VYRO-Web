@@ -372,3 +372,16 @@ select[data-vd]{position:absolute!important;width:1px!important;height:1px!impor
 .tl-track{align-content:center}
 .cal aside .row .tag,.cal aside .row .btn.del{flex:none}
 @media(max-width:700px){.tl-head,.tl-row{grid-template-columns:54px minmax(0,1fr)}.tl-row em{font-size:11px}}
+
+/* Schedule type dropdown: align options closer to the left edge and
+   make its boundary against the calendar/date area clearer. */
+.vd-panel{
+  padding:4px 0!important;
+  border-right:1px solid var(--ln)!important;
+  border-radius:12px!important;
+}
+.vd-panel .vd-opt{
+  padding:10px 9px!important;
+  border-radius:7px!important;
+  text-align:left!important;
+}

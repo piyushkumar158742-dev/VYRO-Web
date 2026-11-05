@@ -119,3 +119,33 @@ textarea{max-width:100%;resize:vertical}
 @media(prefers-reduced-motion:reduce){
   .rail,.rail button{scroll-behavior:auto!important;transition:none!important}
 }
+
+/* Restore normal document scrolling across every Vyro page and device.
+   Keep navigation fixed, but never constrain the document to the viewport. */
+html,body{
+  height:auto!important;
+  min-height:100%!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+}
+body{position:relative!important}
+.app{
+  height:auto!important;
+  min-height:100vh!important;
+  min-height:100dvh!important;
+  overflow:visible!important;
+}
+.wrap,#main{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  overscroll-behavior-y:auto!important;
+}
+@media(max-width:860px){
+  html,body{overflow-y:auto!important}
+  .app{display:block!important;overflow:visible!important}
+  .wrap{padding-bottom:calc(90px + env(safe-area-inset-bottom))!important}
+}

@@ -418,3 +418,12 @@ main:has(.settings-hub),#app:has(.settings-hub),.view:has(.settings-hub){display
  .settings-hub .name-edit-row{flex-wrap:wrap!important}
  .settings-hub .name-edit-row::before{flex-basis:100%}
 }
+
+/* Slightly narrower Settings hub as requested. */
+.settings-hub{
+  width:min(calc(100% - 40px),720px)!important;
+  max-width:720px!important;
+}
+@media(max-width:680px){
+  .settings-hub{width:calc(100% - 24px)!important;max-width:720px!important}
+}

@@ -31,7 +31,7 @@ V.tasks = () => {
                     aria-pressed="${task.completed}">
               <span aria-hidden="true">${task.completed ? '✓' : ''}</span>
             </button>
-            <div class="task-copy"><strong>${esc(task.title)}</strong></div>
+            <div class="task-copy"><strong title="${esc(task.title)}">${esc(task.title)}</strong></div>
             <span class="tag ${TASK_PRIORITIES.has(task.priority) ? task.priority : 'medium'}">${esc(TASK_PRIORITIES.has(task.priority) ? task.priority : 'medium')}</span>
             <button class="btn del task-delete" onclick="tdel(${Number(task.id)})" aria-label="Delete task">✕</button>
           </div>

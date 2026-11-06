@@ -15,7 +15,11 @@ function removeDemoData(state){
  const demoBrandNames=new Set(['TechCorp','VPN Secure','EnergyDrink']);
  const demoEventTitles=new Set(['Publish VR video','TechCorp sponsor call']);
  state.videos=(state.videos||[]).filter(v=>!demoVideoTitles.has(v.title));
- state.tasks=(state.tasks||[]).filter(t=>!demoTaskTitles.has(t.title));
+ state.tasks=(state.tasks||[]).filter(t=>{
+  const title=String(t?.title||'');
+  const pollutedTestTask=title.length>90&&/^a{20,}/i.test(title)&&/STAY ON TRACK/i.test(title)&&/Add task/i.test(title)&&/Make the next step/i.test(title);
+  return !demoTaskTitles.has(t.title)&&!pollutedTestTask;
+ });
  state.brands=(state.brands||[]).filter(b=>!demoBrandNames.has(b.name));
  state.events=(state.events||[]).filter(e=>!demoEventTitles.has(e.title));
  return state;
@@ -43,12 +47,12 @@ function buildVd(sel){
   const id=sel.id||vdId();sel.id=id;
   const w=document.createElement('div');w.className='vd';
   const t=document.createElement('button');t.type='button';t.className='vd-trigger';
-  t.setAttribute('role','combobox');t.setAttribute('aria-haspopup','listbox');t.setAttribute('aria-expanded','false');
+  t.setAttribute('role','combobox');t.setAttribute('aria-haspopup','listbox');t.setAttribute('aria-expanded','false');t.setAttribute('aria-controls',id+'-listbox');
   t.setAttribute('aria-labelledby',(sel.closest('label')?sel.closest('label').firstChild.textContent.trim():'')+' '+id);
   const lb=document.createElement('span');lb.className='vd-label';
   const ic=document.createElement('span');ic.className='vd-ico';ic.setAttribute('aria-hidden','true');
   t.append(lb,ic);
-  const p=document.createElement('div');p.className='vd-panel';p.setAttribute('role','listbox');
+  const p=document.createElement('div');p.className='vd-panel';p.id=id+'-listbox';p.setAttribute('role','listbox');
   const fill=()=>{
     p.innerHTML='';
     [...sel.options].forEach(o=>{
@@ -59,7 +63,16 @@ function buildVd(sel){
         ||(typeof DS!=='undefined'&&DS[o.value]?DS[o.value]:null);
       if(c)dot.style.background=c;else dot.remove();
       it.append(dot,document.createTextNode(o.textContent));
-      it.onclick=e=>{e.preventDefault();e.stopPropagation();sel.value=o.value;sel.dispatchEvent(new Event('change',{bubbles:true}));syncVd(sel);closeVd()};
+      it.setAttribute('aria-selected',String(o.selected));
+      it.addEventListener('keydown',e=>{
+        const opts=[...p.querySelectorAll('.vd-opt')],at=opts.indexOf(it);
+        if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();opts[(at+(e.key==='ArrowDown'?1:-1)+opts.length)%opts.length]?.focus()}
+        else if(e.key==='Home'){e.preventDefault();opts[0]?.focus()}
+        else if(e.key==='End'){e.preventDefault();opts[opts.length-1]?.focus()}
+        else if(e.key==='Escape'){e.preventDefault();closeVd();t.focus()}
+        else if(e.key==='Tab'){closeVd()}
+      });
+      it.onclick=e=>{e.preventDefault();e.stopPropagation();sel.value=o.value;sel.dispatchEvent(new Event('change',{bubbles:true}));syncVd(sel);closeVd();t.focus()};
       p.append(it);
     });
   };
@@ -68,10 +81,16 @@ function buildVd(sel){
   const sync=()=>{if(sel._vdFill)sel._vdFill();syncVd(sel)};
   sel.addEventListener('change',syncVd.bind(null,sel));
   sel.addEventListener('vd-refresh',sync);
-  t.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();
-    if(t.disabled)return;
-    const open=w.classList.contains('vd-open');closeVd();
-    if(!open){w.classList.add('vd-open');t.setAttribute('aria-expanded','true');syncVd(sel);fitVd(w,t,p)}});
+  const openMenu=focusSelected=>{
+    closeVd();w.classList.add('vd-open');t.setAttribute('aria-expanded','true');syncVd(sel);fitVd(w,t,p);
+    if(focusSelected){const selected=p.querySelector('.vd-opt.sel')||p.querySelector('.vd-opt');selected?.focus()}
+  };
+  t.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(t.disabled)return;
+    if(w.classList.contains('vd-open')){closeVd();return}openMenu(false)});
+  t.addEventListener('keydown',e=>{
+    if(['ArrowDown','ArrowUp','Enter',' '].includes(e.key)){e.preventDefault();if(!w.classList.contains('vd-open'))openMenu(true);else (p.querySelector('.vd-opt.sel')||p.querySelector('.vd-opt'))?.focus()}
+    else if(e.key==='Escape'&&w.classList.contains('vd-open')){e.preventDefault();closeVd();t.focus()}
+  });
   w.append(t,p);
   sel.parentNode.insertBefore(w,sel);
   sel.classList.add('vd-native');
@@ -84,7 +103,7 @@ function syncVd(sel){
   w._vd.label.textContent=o?o.textContent:'';
   w._vd.trigger.disabled=!!sel.disabled;
   w.classList.toggle('vd-disabled',!!sel.disabled);
-  w._vd.panel.querySelectorAll('.vd-opt').forEach(b=>b.classList.toggle('sel',b.dataset.value===(o?o.value:'')));
+  w._vd.panel.querySelectorAll('.vd-opt').forEach(b=>{const selected=b.dataset.value===(o?o.value:'');b.classList.toggle('sel',selected);b.setAttribute('aria-selected',String(selected))});
 }
 function closeVd(){document.querySelectorAll('.vd.vd-open').forEach(w=>{w.classList.remove('vd-open');w._vd&&w._vd.trigger.setAttribute('aria-expanded','false')})}
 function fitVd(w,t,p){

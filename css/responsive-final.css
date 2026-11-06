@@ -395,85 +395,59 @@ html,body{
   opacity:1!important;background:color-mix(in srgb,var(--ink) 9%,transparent)!important;
 }
 
-/* ---------- Final QA hardening: predictable modal scrolling ---------- */
-/* One scroll surface for every modal. This prevents the New video and
-   Add event forms from losing fields beneath a fixed/sticky action footer. */
+/* ---------- Single, predictable modal scroll model ---------- */
+/* The overlay stays fixed. Long content scrolls inside the sheet; for the
+   two long creation forms, the heading stays visible and the form is the
+   only inner scroll area. No sticky footer may cover the last field. */
 #modal.modal:not([hidden]){
-  position:fixed!important;
-  inset:0!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  overflow-x:hidden!important;
-  overflow-y:auto!important;
-  padding:16px!important;
-  box-sizing:border-box!important;
-  -webkit-overflow-scrolling:touch!important;
+  position:fixed!important;inset:0!important;display:flex!important;
+  align-items:center!important;justify-content:center!important;
+  overflow:hidden!important;padding:12px!important;box-sizing:border-box!important;
   overscroll-behavior:contain!important;
 }
 #modal.modal:not([hidden])>#sheet.sheet{
-  display:block!important;
-  width:min(570px,calc(100vw - 32px))!important;
-  max-width:570px!important;
-  height:auto!important;
-  min-height:0!important;
-  max-height:calc(100dvh - 32px)!important;
-  margin:auto!important;
-  padding:0!important;
-  overflow-x:hidden!important;
-  overflow-y:auto!important;
-  overscroll-behavior:contain!important;
-  -webkit-overflow-scrolling:touch!important;
-  scrollbar-width:thin!important;
-  box-sizing:border-box!important;
+  display:block!important;position:relative!important;
+  width:min(570px,calc(100vw - 24px))!important;max-width:570px!important;
+  height:auto!important;min-height:0!important;max-height:calc(100dvh - 24px)!important;
+  margin:auto!important;padding:0!important;overflow-x:hidden!important;overflow-y:auto!important;
+  overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;
+  scrollbar-width:thin!important;box-sizing:border-box!important;
 }
-#modal.modal:not([hidden])>#sheet.sheet:has(.video-form),
-#modal.modal:not([hidden])>#sheet.sheet:has(.standard-form){
-  display:block!important;
-  height:auto!important;
-  min-height:0!important;
-  max-height:calc(100dvh - 32px)!important;
-  overflow-x:hidden!important;
-  overflow-y:auto!important;
+#modal.modal:not([hidden])>#sheet.sheet:has(>form.video-form),
+#modal.modal:not([hidden])>#sheet.sheet:has(>form.standard-form){
+  display:flex!important;flex-direction:column!important;
+  overflow:hidden!important;
 }
-#modal #sheet .video-form,
-#modal #sheet .standard-form{
-  min-height:0!important;
-  max-height:none!important;
-  height:auto!important;
-  overflow:visible!important;
-  padding-bottom:max(22px,env(safe-area-inset-bottom))!important;
-  box-sizing:border-box!important;
-}
-#modal #sheet .acts,
-#modal #sheet .video-form .acts,
-#modal #sheet .standard-form .acts{
-  position:static!important;
-  inset:auto!important;
+#modal.modal:not([hidden])>#sheet.sheet:has(>form.video-form)>.form-heading,
+#modal.modal:not([hidden])>#sheet.sheet:has(>form.standard-form)>.form-heading{
   flex:0 0 auto!important;
-  margin-bottom:0!important;
-  padding-bottom:4px!important;
+}
+#modal.modal:not([hidden])>#sheet.sheet>form.video-form,
+#modal.modal:not([hidden])>#sheet.sheet>form.standard-form{
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+  min-height:0!important;max-height:none!important;height:auto!important;
+  overflow-x:hidden!important;overflow-y:auto!important;
+  overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;
+  scrollbar-width:thin!important;
+  padding-bottom:max(22px,env(safe-area-inset-bottom))!important;
+}
+#modal.modal:not([hidden])>#sheet.sheet form.video-form>.acts,
+#modal.modal:not([hidden])>#sheet.sheet form.standard-form>.acts{
+  position:static!important;inset:auto!important;flex:0 0 auto!important;
+  margin-top:8px!important;margin-bottom:0!important;
+  padding-bottom:6px!important;
 }
 @media(max-width:600px){
-  #modal.modal:not([hidden]){
-    align-items:flex-start!important;
-    padding:calc(8px + env(safe-area-inset-top)) 8px calc(8px + env(safe-area-inset-bottom))!important;
-  }
-  #modal.modal:not([hidden])>#sheet.sheet,
-  #modal.modal:not([hidden])>#sheet.sheet:has(.video-form),
-  #modal.modal:not([hidden])>#sheet.sheet:has(.standard-form){
-    width:calc(100vw - 16px)!important;
-    max-width:570px!important;
+  #modal.modal:not([hidden]){align-items:center!important;padding:8px!important}
+  #modal.modal:not([hidden])>#sheet.sheet{
+    width:calc(100vw - 16px)!important;max-width:570px!important;
     max-height:calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
-    margin:0 auto!important;
     border-radius:18px!important;
   }
 }
 @media(max-height:620px){
-  #modal.modal:not([hidden])>#sheet.sheet,
-  #modal.modal:not([hidden])>#sheet.sheet:has(.video-form),
-  #modal.modal:not([hidden])>#sheet.sheet:has(.standard-form){
-    max-height:calc(100dvh - 20px)!important;
+  #modal.modal:not([hidden])>#sheet.sheet{
+    max-height:calc(100dvh - 16px)!important;
   }
 }
 
@@ -496,7 +470,3 @@ html,body{
 .task-row{align-items:center!important}
 .task-row .task-copy,.dashboard-tasks .task-title{min-width:0!important;flex:1 1 auto!important}
 
-/* Keep the modal overlay stationary; the sheet above is the single scroll surface. */
-#modal.modal:not([hidden]){
-  overflow:hidden!important;
-}

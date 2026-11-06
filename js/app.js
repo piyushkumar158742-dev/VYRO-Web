@@ -48,7 +48,7 @@ function buildVd(sel){
   const w=document.createElement('div');w.className='vd';
   const t=document.createElement('button');t.type='button';t.className='vd-trigger';
   t.setAttribute('role','combobox');t.setAttribute('aria-haspopup','listbox');t.setAttribute('aria-expanded','false');t.setAttribute('aria-controls',id+'-listbox');
-  t.setAttribute('aria-labelledby',(sel.closest('label')?sel.closest('label').firstChild.textContent.trim():'')+' '+id);
+  t.setAttribute('aria-label',(sel.closest('label')?.childNodes[0]?.textContent||'Select option').trim());
   const lb=document.createElement('span');lb.className='vd-label';
   const ic=document.createElement('span');ic.className='vd-ico';ic.setAttribute('aria-hidden','true');
   t.append(lb,ic);

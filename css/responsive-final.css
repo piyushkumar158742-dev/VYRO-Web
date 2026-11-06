@@ -255,3 +255,88 @@ html,body{
   .cal .day{cursor:pointer;-webkit-tap-highlight-color:transparent}
   .wrap{overscroll-behavior-y:auto!important;touch-action:pan-y!important}
 }
+
+/* Schedule event panels: fixed four-row viewport with their own scrollbars.
+   Keep both panels compact even when many events are added. */
+.cal aside .panel{
+  display:flex!important;
+  flex-direction:column!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+.cal aside .cal-list{
+  height:var(--cal-list-h,208px)!important;
+  min-height:0!important;
+  max-height:var(--cal-list-h,208px)!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  scrollbar-width:thin!important;
+  scrollbar-color:color-mix(in srgb,var(--ink) 24%,transparent) transparent!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+.cal aside .cal-list::-webkit-scrollbar{display:block!important;width:7px!important}
+.cal aside .cal-list::-webkit-scrollbar-thumb{
+  background:color-mix(in srgb,var(--ink) 24%,transparent)!important;
+  border-radius:99px!important;
+}
+.cal aside .cal-list>.row{flex:0 0 auto!important}
+@media(max-width:860px){
+  .cal aside .panel{overflow:hidden!important}
+  .cal aside .cal-list{
+    height:var(--cal-list-h,208px)!important;
+    max-height:var(--cal-list-h,208px)!important;
+    overflow-y:auto!important;
+    touch-action:pan-y!important;
+  }
+}
+
+/* Restore the original compact popup width; keep controls inside the sheet. */
+#sheet.sheet{
+  width:min(570px,calc(100vw - 32px))!important;
+  max-width:570px!important;
+  max-height:min(88dvh,820px)!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  box-sizing:border-box!important;
+}
+#sheet.sheet form,#sheet.sheet .f,#sheet.sheet label{min-width:0!important;max-width:100%!important}
+#sheet.sheet input,#sheet.sheet select,#sheet.sheet textarea{
+  width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;
+}
+#sheet.sheet .vd{width:100%!important;min-width:0!important;max-width:100%!important}
+#sheet.sheet .vd-panel{
+  left:0!important;right:0!important;width:100%!important;max-width:100%!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:600px){
+  #sheet.sheet{
+    width:min(570px,calc(100vw - 20px))!important;
+    max-width:570px!important;
+    max-height:88dvh!important;
+    border-radius:18px!important;
+  }
+}
+
+/* Make the Schedule date field easier to recognise and operate. */
+#sheet.sheet .event-date-label input[type=date]{
+  min-height:48px!important;
+  padding:11px 13px!important;
+  border:1px solid var(--ln)!important;
+  border-radius:11px!important;
+  background:var(--pan)!important;
+  color:var(--ink)!important;
+  color-scheme:dark light;
+  font:inherit!important;
+  font-size:14px!important;
+  cursor:pointer!important;
+  appearance:auto!important;
+  -webkit-appearance:auto!important;
+}
+#sheet.sheet .event-date-label input[type=date]:focus{
+  outline:2px solid color-mix(in srgb,var(--ink) 28%,transparent)!important;
+  outline-offset:2px!important;
+}
+#sheet.sheet .event-time-picker{width:100%!important;max-width:100%!important}

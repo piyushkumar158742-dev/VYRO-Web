@@ -470,3 +470,9 @@ html,body{
 .task-row{align-items:center!important}
 .task-row .task-copy,.dashboard-tasks .task-title{min-width:0!important;flex:1 1 auto!important}
 
+/* Completed-task strike-through should match the text, not the full row. */
+.task-row .task-copy strong{
+  width:fit-content!important;
+  max-width:100%!important;
+  justify-self:start!important;
+}

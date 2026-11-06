@@ -227,3 +227,31 @@ html,body{
     margin:12px auto 28px!important;
   }
 }
+
+/* Mobile Schedule: let swipes on date cells and side-panel cards move the
+   main page, rather than trapping the gesture inside a small event list. */
+@media(max-width:860px){
+  .cal,
+  .cal>section,
+  .cal>section.panel,
+  .cal aside,
+  .cal aside .panel,
+  .cal aside .panel>header,
+  .cal aside .cal-list,
+  .cal aside .cal-list>.row,
+  .cal .dow,
+  .cal .grid,
+  .cal .day{
+    touch-action:pan-y!important;
+  }
+  .cal aside .cal-list{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    overscroll-behavior: auto!important;
+  }
+  .cal aside .panel{overflow:visible!important}
+  .cal .day{cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .wrap{overscroll-behavior-y:auto!important;touch-action:pan-y!important}
+}

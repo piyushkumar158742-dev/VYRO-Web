@@ -3,7 +3,7 @@
 (function(){
 'use strict';
 const CFG='vyro_backend_config_v1';
-let auth=null,db=null,user=null,saveTimer=null,googleTokenClient=null,ready=false,authResolved=false;
+let auth=null,db=null,user=null,saveTimer=null,googleTokenClient=null,ready=false,authResolved=false,explicitAuthAction=false;
 const $=s=>document.querySelector(s);
 const say=m=>{if(typeof toast==='function')toast(m);else alert(m)};
 const DEFAULT_CFG={firebaseApiKey:'AIzaSyCoiNZ0WtsxrC-rHX-xGEkQkWIurnj5J4k',firebaseAuthDomain:'vyro-cd2fd.firebaseapp.com',firebaseProjectId:'vyro-cd2fd',firebaseAppId:'1:574510502743:web:947b8e4e768de1025ea412'};
@@ -21,6 +21,8 @@ function configure(){
   auth=app.auth();db=app.firestore();ready=true;
   auth.onAuthStateChanged(async u=>{
    user=u||null;
+   const announceSignIn=!!u&&explicitAuthAction;
+   if(u)explicitAuthAction=false;
    authResolved=true;
    window.VyroBackend.user=user;
    if(user){
@@ -28,8 +30,9 @@ function configure(){
      const ref=db.collection('users').doc(user.uid).collection('workspace').doc('main');
      const snap=await ref.get();
      if(snap.exists&&typeof S!=='undefined'&&typeof save==='function'){
-      const cloud=snap.data().state;
-      if(cloud&&typeof cloud==='object'){
+      const cloudRaw=snap.data().state;
+      if(cloudRaw&&typeof cloudRaw==='object'){
+       const cloud=typeof removeDemoData==='function'?removeDemoData({...cloudRaw,tasks:Array.isArray(cloudRaw.tasks)?cloudRaw.tasks.slice():[]}):cloudRaw;
        const localExists=!!localStorage.getItem('vyro_creator_os_state');
        const localState=typeof S==='object'?JSON.parse(JSON.stringify(S)):null;
        if(localExists&&localState&&workspaceSignature(localState)!==workspaceSignature(cloud)){
@@ -39,8 +42,8 @@ function configure(){
        applyCloudWorkspace(cloud);
       }
      }else if(typeof S!=='undefined')queueSync(S);
-     say('Signed in. Workspace sync is ready.');
-    }catch(e){console.error(e);say('Signed in, but workspace sync failed. Check Firestore setup and rules.')}
+     if(announceSignIn)say('Signed in. Workspace sync is ready.');
+    }catch(e){console.error(e);if(announceSignIn)say('Signed in, but workspace sync failed. Check Firestore setup and rules.')}
    }
    document.dispatchEvent(new CustomEvent('vyro-auth-change',{detail:{user}}));
   });
@@ -101,8 +104,8 @@ function requestLegalConsent(onAccept){
  modal.querySelector('.vyro-legal-continue').addEventListener('click',()=>{if(!modal.querySelector('#vyro-modal-privacy').checked||!modal.querySelector('#vyro-modal-terms').checked){modal.querySelector('.vyro-legal-error').hidden=false;return}recordLegalConsent();close();onAccept()});
  modal.querySelector('#vyro-modal-privacy').focus();
 }
-async function signGoogle(){requestLegalConsent(async()=>{const x=configure();if(!x.ok){say(x.reason);return}try{await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())}catch(e){console.error(e);say(authError(e))}})}
-async function signEmail(mode){requestLegalConsent(async()=>{const x=configure();if(!x.ok){say(x.reason);return}const email=($('#backend-email')?.value||'').trim(),pass=$('#backend-password')?.value||'';if(!email||!pass){say('Enter your email and password.');return}try{if(mode==='create')await auth.createUserWithEmailAndPassword(email,pass);else await auth.signInWithEmailAndPassword(email,pass)}catch(e){say(authError(e))}})}
+async function signGoogle(){requestLegalConsent(async()=>{const x=configure();if(!x.ok){say(x.reason);return}explicitAuthAction=true;try{await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())}catch(e){explicitAuthAction=false;console.error(e);say(authError(e))}})}
+async function signEmail(mode){requestLegalConsent(async()=>{const x=configure();if(!x.ok){say(x.reason);return}const email=($('#backend-email')?.value||'').trim(),pass=$('#backend-password')?.value||'';if(!email||!pass){say('Enter your email and password.');return}explicitAuthAction=true;try{if(mode==='create')await auth.createUserWithEmailAndPassword(email,pass);else await auth.signInWithEmailAndPassword(email,pass)}catch(e){explicitAuthAction=false;say(authError(e))}})}
 function authError(e){return ({'auth/unauthorized-domain':'This website domain is not authorized in Firebase Authentication settings.','auth/operation-not-allowed':'Email/password sign-in is not enabled in Firebase Authentication.','auth/popup-blocked':'Allow pop-ups for Vyro and try again.','auth/invalid-credential':'Email or password is incorrect. If you created your account with Google, use Continue with Google.','auth/invalid-email':'Enter a valid email address.','auth/email-already-in-use':'An account with this email already exists. Choose “Sign in” instead of “Create account”, or use Continue with Google if you originally registered with Google.','auth/user-not-found':'No account was found for this email. Choose “Create account” to register, or use Continue with Google if appropriate.','auth/wrong-password':'That password is incorrect. Check it and try again.','auth/weak-password':'Choose a password with at least 6 characters.','auth/popup-closed-by-user':'The Google window was closed before finishing. Try again.','auth/cancelled-popup-request':'Another sign-in window is already open.','auth/user-mismatch':'Choose the same Google account you are signed in with.','auth/credential-already-in-use':'That Google account already belongs to another Vyro account. Sign out, then sign in with Google.','auth/provider-already-linked':'Google is already linked to this account. Try again.','auth/network-request-failed':'Network error. Check your connection and try again.'})[e.code]||e.message||'Sign-in failed.'}
 async function signOut(){if(auth)await auth.signOut();say('Signed out of Creator OS cloud sync.')}
 async function youtubeRequest(path,token,key){

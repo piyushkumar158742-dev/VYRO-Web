@@ -3,7 +3,7 @@
 (function(){
 'use strict';
 const CFG='vyro_backend_config_v1';
-let auth=null,db=null,user=null,saveTimer=null,googleTokenClient=null,ready=false,authResolved=false,explicitAuthAction=false;
+let auth=null,db=null,user=null,saveTimer=null,googleTokenClient=null,ready=false,authResolved=false,explicitAuthAction=false,preferCloudOnNextAuth=false;
 const $=s=>document.querySelector(s);
 const say=m=>{if(typeof toast==='function')toast(m);else alert(m)};
 const DEFAULT_CFG={firebaseApiKey:'AIzaSyCoiNZ0WtsxrC-rHX-xGEkQkWIurnj5J4k',firebaseAuthDomain:'vyro-cd2fd.firebaseapp.com',firebaseProjectId:'vyro-cd2fd',firebaseAppId:'1:574510502743:web:947b8e4e768de1025ea412'};
@@ -36,10 +36,17 @@ function configure(){
        const localExists=!!localStorage.getItem('vyro_creator_os_state');
        const localState=typeof S==='object'?JSON.parse(JSON.stringify(S)):null;
        if(localExists&&localState&&workspaceSignature(localState)!==workspaceSignature(cloud)){
-        promptWorkspaceConflict(localState,cloud,ref);
-        return;
+        if(preferCloudOnNextAuth){
+         preferCloudOnNextAuth=false;
+         applyCloudWorkspace(cloud);
+        }else{
+         promptWorkspaceConflict(localState,cloud,ref);
+         return;
+        }
+       }else{
+        preferCloudOnNextAuth=false;
+        applyCloudWorkspace(cloud);
        }
-       applyCloudWorkspace(cloud);
       }
      }else if(typeof S!=='undefined')queueSync(S);
      if(announceSignIn)say('Signed in. Workspace sync is ready.');
@@ -168,8 +175,11 @@ function connectYouTube(){
   if(typeof S==='undefined'||!S?.settings){say('Workspace is still loading. Try again in a moment.');return}
   const key=cfg().youtubeApiKey||'';
   ytBusy(true);
+  // Connecting a YouTube channel always prefers the signed-in creator's cloud workspace.
+  preferCloudOnNextAuth=true;
   try{
    const token=await youtubeAccessToken();
+   preferCloudOnNextAuth=false;
    say('Connected to Google. Syncing your YouTube channel…');
    const data=await youtubeRequest('channels?part=snippet,statistics,contentDetails&mine=true',token,key);
    if(!data.items?.length)throw new Error('No YouTube channel was found on that Google account. Pick the account that owns your channel.');
@@ -184,6 +194,7 @@ function connectYouTube(){
    if(typeof draw==='function')draw();
    say('YouTube connected. Synced '+imported.length+' videos.');
   }catch(e){
+   preferCloudOnNextAuth=false;
    console.error('YouTube connect:',e);
    say(e.code?authError(e):(e.message||'Could not sync YouTube data.'));
   }finally{ytBusy(false)}

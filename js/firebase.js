@@ -33,20 +33,10 @@ function configure(){
       const cloudRaw=snap.data().state;
       if(cloudRaw&&typeof cloudRaw==='object'){
        const cloud=typeof removeDemoData==='function'?removeDemoData({...cloudRaw,tasks:Array.isArray(cloudRaw.tasks)?cloudRaw.tasks.slice():[]}):cloudRaw;
-       const localExists=!!localStorage.getItem('vyro_creator_os_state');
-       const localState=typeof S==='object'?JSON.parse(JSON.stringify(S)):null;
-       if(localExists&&localState&&workspaceSignature(localState)!==workspaceSignature(cloud)){
-        if(preferCloudOnNextAuth){
-         preferCloudOnNextAuth=false;
-         applyCloudWorkspace(cloud);
-        }else{
-         promptWorkspaceConflict(localState,cloud,ref);
-         return;
-        }
-       }else{
-        preferCloudOnNextAuth=false;
-        applyCloudWorkspace(cloud);
-       }
+       // Cloud is the canonical workspace: always load it without asking the user
+       // to choose between device and cloud copies.
+       preferCloudOnNextAuth=false;
+       applyCloudWorkspace(cloud);
       }
      }else if(typeof S!=='undefined')queueSync(S);
      if(announceSignIn)say('Signed in. Workspace sync is ready.');
